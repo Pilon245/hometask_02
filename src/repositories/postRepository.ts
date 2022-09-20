@@ -43,6 +43,7 @@ export const postRepository = {
                 blogId: blogId,
                 blogName: blogName.name
             }
+            return true
         }else {
             return false
         }

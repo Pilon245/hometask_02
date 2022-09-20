@@ -11,7 +11,7 @@ app.use (express.json())
 const port = process.env.PORT || 5002
 
 app.use("/api",blogsRouter,postRouter)
-app.use('/api',delRouter)
+app.use('/api',delRouter) // почему начал рушаться на blogName; BlogName.name
 
 app.listen(port, () => {
     console.log(`Server stared on port ${port}`)

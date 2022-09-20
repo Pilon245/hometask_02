@@ -29,6 +29,7 @@ export const blogsRepository = {
         if(blog) {
             blog.name = name
             blog.youtubeUrl = youtubeUrl
+            return true
         } else {
             return false
         }
