@@ -27,7 +27,7 @@ export const postInputControlMiddleware = (req: Request, res: Response, next : N
     //     errors.push({message: "blogId is wrong", field: " blogId" })
     // }
     if(errors.length){
-        return res.status(400).send({errorsMessages: errors})
+        return res.status(400).send({"errorsMessages": errors})
     }
     next()
 }
