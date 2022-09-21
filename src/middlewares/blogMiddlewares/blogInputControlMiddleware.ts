@@ -9,10 +9,10 @@ export const blogInputControlMiddleware = (req: Request, res: Response, next : N
     const errors: { message: string, field: string} [] = []
 
     if(!name || name.length > 15  || typeof name !== "string") {
-        errors.push({message: "name is wrong", field: " name" })
+        errors.push({message: "name is wrong", field: "name" })
     }
     if(!youtubeUrl || youtubeUrl.length > 100 || !valid || typeof youtubeUrl !== "string") {
-        errors.push({message: "youtubeUrl is wrong", field: " youtubeUrl" })
+        errors.push({message: "youtubeUrl is wrong", field: "youtubeUrl" })
     }
     if(errors.length){
         return res.status(400).send({errorsMessages: errors})

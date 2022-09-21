@@ -13,14 +13,15 @@ export const postInputControlMiddleware = (req: Request, res: Response, next : N
 
     const errors: { message: string, field: string} [] = []
 
-    if(!title || title.length > 30 || typeof title !== "string") {
-        errors.push({message: "title is wrong", field: " title" })
-    }
+
     if(!shortDescription || shortDescription.length > 100 || typeof shortDescription !== "string") {
-        errors.push({message: "shortDescription is wrong", field: " shortDescription" })
+        errors.push({message: "shortDescription is wrong", field: "shortDescription" })
+    }
+    if(!title || title.length > 30 || typeof title !== "string") {
+        errors.push({message: "title is wrong", field: "title" })
     }
     if(!content || content.length > 1000 || typeof content !== "string") {
-        errors.push({message: "content is wrong", field: " content" })
+        errors.push({message: "content is wrong", field: "content" })
     }
     // if(!blog /**|| typeof blog !== "string"*/) {
     //     errors.push({message: "blogId is wrong", field: " blogId" })
