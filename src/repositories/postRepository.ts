@@ -33,11 +33,11 @@ export const postRepository = {
         return newPost
     },
     replacePost(id: string, title: string, shortDescription: string, content: string, blogId: string) {
-        for (let i=0; i < post.length; i++){
-            if(post[i].id === id) {
-                return true
-            }
-        }
+        // for (let i=0; i < post.length; i++){
+        //     if(post[i].id === id) {
+        //         return true
+        //     }
+        // }
         let postUp = post.find(p => p.id === id)
         if(postUp) {
             postUp.title = title
