@@ -32,17 +32,18 @@ export const postRepository = {
         post.push(newPost)
         return newPost
     },
-    replacePost(title: string, shortDescription: string, content: string, blogId: string) {
-        const blogName: any = blogs.find(p => p.id === blogId)
-        if(blogName){
-            const newPost: PostDbType = {
-                id: String(+(new Date())),
-                title: title,
-                shortDescription: shortDescription,
-                content: content,
-                blogId: blogId,
-                blogName: blogName.name
+    replacePost(id: string, title: string, shortDescription: string, content: string, blogId: string) {
+        for (let i=0; i < post.length; i++){
+            if(post[i].id === id) {
+                return true
             }
+        }
+        let postUp = post.find(p => p.id === id)
+        if(postUp) {
+            postUp.title = title
+            postUp.shortDescription = shortDescription
+            postUp.content = content
+            postUp.blogId = blogId
             return true
         }else {
             return false

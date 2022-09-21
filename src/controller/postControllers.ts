@@ -22,7 +22,7 @@ export const postControllers = {
         }
     },
     async updatePost( req: Request, res: Response) {
-        const isUpdate = await postRepository.replacePost(req.body.title,
+        const isUpdate = await postRepository.replacePost(req.params.id,req.body.title,
             req.body.shortDescription, req.body.content, req.body.blogId)
         if(isUpdate) {
             res.send(204)
