@@ -24,7 +24,7 @@ export const postInputControlMiddleware = (req: Request, res: Response, next : N
         errors.push({message: "content is wrong", field: "content" })
     }
     if(!blog /**|| typeof blog !== "string"*/) {
-        errors.push({message: "blogId is wrong", field: " blogId" })
+        errors.push({message: "blogId is wrong", field: "blogId" })
     }
     if(errors.length){
         return res.status(400).send({errorsMessages: errors})
