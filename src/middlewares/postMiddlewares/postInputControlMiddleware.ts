@@ -23,11 +23,11 @@ export const postInputControlMiddleware = (req: Request, res: Response, next : N
     if(!content || content.length > 1000 || typeof content !== "string") {
         errors.push({message: "content is wrong", field: "content" })
     }
-    // if(!blog /**|| typeof blog !== "string"*/) {
-    //     errors.push({message: "blogId is wrong", field: " blogId" })
-    // }
+    if(!blog /**|| typeof blog !== "string"*/) {
+        errors.push({message: "blogId is wrong", field: " blogId" })
+    }
     if(errors.length){
-        return res.status(400).send({"errorsMessages": errors})
+        return res.status(400).send({errorsMessages: errors})
     }
     next()
 }

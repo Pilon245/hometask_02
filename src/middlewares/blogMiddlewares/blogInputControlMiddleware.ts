@@ -8,7 +8,7 @@ export const blogInputControlMiddleware = (req: Request, res: Response, next : N
     let valid = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/.test(req.body.youtubeUrl);
     const errors: { message: string, field: string} [] = []
 
-    if(!name || name.length > 15  || typeof name !== "string") {
+    if(!name || name.length > 15 || !name.trim()  || typeof name !== "string") {
         errors.push({message: "name is wrong", field: "name" })
     }
     if(!youtubeUrl || youtubeUrl.length > 100 || !valid || typeof youtubeUrl !== "string") {
