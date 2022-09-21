@@ -14,13 +14,13 @@ export const postInputControlMiddleware = (req: Request, res: Response, next : N
     const errors: { message: string, field: string} [] = []
 
 
-    if(!shortDescription || shortDescription.length > 100 || typeof shortDescription !== "string") {
+    if(!shortDescription || shortDescription.length > 100 || !shortDescription.trim() || typeof shortDescription !== "string") {
         errors.push({message: "shortDescription is wrong", field: "shortDescription" })
     }
-    if(!title || title.length > 30 || typeof title !== "string") {
+    if(!title || title.length > 30 || !title.trim() || typeof title !== "string") {
         errors.push({message: "title is wrong", field: "title" })
     }
-    if(!content || content.length > 1000 || typeof content !== "string") {
+    if(!content || !content.trim() || content.length > 1000 || typeof content !== "string") {
         errors.push({message: "content is wrong", field: "content" })
     }
     if(!blog /**|| typeof blog !== "string"*/) {
