@@ -1,15 +1,18 @@
 import {Router, Request, Response} from "express";
-import {blogs, blogsRepository} from "../repositories/blogsRepository";
+import { blogsRepository} from "../repositories/blogsRepository";
+import {blogsService} from "../domain/blogsService";
 
 
 
 export const blogsControllers = {
     async getBlogs( req: Request, res: Response) {
-        const foundRepository = await blogsRepository.findBlogs(req.params.id)
+        const foundRepository = await blogsService.findBlogs(req.params.id)
         return res.status(200).send(foundRepository)
     },
+
     async getBlogsById(req: Request, res: Response) {
-        const blog = await blogsRepository.findBlogsById(req.params.id)
+        const blog = await blogsService.findBlogsById(req.params.id)
+        console.log(blog)
         if(blog) {
             res.status(200).send(blog)
         } else {
@@ -17,13 +20,13 @@ export const blogsControllers = {
         }
     },
     async createBlogs( req: Request, res: Response) {
-        const newBlog = await blogsRepository.makeBlogs(req.body.name, req.body.youtubeUrl)
+        const newBlog = await blogsService.createBlogs(req.body.name, req.body.youtubeUrl)
         if(newBlog){
             res.status(201).send(newBlog)
         }
     },
     async updateBlogs( req: Request, res: Response) {
-        const isUpdate = await blogsRepository.replaceBlogs(req.params.id, req.body.name, req.body.youtubeUrl)
+        const isUpdate = await blogsService.updateBlogs(req.params.id, req.body.name, req.body.youtubeUrl)
         if(isUpdate) {
             res.send(204)
         } else{
@@ -31,7 +34,7 @@ export const blogsControllers = {
         }
     },
     async deleteBlogs( req: Request, res: Response) {
-        const isDelete = blogsRepository.removeBlogs(req.params.id)
+        const isDelete = await blogsService.deleteBlogs(req.params.id)
         if(isDelete) {
             res.send(204)
         } else{

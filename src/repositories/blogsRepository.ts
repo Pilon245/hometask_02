@@ -1,49 +1,44 @@
 import {strict} from "assert";
+import {blogsCollection} from "./db";
+import {BlogsDbType} from "./db";
+import {ObjectId} from "mongodb";
 
-type BlogsDbType = {
-    id: string
-    name: string
-    youtubeUrl: string
-}
-export let blogs: BlogsDbType[] = []
+// export const blogFindId = {
+//     async blogId(id: string) {
+//         const result = await blogsCollection.findOne({_id: new ObjectId(id)})
+//         if(result) {
+//             return result
+//         } else {
+//             return true
+//         }
+//     }
+// }
 
 export const blogsRepository = {
-    findBlogs(title: string | null | undefined) {
-        return blogs
-    },
-
-    findBlogsById(id: string) {
-        return blogs.find(p => p.id === id)
-    },
-    makeBlogs(name: string, youtubeUrl: string) {
-        const newBlogs: BlogsDbType = {
-            id: String(+(new Date())) ,
-            name: name,
-            youtubeUrl: youtubeUrl
+    async findBlogs(title: string | null | undefined): Promise<BlogsDbType []> {
+        const filter: any = {}
+        if(title){
+            filter.title = {$regex: title} // regex должен найти title в занчениях базы данных
         }
-        blogs.push(newBlogs)
+        return blogsCollection.find(filter).toArray()
+    },
+    async findBlogsById(id: string): Promise<BlogsDbType | null> {
+        return await blogsCollection.findOne({_id: new ObjectId(id)})
+    },
+    async createBlogs(newBlogs: BlogsDbType): Promise<BlogsDbType> {
+        const result = await blogsCollection.insertOne(newBlogs)
         return newBlogs
     },
-    replaceBlogs(id: string,name: string, youtubeUrl: string) {
-        let blog = blogs.find(p => p.id === id )
-        if(blog) {
-            blog.name = name
-            blog.youtubeUrl = youtubeUrl
-            return true
-        } else {
-            return false
-        }
+    async updateBlogs(id: string,name: string, youtubeUrl: string) {
+        const result = await blogsCollection.updateOne({_id:new ObjectId(id)}, {$set: {name:name}})
+        return result.matchedCount === 1
     },
-    removeBlogs(id: string) {
-        for (let i=0; i < blogs.length; i++){
-            if(blogs[i].id === id) {
-                blogs.splice(i,1)
-                return true
-            }
-        }
+    async deleteBlogs(id: string) {
+        const result = await blogsCollection.deleteOne({_id: new ObjectId(id)})
+        return result.deletedCount === 1
     },
-    deleteAllBlogs() {
-        blogs = []
+    async deleteAllBlogs() {
+        const deleteAllBlogs = await blogsCollection.deleteMany({})
         return true
     }
 

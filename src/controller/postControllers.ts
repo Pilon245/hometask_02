@@ -1,14 +1,15 @@
 import {Router, Request, Response} from "express";
-import {blogs, blogsRepository} from "../repositories/blogsRepository";
+import { blogsRepository} from "../repositories/blogsRepository";
 import {postRepository} from "../repositories/postRepository";
+import {postsService} from "../domain/postsService";
 
 export const postControllers = {
     async getPost( req: Request, res: Response) {
-        const foundRepository = await postRepository.findPost(req.params.id)
+        const foundRepository = await postsService.findPost(req.params.id)
         return res.status(200).send(foundRepository)
     },
     async getPostById(req: Request, res: Response) {
-        const post = await postRepository.findPostById(req.params.id)
+        const post = await postsService.findPostById(req.params.id)
         if(post) {
             res.status(200).send(post)
         } else {
@@ -16,13 +17,13 @@ export const postControllers = {
         }
     },
     async createPost( req: Request, res: Response) {
-        const newPost = await postRepository.makePost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
+        const newPost = await postsService.createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
         if(newPost){
             res.status(201).send(newPost)
         }
     },
     async updatePost( req: Request, res: Response) {
-        const isUpdate = await postRepository.replacePost(req.params.id,req.body.title,
+        const isUpdate = await postsService.updatePost(req.params.id,req.body.title,
             req.body.shortDescription, req.body.content, req.body.blogId)
         if(isUpdate) {
             res.send(204)
@@ -31,7 +32,7 @@ export const postControllers = {
         }
     },
     async deletePost( req: Request, res: Response) {
-        const isDelete = postRepository.removePost(req.params.id)
+        const isDelete = await postsService.deletePost(req.params.id)
         if(isDelete) {
             res.send(204)
         } else{
