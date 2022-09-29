@@ -4,6 +4,8 @@ import {postRouter} from "./routes/postRouter";
 import {delControllers} from "./controller/delControllers";
 import {delRouter} from "./routes/delRouter";
 import {runDb} from "./repositories/db";
+import * as dotenv from "dotenv";
+dotenv.config()
 
 const app = express()
 
