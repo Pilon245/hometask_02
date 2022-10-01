@@ -17,7 +17,8 @@ export const postsService = {
                 shortDescription: p.shortDescription,
                 content: p.content,
                 blogId: p.blogId,
-                blogName: p.blogName
+                blogName: p.blogName,
+                createdAt: p.createdAt
             }
         ))
     },
@@ -30,7 +31,9 @@ export const postsService = {
                 shortDescription: post.shortDescription,
                 content: post.content,
                 blogId: post.blogId,
-                blogName: post.blogName
+                blogName: post.blogName,
+                createdAt: post.createdAt
+
             }
             return outPost
         }
@@ -46,7 +49,8 @@ export const postsService = {
             shortDescription: shortDescription,
             content: content,
             blogId: blogId,
-            blogName: blogName!.name
+            blogName: blogName!.name,
+            createdAt: new Date().toISOString()
 
         }
         const createdPost = await postRepository.createPost(newPost)
@@ -56,7 +60,8 @@ export const postsService = {
             shortDescription: createdPost.shortDescription,
             content: createdPost.content,
             blogId: createdPost.blogId,
-            blogName: createdPost.blogName
+            blogName: createdPost.blogName,
+            createdAt: createdPost.createdAt
 
         }
         return outNewPost

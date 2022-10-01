@@ -8,6 +8,7 @@ export type PostDbType = {
     content: string
     blogId: string
     blogName: string
+    createdAt: string
 }
 
 export type OutputPostDbType = {
@@ -17,4 +18,5 @@ export type OutputPostDbType = {
     content: string
     blogId: string
     blogName: string
+    createdAt: string
 }
