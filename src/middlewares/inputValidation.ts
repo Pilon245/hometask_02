@@ -10,7 +10,7 @@ export const inputValidation = (req: Request, res: Response, next: NextFunction)
                 field: error.param
             }
         })
-        return res.status(400).send({"errorsMesseges": errorsArray})
+        return res.status(400).send({"errorsMessages": errorsArray})
     } else {
        next()
 }
