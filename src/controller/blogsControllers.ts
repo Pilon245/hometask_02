@@ -1,12 +1,12 @@
 import {Router, Request, Response} from "express";
 import { blogsRepository} from "../repositories/blogsRepository";
-import {blogsService} from "../domain/blogsService";
+import {blogsService} from "../service/blogsService";
 
 
 
 export const blogsControllers = {
     async getBlogs( req: Request, res: Response) {
-        const foundRepository = await blogsService.findBlogs(req.params.id)
+        const foundRepository = await blogsService.findBlogs()
         return res.status(200).send(foundRepository)
     },
 

@@ -1,20 +1,12 @@
-import {MongoClient} from "mongodb";
+import {MongoClient, ObjectId} from "mongodb";
 import * as dotenv from "dotenv";
 dotenv.config()
+import {BlogsDbType} from "../types/blogsTypes";
+import {PostDbType} from "../types/postsTypes";
 
-export type BlogsDbType = {
-    // id: string
-    name: string
-    youtubeUrl: string
-}
-export type PostDbType = {
-    // id: string
-    title: string
-    shortDescription: string
-    content: string
-    blogId: string
-    blogName: string
-}
+
+
+
 
 
 const mongoUri = process.env.MONGODB_URL || ""

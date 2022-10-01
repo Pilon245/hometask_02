@@ -1,11 +1,11 @@
 import {Router, Request, Response} from "express";
 import { blogsRepository} from "../repositories/blogsRepository";
 import {postRepository} from "../repositories/postRepository";
-import {postsService} from "../domain/postsService";
+import {postsService} from "../service/postsService";
 
 export const postControllers = {
     async getPost( req: Request, res: Response) {
-        const foundRepository = await postsService.findPost(req.params.id)
+        const foundRepository = await postsService.findPost()
         return res.status(200).send(foundRepository)
     },
     async getPostById(req: Request, res: Response) {

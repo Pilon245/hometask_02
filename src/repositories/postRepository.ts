@@ -1,21 +1,17 @@
-// import {blogs} from "./blogsRepository";
-import {blogsCollection, PostDbType, postsCollection} from "./db";
+import {postsCollection} from "./db";
 import {ObjectId} from "mongodb";
+import {PostDbType} from "../types/postsTypes";
 
 export const postRepository = {
-    async findPost(title: string | null | undefined): Promise<PostDbType []>{
-        const filter: any = {}
-        if(title){
-            filter.title = {$regex: title} // regex должен найти title в занчениях базы данных
-        }
-        return postsCollection.find(filter).toArray()
+    async findPost(): Promise<PostDbType []>{
+        return postsCollection.find().toArray()
     },
 
     async findPostById(id: string): Promise<PostDbType | null>{
         let post: PostDbType | null = await postsCollection.findOne({_id: new ObjectId(id)})
         return post
     },
-    async createPost(newPost: PostDbType){
+    async createPost(newPost: PostDbType): Promise<PostDbType>{
         const result = await postsCollection.insertOne(newPost)
         return newPost
     },
