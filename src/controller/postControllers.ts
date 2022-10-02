@@ -16,8 +16,22 @@ export const postControllers = {
             res.send(404)
         }
     },
+    async getPostOnBlog(req: Request, res: Response) {
+      const posts = await postsService.findPostOnBlog(req.params.blogId)
+      if(posts) {
+          res.status(200).send(posts)
+      }else {
+          res.sendStatus(404)
+      }
+    },
     async createPost( req: Request, res: Response) {
         const newPost = await postsService.createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
+        if(newPost){
+            res.status(201).send(newPost)
+        }
+    },
+    async createPostonBlog( req: Request, res: Response) {
+        const newPost = await postsService.createPost(req.body.title, req.body.shortDescription, req.body.content, req.params.blogId)
         if(newPost){
             res.status(201).send(newPost)
         }

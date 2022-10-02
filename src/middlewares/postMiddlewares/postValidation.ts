@@ -1,4 +1,4 @@
-import {body,CustomValidator, validationResult} from "express-validator";
+import {body, CustomValidator, param, validationResult} from "express-validator";
 import {NextFunction, Request, Response} from "express";
 import {authMiddleware} from "../authMiddleware";
 import {blogsRepository} from "../../repositories/blogsRepository";
@@ -13,7 +13,32 @@ import {inputValidation} from "../inputValidation";
 //     return Promise.resolve()
 // }
 
-export const PostValidation = [
+export const blogIdValodation = [
+    body("blogId")
+        .isString().withMessage("Field 'blogId' is not a string.")
+        .notEmpty({ignore_whitespace: true}).withMessage("Field 'blogId' cannot be empty.")
+        .custom(async (value) => {
+            const blog: any = await blogsRepository.findBlogsById(value)
+            if(!blog){
+                throw new Error("Field 'blogId' is not in id.")
+            }
+            return true
+        })
+]
+export const postOnblogIdValodation = [
+    param("blogId")
+        .isString().withMessage("Field 'blogId' is not a string.")
+        .notEmpty({ignore_whitespace: true}).withMessage("Field 'blogId' cannot be empty.")
+        .custom(async (value) => {
+            const blog: any = await blogsRepository.findBlogsById(value)
+            if(!blog){
+                throw new Error("Field 'blogId' is not in id.")
+            }
+            return true
+        })
+]
+
+export const postValidation = [
     body("title")
         .isString().withMessage("Field 'title' is not a string.")
         .notEmpty({ignore_whitespace: true}).withMessage("Field 'title' cannot be empty.")
@@ -26,15 +51,5 @@ export const PostValidation = [
         .isString().withMessage("Field 'content' is not a string.")
         .notEmpty({ignore_whitespace: true}).withMessage("Field 'content' cannot be empty.")
         .isLength({min: 1, max: 1000}).withMessage("Min length of field 'content' 1 max 1000."),
-    body("blogId")
-        .isString().withMessage("Field 'blogId' is not a string.")
-        .notEmpty({ignore_whitespace: true}).withMessage("Field 'blogId' cannot be empty.")
-        .custom(async (value) => {
-        const blog: any = await blogsRepository.findBlogsById(value)
-        if(!blog){
-            throw new Error("Field 'blogId' is not in id.")
-            }
-        return true
-        }),
     inputValidation
 ]

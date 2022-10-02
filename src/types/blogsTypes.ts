@@ -13,3 +13,10 @@ export type OutputBlogsDbType = {
     youtubeUrl: string
     createdAt: string
 }
+export type PagesBlogDbType = {
+    pagesCount: number
+    page: number
+    pageSize: number
+    totalCount: number
+    item: Array<OutputBlogsDbType>
+}

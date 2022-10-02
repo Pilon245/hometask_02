@@ -6,7 +6,12 @@ import {blogsService} from "../service/blogsService";
 
 export const blogsControllers = {
     async getBlogs( req: Request, res: Response) {
-        const foundRepository = await blogsService.findBlogs()
+        const pageNumber = req.query.pageNumber ? req.query.pageNumber : 1
+        const pageSize = req.query.pageSize ? req.query.pageSize : 10
+        const sortBy = req.query.sortBy ? req.query.sortBy : "createdAt"
+        const sortDirection = req.query.sortDirection === "asc" ? "asc" : "desc"
+        const searchNameTerm = req.query.searchNameTerm ? req.query.searchNameTerm : ""
+        const foundRepository = await blogsService.findBlogs(pageNumber,pageSize,sortBy,sortDirection,searchNameTerm)
         return res.status(200).send(foundRepository)
     },
 

@@ -6,10 +6,13 @@ export const postRepository = {
     async findPost(): Promise<PostDbType []>{
         return postsCollection.find().toArray()
     },
-
     async findPostById(id: string): Promise<PostDbType | null>{
         let post: PostDbType | null = await postsCollection.findOne({_id: new ObjectId(id)})
         return post
+    },
+    async findPostOnBlog(blogId: string): Promise<PostDbType [] | null>{
+      let posts: PostDbType [] | null = await postsCollection.find({blogId: blogId}).toArray()
+      return posts
     },
     async createPost(newPost: PostDbType): Promise<PostDbType>{
         const result = await postsCollection.insertOne(newPost)

@@ -1,18 +1,31 @@
 import {blogsRepository} from "../repositories/blogsRepository";
-import {BlogsDbType, OutputBlogsDbType} from "../types/blogsTypes"
+import {BlogsDbType, OutputBlogsDbType, PagesBlogDbType} from "../types/blogsTypes"
 import {ObjectId} from "mongodb";
+import {isMap} from "util/types";
 
 export const blogsService = {
-    async findBlogs(): Promise<OutputBlogsDbType[]> {
-        const blogs = await blogsRepository.findBlogs()
-        return blogs.map(b => (
+    async findBlogs(pageNumber: number, pageSize: number, sortBy: string, sortDirection: string, searchNameTerm: string)
+        : Promise<PagesBlogDbType[]> {
+        let skip = pageNumber * pageSize
+        let direction : number = -1
+        if(sortDirection === "asc"){
+            direction = 1
+        }
+        const blogs = await blogsRepository.findBlogs(skip, pageSize,sortBy, sortDirection,searchNameTerm)
+        const totalCount = await blogsRepository.countBlogs()
+        const outBlog: PagesBlogDbType [] = {
+            pagesCount: (Math.ceil(totalCount/pageSize)-1)*pageSize,
+            page: skip,
+            pageSize: pageSize,
+            totalCount: totalCount,
+            items: blogs.map(b => (
             {
                 id: b._id,
                 name: b.name,
                 youtubeUrl: b.youtubeUrl,
                 createdAt: b.createdAt
-
-        }))
+        }))}
+            return outBlog
     },
     async findBlogsById(id: string): Promise<OutputBlogsDbType | null> {
         const blog =  await blogsRepository.findBlogsById(id)
@@ -50,6 +63,18 @@ export const blogsService = {
     },
     async deleteBlogs(id: string): Promise<boolean> {
         return await blogsRepository.deleteBlogs(id)
+    },
+    async sortBlogsByName(PageNumber: number, PageSize: number): Promise<OutputBlogsDbType[]> {
+        let skip = (Math.ceil(PageNumber/PageSize) - 1)*PageSize
+        const sortBlogs =  await blogsRepository.sortBlogsByName(skip, PageSize)
+        return sortBlogs.map(b => (
+            {
+                id: b._id,
+                name: b.name,
+                youtubeUrl: b.youtubeUrl,
+                createdAt: b.createdAt
+
+            }))
     },
     async deleteAllBlogs() {
     return blogsRepository.deleteAllBlogs()

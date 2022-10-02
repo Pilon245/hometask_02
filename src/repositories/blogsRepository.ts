@@ -3,8 +3,14 @@ import {ObjectId} from "mongodb";
 import {BlogsDbType} from "../types/blogsTypes";
 
 export const blogsRepository = {
-    async findBlogs(): Promise<BlogsDbType []> {
-        return blogsCollection.find().toArray()
+    async findBlogs(skip: number, pageSize: number, sortBy: string, sortDirection: string, searchNameTerm: string)
+        : Promise<BlogsDbType []> {
+        return  await blogsCollection
+            .find({name: {$regex: searchNameTerm}})
+            .sort(sortBy, sortDirection)
+            .skip(skip)
+            .limit(pageSize)
+            .toArray()
     },
     async findBlogsById(id: string): Promise<BlogsDbType | null> {
         return await blogsCollection.findOne({_id: new ObjectId(id)})
@@ -20,6 +26,13 @@ export const blogsRepository = {
     async deleteBlogs(id: string) : Promise<boolean> {
         const result = await blogsCollection.deleteOne({_id: new ObjectId(id)})
         return result.deletedCount === 1
+    },
+    async countBlogs() {
+      return await blogsCollection.find().count()
+    },
+    async sortBlogsByName(skip: number, PageSize: number): Promise<BlogsDbType []> {
+        const result = await blogsCollection.find({}).skip(skip).limit(PageSize).toArray()
+        return result
     },
     async deleteAllBlogs() {
         await blogsCollection.deleteMany({})

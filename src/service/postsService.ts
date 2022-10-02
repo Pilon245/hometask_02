@@ -39,6 +39,23 @@ export const postsService = {
         }
         return post
     },
+    async findPostOnBlog(blogId: string): Promise<OutputPostDbType [] | null>{
+        const posts = await postRepository.findPostOnBlog(blogId)
+        if(posts){
+                return posts.map(p => (
+                        {
+                        id: p._id,
+                        title: p.title,
+                        shortDescription: p.shortDescription,
+                        content: p.content,
+                        blogId: p.blogId,
+                        blogName: p.blogName,
+                        createdAt: p.createdAt
+                    }
+                ))
+        }
+        return posts
+    },
     async createPost(title: string, shortDescription: string, content: string, blogId: string)
         : Promise<OutputPostDbType>{
         const blogName: BlogsDbType | null =  await blogsRepository.findBlogsById(blogId)
