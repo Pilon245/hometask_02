@@ -1,4 +1,5 @@
 import {ObjectId} from "mongodb";
+import {OutputBlogsDbType} from "./blogsTypes";
 
 export type PostDbType = {
     _id: ObjectId
@@ -19,4 +20,11 @@ export type OutputPostDbType = {
     blogId: string
     blogName: string
     createdAt: string
+}
+export type PagesPostDbType = {
+    pagesCount: number
+    page: number
+    pageSize: number
+    totalCount: number
+    item: Array<OutputPostDbType>
 }

@@ -1,26 +1,34 @@
 // import {blogs} from "./blogsRepository";
 // import { PostDbType, postsCollection} from "./db";
 import {postRepository} from "../repositories/postRepository";
-import {PostDbType} from "../types/postsTypes";
+import {PagesPostDbType, PostDbType} from "../types/postsTypes";
 import {blogsRepository} from "../repositories/blogsRepository";
 import {OutputPostDbType} from "../types/postsTypes";
-import {BlogsDbType} from "../types/blogsTypes";
+import {BlogsDbType, PagesBlogDbType} from "../types/blogsTypes";
 import {ObjectId} from "mongodb";
 
 export const postsService = {
-    async findPost(): Promise<OutputPostDbType []>{
-        const posts = await postRepository.findPost()
-        return posts.map(p => (
-            {
-                id: p._id,
-                title: p.title,
-                shortDescription: p.shortDescription,
-                content: p.content,
-                blogId: p.blogId,
-                blogName: p.blogName,
-                createdAt: p.createdAt
-            }
-        ))
+    async findPost(pageNumber: number, pageSize: number, sortBy: string, sortDirection: string)
+        : Promise<PagesPostDbType []>{
+        let skip = pageNumber * pageSize
+        const posts = await postRepository.findPost(skip, pageSize,sortBy, sortDirection)
+        const totalCount = await postRepository.countPosts()
+        const outPosts: PagesPostDbType [] = {
+            pagesCount: (Math.ceil(totalCount/pageSize)-1)*pageSize,
+            page: skip,
+            pageSize: pageSize,
+            totalCount: totalCount,
+            items: posts.map(p => (
+                {
+                    id: p._id,
+                    title: p.title,
+                    shortDescription: p.shortDescription,
+                    content: p.content,
+                    blogId: p.blogId,
+                    blogName: p.blogName,
+                    createdAt: p.createdAt
+                }))}
+        return outPosts
     },
     async findPostById(id: string): Promise<OutputPostDbType | null> {
         const post = await postRepository.findPostById(id)
@@ -39,10 +47,23 @@ export const postsService = {
         }
         return post
     },
-    async findPostOnBlog(blogId: string): Promise<OutputPostDbType [] | null>{
-        const posts = await postRepository.findPostOnBlog(blogId)
+    async findPostOnBlog(
+        blogId: string,
+        pageNumber: number,
+        pageSize: number,
+        sortBy: string,
+        sortDirection: string)
+        : Promise<PagesPostDbType [] | null> {
+        let skip = pageNumber * pageSize
+        const posts = await postRepository.findPostOnBlog(blogId, skip, pageSize, sortBy, sortDirection)
         if(posts){
-                return posts.map(p => (
+        const totalCount = await postRepository.countPosts()
+        const outPosts: PagesPostDbType [] = {
+            pagesCount: (Math.ceil(totalCount/pageSize)-1)*pageSize,
+            page: skip,
+            pageSize: pageSize,
+            totalCount: totalCount,
+            items: posts.map(p => (
                         {
                         id: p._id,
                         title: p.title,
@@ -53,6 +74,8 @@ export const postsService = {
                         createdAt: p.createdAt
                     }
                 ))
+        }
+        return outPosts
         }
         return posts
     },

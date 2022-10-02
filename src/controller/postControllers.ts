@@ -2,10 +2,15 @@ import {Router, Request, Response} from "express";
 import { blogsRepository} from "../repositories/blogsRepository";
 import {postRepository} from "../repositories/postRepository";
 import {postsService} from "../service/postsService";
+import {blogsService} from "../service/blogsService";
 
 export const postControllers = {
     async getPost( req: Request, res: Response) {
-        const foundRepository = await postsService.findPost()
+        const pageNumber = req.query.pageNumber ? 1 : 1
+        const pageSize = req.query.pageSize ? 10 : 10
+        const sortBy = req.query.sortBy ? "createdAt" : "createdAt"
+        const sortDirection = req.query.sortDirection === "asc" ? "asc" : "desc"
+        const foundRepository = await postsService.findPost(pageNumber,pageSize,sortBy,sortDirection)
         return res.status(200).send(foundRepository)
     },
     async getPostById(req: Request, res: Response) {
@@ -17,7 +22,16 @@ export const postControllers = {
         }
     },
     async getPostOnBlog(req: Request, res: Response) {
-      const posts = await postsService.findPostOnBlog(req.params.blogId)
+        const pageNumber = req.query.pageNumber ? 1 : 1
+        const pageSize = req.query.pageSize ? 10 : 10
+        const sortBy = req.query.sortBy ? "createdAt" : "createdAt"
+        const sortDirection = req.query.sortDirection === "asc" ? "asc" : "desc"
+      const posts = await postsService.findPostOnBlog(
+          req.params.blogId,
+          pageNumber,
+          pageSize,
+          sortBy,
+          sortDirection)
       if(posts) {
           res.status(200).send(posts)
       }else {

@@ -16,6 +16,6 @@ blogsRouter.post('/blogs',authMiddleware,blogValidation,blogsControllers.createB
 blogsRouter.put('/blogs/:id',authMiddleware,blogValidation,blogsControllers.updateBlogs)
 blogsRouter.delete('/blogs/:id',authMiddleware,blogsControllers.deleteBlogs)
 blogsRouter.get('/blogs/:blogId/posts',postControllers.getPostOnBlog)
-blogsRouter.post('/blogs/:blogId/posts',authMiddleware,postOnblogIdValodation,postValidation,postControllers.createPostonBlog)
+blogsRouter.post('/blogs/:blogId/posts',authMiddleware,postValidation,postControllers.createPostonBlog)
 
 

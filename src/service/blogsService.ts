@@ -7,10 +7,6 @@ export const blogsService = {
     async findBlogs(pageNumber: number, pageSize: number, sortBy: string, sortDirection: string, searchNameTerm: string)
         : Promise<PagesBlogDbType[]> {
         let skip = pageNumber * pageSize
-        let direction : number = -1
-        if(sortDirection === "asc"){
-            direction = 1
-        }
         const blogs = await blogsRepository.findBlogs(skip, pageSize,sortBy, sortDirection,searchNameTerm)
         const totalCount = await blogsRepository.countBlogs()
         const outBlog: PagesBlogDbType [] = {

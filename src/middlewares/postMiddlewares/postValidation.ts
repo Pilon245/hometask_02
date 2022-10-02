@@ -23,7 +23,8 @@ export const blogIdValodation = [
                 throw new Error("Field 'blogId' is not in id.")
             }
             return true
-        })
+        }),
+    inputValidation
 ]
 export const postOnblogIdValodation = [
     param("blogId")
@@ -35,7 +36,8 @@ export const postOnblogIdValodation = [
                 throw new Error("Field 'blogId' is not in id.")
             }
             return true
-        })
+        }),
+    inputValidation
 ]
 
 export const postValidation = [
