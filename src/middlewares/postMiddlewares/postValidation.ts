@@ -26,19 +26,7 @@ export const blogIdValodation = [
         }),
     inputValidation
 ]
-export const postOnblogIdValodation = [
-    param("blogId")
-        .isString().withMessage("Field 'blogId' is not a string.")
-        .notEmpty({ignore_whitespace: true}).withMessage("Field 'blogId' cannot be empty.")
-        .custom(async (value) => {
-            const blog: any = await blogsRepository.findBlogsById(value)
-            if(!blog){
-                throw new Error("Field 'blogId' is not in id.")
-            }
-            return true
-        }),
-    inputValidation
-]
+
 
 export const postValidation = [
     body("title")
