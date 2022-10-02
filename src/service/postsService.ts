@@ -14,8 +14,8 @@ export const postsService = {
         const posts = await postRepository.findPost(skip, pageSize,sortBy, sortDirection)
         const totalCount = await postRepository.countPosts()
         const outPosts: PagesPostDbType [] = {
-            pagesCount: (Math.ceil(totalCount/pageSize)-1)*pageSize,
-            page: skip,
+            pagesCount: (Math.ceil(totalCount/pageSize)),
+            page: (Math.ceil(totalCount/pageSize)-1),
             pageSize: pageSize,
             totalCount: totalCount,
             items: posts.map(p => (
@@ -59,8 +59,8 @@ export const postsService = {
         if(posts){
         const totalCount = await postRepository.countPosts()
         const outPosts: PagesPostDbType [] = {
-            pagesCount: (Math.ceil(totalCount/pageSize)-1)*pageSize,
-            page: skip,
+            pagesCount: (Math.ceil(totalCount/pageSize)),
+            page: (Math.ceil(totalCount/pageSize)-1),
             pageSize: pageSize,
             totalCount: totalCount,
             items: posts.map(p => (

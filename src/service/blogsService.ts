@@ -10,8 +10,8 @@ export const blogsService = {
         const blogs = await blogsRepository.findBlogs(skip, pageSize,sortBy, sortDirection,searchNameTerm)
         const totalCount = await blogsRepository.countBlogs()
         const outBlog: PagesBlogDbType [] = {
-            pagesCount: (Math.ceil(totalCount/pageSize)-1)*pageSize,
-            page: skip,
+            pagesCount: (Math.ceil(totalCount/pageSize)),
+            page: (Math.ceil(totalCount/pageSize)-1),
             pageSize: pageSize,
             totalCount: totalCount,
             items: blogs.map(b => (

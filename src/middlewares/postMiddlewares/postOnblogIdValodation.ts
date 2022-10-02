@@ -14,7 +14,7 @@ export const inputOnblogIdValidation = (req: Request, res: Response, next: NextF
                 field: error.param
             }
         })
-        return res.status(404).send({"errorsMessages": errorsArray})
+        return res.sendStatus(404)
     } else {
         next()
     }
