@@ -24,7 +24,6 @@ export const blogIdValodation = [
             }
             return true
         }),
-    inputValidation
 ]
 
 
@@ -41,5 +40,23 @@ export const postValidation = [
         .isString().withMessage("Field 'content' is not a string.")
         .notEmpty({ignore_whitespace: true}).withMessage("Field 'content' cannot be empty.")
         .isLength({min: 1, max: 1000}).withMessage("Min length of field 'content' 1 max 1000."),
-    inputValidation
 ]
+
+// const blogIdValidation = body("blogId")
+//     .isString().withMessage("Field 'blogId' is not a string.")
+//     .notEmpty({ignore_whitespace: true}).withMessage("Field 'blogId' cannot be empty.")
+//     .custom(async (value) => {
+//         const blog: any = await blogsRepository.findBlogsById(value)
+//         if(!blog){
+//             throw new Error("Field 'blogId' is not in id.")
+//         }
+//         return true
+//     })
+//
+// const titleValidation = body("title")
+//     .isString().withMessage("Field 'title' is not a string.")
+//     .notEmpty({ignore_whitespace: true}).withMessage("Field 'title' cannot be empty.")
+//     .isLength({min: 1, max: 30}).withMessage("Min length of field 'title' 1 max 30.")
+//
+// const createNewPostValidation = [titleValidation,'shortDescription', inputValidation]
+// const updatePostValidation = [titleValidation,'shortDescription','...', '...', '....', inputValidation]

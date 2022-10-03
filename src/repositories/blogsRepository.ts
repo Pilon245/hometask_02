@@ -29,9 +29,7 @@ export const blogsRepository = {
     },
     async countBlogs(sortBy: string, sortDirection: any, searchNameTerm: string) {
       return await blogsCollection
-          .find({name: {$regex: searchNameTerm}})
-          .sort(sortBy, sortDirection)
-          .count()
+          .countDocuments({name: {$regex: searchNameTerm}})
     },
     async sortBlogsByName(skip: number, PageSize: number): Promise<BlogsDbType []> {
         const result = await blogsCollection.find({}).skip(skip).limit(PageSize).toArray()
