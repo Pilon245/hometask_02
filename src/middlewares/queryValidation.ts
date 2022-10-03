@@ -23,7 +23,7 @@ type QueryValidationResult = {
 
 export const queryValidation  = (query: any): QueryValidationResult => {
     const pageNumber = typeof query.pageNumber === "string" ? +query.pageNumber : 1
-    const pageSize = typeof query.pageSize === "string" ? parseInt(query.pageSize) : 10
+    const pageSize = typeof query.pageSize === "string" ? parseInt(query.pageSize, 10) : 10
     const sortBy = typeof query.sortBy === "string" ? query.sortBy : "createdAt"
     const sortDirection = typeof query.sortDirection === "string" ? query.sortDirection : "desc"
     const searchNameTerm  = typeof query.searchNameTerm === "string" ? query.searchNameTerm?.toString() : ""
