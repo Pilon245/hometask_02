@@ -26,5 +26,5 @@ export type PagesPostDbType = {
     page: number
     pageSize: number
     totalCount: number
-    item: Array<OutputPostDbType>
+    items: Array<OutputPostDbType>
 }

@@ -7,16 +7,17 @@ export type BlogsDbType = {
     youtubeUrl: string
     createdAt: string
 }
-export type OutputBlogsDbType = {
-    id: ObjectId
-    name: string
-    youtubeUrl: string
-    createdAt: string
-}
+
 export type PagesBlogDbType = {
     pagesCount: number
     page: number
     pageSize: number
     totalCount: number
-    item: Array<OutputBlogsDbType>
+    items: Array<OutputBlogsDbType>
+}
+export type OutputBlogsDbType = {
+    id: ObjectId
+    name: string
+    youtubeUrl: string
+    createdAt: string
 }

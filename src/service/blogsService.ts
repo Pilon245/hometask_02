@@ -5,11 +5,11 @@ import {isMap} from "util/types";
 
 export const blogsService = {
     async findBlogs(pageNumber: number, pageSize: number, sortBy: string, sortDirection: string, searchNameTerm: string)
-        : Promise<PagesBlogDbType []> {
+        : Promise<PagesBlogDbType> {
         let skip = pageNumber * pageSize
         const blogs = await blogsRepository.findBlogs(skip, pageSize,sortBy, sortDirection,searchNameTerm)
         const totalCount = await blogsRepository.countBlogs(sortBy, sortDirection,searchNameTerm)
-        const outBlog: PagesBlogDbType [] = {
+        const outBlog: PagesBlogDbType = {
             pagesCount: (Math.ceil(totalCount/pageSize)),
             page: pageNumber,
             pageSize: pageSize,

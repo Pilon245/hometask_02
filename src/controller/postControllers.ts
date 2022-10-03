@@ -3,13 +3,11 @@ import { blogsRepository} from "../repositories/blogsRepository";
 import {postRepository} from "../repositories/postRepository";
 import {postsService} from "../service/postsService";
 import {blogsService} from "../service/blogsService";
+import {queryValidation} from "../middlewares/queryValidation";
 
 export const postControllers = {
     async getPost( req: Request, res: Response) {
-        const pageNumber = req.query.pageNumber ? +req.query.pageNumber : 1
-        const pageSize = req.query.pageSize ? +req.query.pageSize : 10
-        const sortBy = req.query.sortBy || "createdAt"
-        const sortDirection = req.query.sortDirection === "asc" ? "asc" : "desc"
+        const {pageNumber, pageSize, sortBy, sortDirection} = queryValidation(req.query)
         const foundRepository = await postsService.findPost(pageNumber,pageSize,sortBy,sortDirection)
         return res.status(200).send(foundRepository)
     },
@@ -26,7 +24,8 @@ export const postControllers = {
         const pageSize = req.query.pageSize ? +req.query.pageSize : 10
         const sortBy = req.query.sortBy || "createdAt"
         const sortDirection = req.query.sortDirection === "asc" ? "asc" : "desc"
-      const posts = await postsService.findPostOnBlog(
+        // const {pageNumber, pageSize, sortBy, sortDirection} = queryValidation(req.query)
+        const posts = await postsService.findPostOnBlog(
           req.params.blogId,
           pageNumber,
           pageSize,

@@ -3,7 +3,7 @@ import {ObjectId} from "mongodb";
 import {BlogsDbType} from "../types/blogsTypes";
 
 export const blogsRepository = {
-    async findBlogs(skip: number, pageSize: number, sortBy: string, sortDirection: string, searchNameTerm: string)
+    async findBlogs(skip: number, pageSize: number, sortBy: string, sortDirection: any, searchNameTerm: string)
         : Promise<BlogsDbType []> {
         return  await blogsCollection
             .find({name: {$regex: searchNameTerm}})
@@ -27,7 +27,7 @@ export const blogsRepository = {
         const result = await blogsCollection.deleteOne({_id: new ObjectId(id)})
         return result.deletedCount === 1
     },
-    async countBlogs(sortBy: string, sortDirection: string, searchNameTerm: string) {
+    async countBlogs(sortBy: string, sortDirection: any, searchNameTerm: string) {
       return await blogsCollection
           .find({name: {$regex: searchNameTerm}})
           .sort(sortBy, sortDirection)

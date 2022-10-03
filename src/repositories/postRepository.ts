@@ -18,7 +18,7 @@ export const postRepository = {
     async findPostOnBlog(blogId: string,skip: number, pageSize: number, sortBy: string, sortDirection: any)
         : Promise<PostDbType [] | null>{
       let posts: PostDbType [] | null = await postsCollection
-          .find({blogId: blogId})
+          .find({blogId: {$regex: blogId}})
           .sort(sortBy, sortDirection)
           .skip(skip)
           .limit(pageSize)
@@ -39,9 +39,16 @@ export const postRepository = {
         const result = await postsCollection.deleteOne({_id: new ObjectId(id)})
         return result.deletedCount === 1
     },
-    async countPosts(sortBy: string, sortDirection: string) {
+    async countPosts(sortBy: string, sortDirection: any) {
         return await postsCollection.find().sort(sortBy, sortDirection).count()
     },
+    // async countPostsById(blogId: string, sortBy: string, sortDirection: any) {
+    //     const filter: any ={}
+    //     if(blogId){
+    //         filter.blogId = {$regex: blogId}
+    //     }
+    //     return await postsCollection.find({_id: new ObjectId(blogId)}).sort(sortBy, sortDirection).count()
+    // },
     async deleteAllPost() {
         const deleteAllPost = await postsCollection.deleteMany({})
         return true
