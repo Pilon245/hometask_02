@@ -1,11 +1,17 @@
 import {Router, Request, Response} from "express";
 import { blogsRepository} from "../repositories/blogsRepository";
 import {blogsService} from "../service/blogsService";
+import {blogsQueryValidation} from "../middlewares/blogMiddlewares/blogsQueryValidation";
 
 
 
 export const blogsControllers = {
     async getBlogs( req: Request, res: Response) {
+        // const pageNumber = blogsQueryValidation.pageNumber
+        // const pageSize = blogsQueryValidation.pageSize
+        // const sortBy = blogsQueryValidation.sortBy
+        // const sortDirection = blogsQueryValidation.sortDirection
+        // const searchNameTerm = blogsQueryValidation.searchNameTerm
         const pageNumber = req.query.pageNumber ? +req.query.pageNumber : 1
         const pageSize = req.query.pageSize ? +req.query.pageSize : 10
         const sortBy = req.query.sortBy || "createdAt"

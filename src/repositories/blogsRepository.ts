@@ -27,8 +27,11 @@ export const blogsRepository = {
         const result = await blogsCollection.deleteOne({_id: new ObjectId(id)})
         return result.deletedCount === 1
     },
-    async countBlogs() {
-      return await blogsCollection.find().count()
+    async countBlogs(sortBy: string, sortDirection: string, searchNameTerm: string) {
+      return await blogsCollection
+          .find({name: {$regex: searchNameTerm}})
+          .sort(sortBy, sortDirection)
+          .count()
     },
     async sortBlogsByName(skip: number, PageSize: number): Promise<BlogsDbType []> {
         const result = await blogsCollection.find({}).skip(skip).limit(PageSize).toArray()

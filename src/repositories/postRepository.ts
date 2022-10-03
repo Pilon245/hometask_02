@@ -3,8 +3,8 @@ import {ObjectId} from "mongodb";
 import {PostDbType} from "../types/postsTypes";
 
 export const postRepository = {
-    async findPost(skip: number, pageSize: number, sortBy: string, sortDirection: string): Promise<PostDbType []>{
-        return await postsCollection
+    async findPost(skip: number, pageSize: number, sortBy: string, sortDirection: any): Promise<PostDbType []>{
+        return postsCollection
             .find({})
             .sort(sortBy, sortDirection)
             .skip(skip)
@@ -15,7 +15,7 @@ export const postRepository = {
         let post: PostDbType | null = await postsCollection.findOne({_id: new ObjectId(id)})
         return post
     },
-    async findPostOnBlog(blogId: string,skip: number, pageSize: number, sortBy: string, sortDirection: string)
+    async findPostOnBlog(blogId: string,skip: number, pageSize: number, sortBy: string, sortDirection: any)
         : Promise<PostDbType [] | null>{
       let posts: PostDbType [] | null = await postsCollection
           .find({blogId: blogId})
@@ -39,8 +39,8 @@ export const postRepository = {
         const result = await postsCollection.deleteOne({_id: new ObjectId(id)})
         return result.deletedCount === 1
     },
-    async countPosts() {
-        return await postsCollection.find().count()
+    async countPosts(sortBy: string, sortDirection: string) {
+        return await postsCollection.find().sort(sortBy, sortDirection).count()
     },
     async deleteAllPost() {
         const deleteAllPost = await postsCollection.deleteMany({})

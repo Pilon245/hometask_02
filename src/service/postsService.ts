@@ -9,11 +9,11 @@ import {ObjectId} from "mongodb";
 
 export const postsService = {
     async findPost(pageNumber: number, pageSize: number, sortBy: string, sortDirection: string)
-        : Promise<PagesPostDbType []>{
+        : Promise<PagesPostDbType>{
         const skip = pageNumber * pageSize
         const posts = await postRepository.findPost(skip, pageSize,sortBy, sortDirection)
-        const totalCount = await postRepository.countPosts()
-        const outPosts: PagesPostDbType [] = {
+        const totalCount = await postRepository.countPosts(sortBy, sortDirection)
+        const outPosts = {
             pagesCount: (Math.ceil(totalCount/pageSize)),
             page: pageNumber,
             pageSize: pageSize,
@@ -57,7 +57,7 @@ export const postsService = {
         const skip = pageNumber * pageSize
         const posts = await postRepository.findPostOnBlog(blogId, skip, pageSize, sortBy, sortDirection)
         if(posts){
-        const totalCount = await postRepository.countPosts()
+        const totalCount = await postRepository.countPosts(sortBy, sortDirection)
         const outPosts: PagesPostDbType [] = {
             pagesCount: (Math.ceil(totalCount/pageSize)),
             page: pageNumber,

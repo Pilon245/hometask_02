@@ -8,7 +8,7 @@ export const blogsService = {
         : Promise<PagesBlogDbType []> {
         let skip = pageNumber * pageSize
         const blogs = await blogsRepository.findBlogs(skip, pageSize,sortBy, sortDirection,searchNameTerm)
-        const totalCount = await blogsRepository.countBlogs()
+        const totalCount = await blogsRepository.countBlogs(sortBy, sortDirection,searchNameTerm)
         const outBlog: PagesBlogDbType [] = {
             pagesCount: (Math.ceil(totalCount/pageSize)),
             page: pageNumber,
