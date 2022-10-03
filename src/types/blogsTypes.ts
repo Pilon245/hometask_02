@@ -8,7 +8,7 @@ export type BlogsDbType = {
     createdAt: string
 }
 
-export type PagesBlogDbType = {
+export type PagesBlogType = {
     pagesCount: number
     page: number
     pageSize: number

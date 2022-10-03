@@ -2,14 +2,22 @@ import {Router, Request, Response} from "express";
 import { blogsRepository} from "../repositories/blogsRepository";
 import {blogsService} from "../service/blogsService";
 import {queryValidation} from "../middlewares/queryValidation";
+import {blogsQueryRepository} from "../repositories/blogsQeuryRepository";
 
 
 
 export const blogsControllers = {
     async getBlogs( req: Request, res: Response) {
         const {pageNumber, pageSize, sortBy, sortDirection, searchNameTerm} = queryValidation(req.query)
-        const foundRepository = await blogsService.findBlogs(pageNumber,pageSize,sortBy,sortDirection,searchNameTerm)
-        return res.status(200).send(foundRepository)
+        const foundBlogs = await blogsQueryRepository.findBlogs({
+            pageNumber,
+            pageSize,
+            sortBy,
+            sortDirection,
+            searchNameTerm
+        })
+
+        return res.status(200).send(foundBlogs)
     },
 
     async getBlogsById(req: Request, res: Response) {

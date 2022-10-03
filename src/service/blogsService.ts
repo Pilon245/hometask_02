@@ -1,15 +1,16 @@
 import {blogsRepository} from "../repositories/blogsRepository";
-import {BlogsDbType, OutputBlogsDbType, PagesBlogDbType} from "../types/blogsTypes"
+import {BlogsDbType, OutputBlogsDbType, PagesBlogType} from "../types/blogsTypes"
 import {ObjectId} from "mongodb";
 import {isMap} from "util/types";
 
 export const blogsService = {
     async findBlogs(pageNumber: number, pageSize: number, sortBy: string, sortDirection: string, searchNameTerm: string)
-        : Promise<PagesBlogDbType> {
+        : Promise<PagesBlogType> {
         let skip = pageNumber * pageSize
-        const blogs = await blogsRepository.findBlogs(skip, pageSize,sortBy, sortDirection,searchNameTerm)
+        const blogs = await blogsRepository.findBlogs(skip, pageSize, sortBy, sortDirection, searchNameTerm)
+
         const totalCount = await blogsRepository.countBlogs(sortBy, sortDirection,searchNameTerm)
-        const outBlog: PagesBlogDbType = {
+        const outBlog: PagesBlogType = {
             pagesCount: (Math.ceil(totalCount/pageSize)),
             page: pageNumber,
             pageSize: pageSize,

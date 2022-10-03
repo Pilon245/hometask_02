@@ -4,7 +4,7 @@ import {postRepository} from "../repositories/postRepository";
 import {PagesPostDbType, PostDbType} from "../types/postsTypes";
 import {blogsRepository} from "../repositories/blogsRepository";
 import {OutputPostDbType} from "../types/postsTypes";
-import {BlogsDbType, PagesBlogDbType} from "../types/blogsTypes";
+import {BlogsDbType, PagesBlogType} from "../types/blogsTypes";
 import {ObjectId} from "mongodb";
 
 export const postsService = {
@@ -57,7 +57,7 @@ export const postsService = {
         const skip = pageNumber * pageSize
         const posts = await postRepository.findPostOnBlog(blogId, skip, pageSize, sortBy, sortDirection)
         if(posts){
-        const totalCount = await postRepository.countPosts(sortBy, sortDirection)
+        const totalCount = await postRepository.countPostsById(blogId,sortBy, sortDirection)
         const outPosts: PagesPostDbType = {
             pagesCount: (Math.ceil(totalCount/pageSize)),
             page: pageNumber,

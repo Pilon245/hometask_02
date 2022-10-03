@@ -1,11 +1,12 @@
 import {blogsCollection, postsCollection} from "./db";
 import {ObjectId} from "mongodb";
 import {PostDbType} from "../types/postsTypes";
+import {BlogsDbType} from "../types/blogsTypes";
 
 export const postRepository = {
     async findPost(skip: number, pageSize: number, sortBy: string, sortDirection: any): Promise<PostDbType []>{
         return postsCollection
-            .find({})
+            .find({blogid:{$regex: ""}})
             .sort(sortBy, sortDirection)
             .skip(skip)
             .limit(pageSize)
@@ -17,13 +18,14 @@ export const postRepository = {
     },
     async findPostOnBlog(blogId: string,skip: number, pageSize: number, sortBy: string, sortDirection: any)
         : Promise<PostDbType [] | null>{
-      let posts: PostDbType [] | null = await postsCollection
-          .find({blogId: {$regex: blogId}})
+      // let posts: PostDbType [] | null = await postsCollection
+        return await postsCollection
+            .find({blogId: {$regex: blogId}})
           .sort(sortBy, sortDirection)
           .skip(skip)
           .limit(pageSize)
           .toArray()
-      return posts
+      // return posts
     },
     async createPost(newPost: PostDbType): Promise<PostDbType>{
         const result = await postsCollection.insertOne(newPost)
@@ -42,13 +44,13 @@ export const postRepository = {
     async countPosts(sortBy: string, sortDirection: any) {
         return await postsCollection.find().sort(sortBy, sortDirection).count()
     },
-    // async countPostsById(blogId: string, sortBy: string, sortDirection: any) {
-    //     const filter: any ={}
-    //     if(blogId){
-    //         filter.blogId = {$regex: blogId}
-    //     }
-    //     return await postsCollection.find({_id: new ObjectId(blogId)}).sort(sortBy, sortDirection).count()
-    // },
+    async countPostsById(blogId: string, sortBy: string, sortDirection: any) {
+        const filter: any ={}
+        if(blogId){
+            filter.blogId = {$regex: blogId}
+        }
+        return await postsCollection.find({blogId:blogId}).sort(sortBy, sortDirection).count()
+    },
     async deleteAllPost() {
         const deleteAllPost = await postsCollection.deleteMany({})
         return true
