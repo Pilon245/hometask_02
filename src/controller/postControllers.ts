@@ -6,9 +6,9 @@ import {blogsService} from "../service/blogsService";
 
 export const postControllers = {
     async getPost( req: Request, res: Response) {
-        const pageNumber = req.query.pageNumber ? 1 : 1
-        const pageSize = req.query.pageSize ? 10 : 10
-        const sortBy = req.query.sortBy ? "createdAt" : "createdAt"
+        const pageNumber = req.query.pageNumber ? +req.query.pageNumber : 1
+        const pageSize = req.query.pageSize ? +req.query.pageSize : 10
+        const sortBy = req.query.sortBy || "createdAt"
         const sortDirection = req.query.sortDirection === "asc" ? "asc" : "desc"
         const foundRepository = await postsService.findPost(pageNumber,pageSize,sortBy,sortDirection)
         return res.status(200).send(foundRepository)
@@ -22,9 +22,9 @@ export const postControllers = {
         }
     },
     async getPostOnBlog(req: Request, res: Response) {
-        const pageNumber = req.query.pageNumber ? 1 : 1
-        const pageSize = req.query.pageSize ? 10 : 10
-        const sortBy = req.query.sortBy ? "createdAt" : "createdAt"
+        const pageNumber = req.query.pageNumber ? +req.query.pageNumber : 1
+        const pageSize = req.query.pageSize ? +req.query.pageSize : 10
+        const sortBy = req.query.sortBy || "createdAt"
         const sortDirection = req.query.sortDirection === "asc" ? "asc" : "desc"
       const posts = await postsService.findPostOnBlog(
           req.params.blogId,

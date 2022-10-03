@@ -47,6 +47,6 @@ startApp()
 // }
 // }
 // console.log(getName(blogsService.findBlogs(1,10),{searchNameTerm: 'name', direction: 'asc'}))
-let skip = (Math.ceil(11/5)-1)*5
+let skip = (Math.ceil(64/5)-1)
 // console.log(skip)
 

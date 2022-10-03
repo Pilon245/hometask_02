@@ -15,7 +15,7 @@ export const postsService = {
         const totalCount = await postRepository.countPosts()
         const outPosts: PagesPostDbType [] = {
             pagesCount: (Math.ceil(totalCount/pageSize)),
-            page: (Math.ceil(totalCount/pageSize)-1),
+            page: pageNumber,
             pageSize: pageSize,
             totalCount: totalCount,
             items: posts.map(p => (
@@ -60,7 +60,7 @@ export const postsService = {
         const totalCount = await postRepository.countPosts()
         const outPosts: PagesPostDbType [] = {
             pagesCount: (Math.ceil(totalCount/pageSize)),
-            page: (Math.ceil(totalCount/pageSize)-1),
+            page: pageNumber,
             pageSize: pageSize,
             totalCount: totalCount,
             items: posts.map(p => (

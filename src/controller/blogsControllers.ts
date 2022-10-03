@@ -6,11 +6,11 @@ import {blogsService} from "../service/blogsService";
 
 export const blogsControllers = {
     async getBlogs( req: Request, res: Response) {
-        const pageNumber = req.query.pageNumber ? 1 : 1
-        const pageSize = req.query.pageSize ? 10 : 10
-        const sortBy = req.query.sortBy ? "createdAt" : "createdAt"
+        const pageNumber = req.query.pageNumber ? +req.query.pageNumber : 1
+        const pageSize = req.query.pageSize ? +req.query.pageSize : 10
+        const sortBy = req.query.sortBy || "createdAt"
         const sortDirection = req.query.sortDirection === "asc" ? "asc" : "desc"
-        const searchNameTerm = req.query.searchNameTerm ? "": ""
+        const searchNameTerm = req.query.searchNameTerm?.toString() || ""
         const foundRepository = await blogsService.findBlogs(pageNumber,pageSize,sortBy,sortDirection,searchNameTerm)
         return res.status(200).send(foundRepository)
     },
