@@ -11,7 +11,7 @@ import {getSkipNumber} from "../helpers/getSkipNumber";
 export const postsService = {
     async findPost(pageNumber: number, pageSize: number, sortBy: string, sortDirection: string)
         : Promise<PagesPostDbType> {
-        const skip = pageNumber * pageSize
+        const skip = getSkipNumber(pageNumber, pageSize)
         const posts = await postRepository.findPost(skip, pageSize, sortBy, sortDirection)
         const totalCount = await postRepository.countPosts(sortBy, sortDirection)
         const outPosts: PagesPostDbType = {
