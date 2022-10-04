@@ -1,7 +1,6 @@
 import {blogsRepository} from "../repositories/blogsRepository";
 import {BlogsDbType, OutputBlogsDbType, PagesBlogType} from "../types/blogsTypes"
 import {ObjectId} from "mongodb";
-import {isMap} from "util/types";
 
 export const blogsService = {
     async findBlogs(pageNumber: number, pageSize: number, sortBy: string, sortDirection: string, searchNameTerm: string)

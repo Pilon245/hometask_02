@@ -20,7 +20,7 @@ export const blogsRepository = {
         return newBlogs
     },
     async updateBlogs(id: string,name: string, youtubeUrl: string) : Promise<boolean> {
-        const result = await blogsCollection.updateOne({_id:new ObjectId(id)}, {$set: {name:name}})
+        const result = await blogsCollection.updateOne({_id:new ObjectId(id)}, {$set: {name:name, youtubeUrl: youtubeUrl}})
         return result.matchedCount === 1
     },
     async deleteBlogs(id: string) : Promise<boolean> {

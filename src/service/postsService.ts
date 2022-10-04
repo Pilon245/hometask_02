@@ -1,20 +1,18 @@
-// import {blogs} from "./blogsRepository";
-// import { PostDbType, postsCollection} from "./db";
-import {postRepository} from "../repositories/postRepository";
-import {PagesPostDbType, PostDbType} from "../types/postsTypes";
+import {postsRepository} from "../repositories/postsRepository";
+import {PagesPostType, PostDbType} from "../types/postsTypes";
 import {blogsRepository} from "../repositories/blogsRepository";
 import {OutputPostDbType} from "../types/postsTypes";
-import {BlogsDbType, PagesBlogType} from "../types/blogsTypes";
+import {BlogsDbType} from "../types/blogsTypes";
 import {ObjectId} from "mongodb";
 import {getSkipNumber} from "../helpers/getSkipNumber";
 
 export const postsService = {
     async findPost(pageNumber: number, pageSize: number, sortBy: string, sortDirection: string)
-        : Promise<PagesPostDbType> {
+        : Promise<PagesPostType> {
         const skip = getSkipNumber(pageNumber, pageSize)
-        const posts = await postRepository.findPost(skip, pageSize, sortBy, sortDirection)
-        const totalCount = await postRepository.countPosts(sortBy, sortDirection)
-        const outPosts: PagesPostDbType = {
+        const posts = await postsRepository.findPost(skip, pageSize, sortBy, sortDirection)
+        const totalCount = await postsRepository.countPosts(sortBy, sortDirection)
+        const outPosts: PagesPostType = {
             pagesCount: (Math.ceil(totalCount / pageSize)),
             page: pageNumber,
             pageSize: pageSize,
@@ -33,7 +31,7 @@ export const postsService = {
         return outPosts
     },
     async findPostById(id: string): Promise<OutputPostDbType | null> {
-        const post = await postRepository.findPostById(id)
+        const post = await postsRepository.findPostById(id)
         if (post) {
             const outPost: OutputPostDbType = {
                 id: post._id,
@@ -55,14 +53,13 @@ export const postsService = {
         pageSize: number,
         sortBy: string,
         sortDirection: string)
-        : Promise<PagesPostDbType | null> {
+        : Promise<PagesPostType | null> {
         // ctrl + alt + l
         const skip = getSkipNumber(pageNumber, pageSize)
-        const posts = await postRepository.findPostOnBlog(blogId, skip, pageSize, sortBy, sortDirection)
-        console.log(posts)
+        const posts = await postsRepository.findPostOnBlog(blogId, skip, pageSize, sortBy, sortDirection)
         if (posts) {
-            const totalCount = await postRepository.countPostsByBlogId(blogId, sortBy, sortDirection)
-            const outPosts: PagesPostDbType = {
+            const totalCount = await postsRepository.countPostsByBlogId(blogId, sortBy, sortDirection)
+            const outPosts: PagesPostType = {
                 pagesCount: (Math.ceil(totalCount / pageSize)),
                 page: pageNumber,
                 pageSize: pageSize,
@@ -97,7 +94,7 @@ export const postsService = {
             createdAt: new Date().toISOString()
 
         }
-        const createdPost = await postRepository.createPost(newPost)
+        const createdPost = await postsRepository.createPost(newPost)
         const outNewPost: OutputPostDbType = {
             id: createdPost._id,
             title: createdPost.title,
@@ -111,13 +108,13 @@ export const postsService = {
         return outNewPost
     },
     async updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string) {
-        return await postRepository.updatePost(id, title, shortDescription, content, blogId)
+        return await postsRepository.updatePost(id, title, shortDescription, content, blogId)
     },
     async deletePost(id: string) {
-        return await postRepository.deletePost(id)
+        return await postsRepository.deletePost(id)
     },
     async deleteAllPost() {
-        return await postRepository.deleteAllPost()
+        return await postsRepository.deleteAllPost()
     }
 
 }

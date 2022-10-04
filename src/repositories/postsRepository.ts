@@ -1,9 +1,8 @@
-import {blogsCollection, postsCollection} from "./db";
+import {postsCollection} from "./db";
 import {ObjectId} from "mongodb";
 import {PostDbType} from "../types/postsTypes";
-import {BlogsDbType} from "../types/blogsTypes";
 
-export const postRepository = {
+export const postsRepository = {
     async findPost(skip: number, pageSize: number, sortBy: string, sortDirection: any): Promise<PostDbType []> {
         return postsCollection
             .find({})
@@ -18,15 +17,12 @@ export const postRepository = {
     },
     async findPostOnBlog(blogId: string, skip: number, pageSize: number, sortBy: string, sortDirection: any)
         : Promise<PostDbType [] | null> {
-        // let posts: PostDbType [] | null = await postsCollection
-        console.log(blogId)
         return await postsCollection
             .find({blogId: blogId})
             .sort(sortBy, sortDirection)
             .skip(skip)
             .limit(pageSize)
             .toArray()
-        // return posts
     },
     async createPost(newPost: PostDbType): Promise<PostDbType> {
         const result = await postsCollection.insertOne(newPost)
@@ -57,5 +53,4 @@ export const postRepository = {
         const deleteAllPost = await postsCollection.deleteMany({})
         return true
     }
-
 }

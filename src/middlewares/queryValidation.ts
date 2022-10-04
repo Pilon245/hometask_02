@@ -1,24 +1,15 @@
-import {Request, Response} from "express";
-
-
-// export const blogsQueryValidation = {
-//     pageNumber(req: Request, res: Response) {return req.query.pageNumber ? +req.query.pageNumber : 1},
-//     pageSize(req: Request, res: Response) {return req.query.pageSize ? +req.query.pageSize : 10},
-//     sortBy(req: Request, res: Response) {return req.query.sortBy || "createdAt"},
-//     sortDirection(req: Request, res: Response) {return req.query.sortDirection === "asc" ? "asc" : "desc"},
-//     searchNameTerm(req: Request, res: Response) {return req.query.searchNameTerm?.toString() || ""}
-// }
-
 export enum SortDirection {
-    Asc = 'asc',
-    Desc = 'desc'
+    asc = 'asc',
+    desc = 'desc'
 }
 
 type QueryValidationResult = {
     pageNumber: number,
     pageSize: number, sortBy: string,
     sortDirection: SortDirection,
-    searchNameTerm: string
+    searchNameTerm: string,
+    searchLoginTerm: string,
+    searchEmailTerm: string
 }
 
 export const queryValidation  = (query: any): QueryValidationResult => {
@@ -27,5 +18,7 @@ export const queryValidation  = (query: any): QueryValidationResult => {
     const sortBy = typeof query.sortBy === "string" ? query.sortBy : "createdAt"
     const sortDirection = typeof query.sortDirection === "string" ? query.sortDirection : "desc"
     const searchNameTerm  = typeof query.searchNameTerm === "string" ? query.searchNameTerm?.toString() : ""
-    return {pageNumber, pageSize, sortBy, sortDirection, searchNameTerm}
+    const searchLoginTerm = typeof query.searchLoginTerm === "string" ? query.searchLoginTerm?.toString() : ""
+    const searchEmailTerm = typeof query.searchEmailTerm === "string" ? query.searchEmailTerm?.toString() : ""
+    return {pageNumber, pageSize, sortBy, sortDirection, searchNameTerm, searchLoginTerm, searchEmailTerm}
 }

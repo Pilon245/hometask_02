@@ -1,5 +1,4 @@
-import {Router, Request, Response} from "express";
-import { blogsRepository} from "../repositories/blogsRepository";
+import {Request, Response} from "express";
 import {blogsService} from "../service/blogsService";
 import {queryValidation} from "../middlewares/queryValidation";
 import {blogsQueryRepository} from "../repositories/blogsQeuryRepository";
@@ -22,7 +21,6 @@ export const blogsControllers = {
 
     async getBlogsById(req: Request, res: Response) {
         const blog = await blogsService.findBlogsById(req.params.id)
-        console.log(blog)
         if(blog) {
             res.status(200).send(blog)
         } else {
