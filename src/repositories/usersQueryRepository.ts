@@ -16,14 +16,15 @@ type FindUsersPayload = {
 export const usersQueryRepository = {
     async findUsers({searchLoginTerm, searchEmailTerm, sortDirection, sortBy, pageSize, pageNumber}: FindUsersPayload)
         : Promise<PagesUsersType> {
+        const filter = {login: {$regex: searchLoginTerm, $options: "(?i)a(?-i)cme"}, email: {$regex: searchEmailTerm, $options: "(?i)a(?-i)cme"}}
         const users = await usersCollection
-            .find({login: {$regex: searchLoginTerm}, email: {$regex: searchEmailTerm}})
+            .find(filter)
             .sort(sortBy, sortDirection === 'asc' ? 1 : -1)
             .skip(getSkipNumber(pageNumber, pageSize))
             .limit(pageSize)
             .toArray()
 
-        const totalCount = await usersCollection.countDocuments()
+        const totalCount = await usersCollection.countDocuments(filter)
 
         return  {
             pagesCount: getPagesCounts(totalCount, pageSize),

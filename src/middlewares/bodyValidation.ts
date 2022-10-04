@@ -36,16 +36,20 @@ const contentValidation = body("content")
 const loginValidation = body("login")
         .isString().withMessage("Field 'login' is not a string.")
         .notEmpty({ignore_whitespace: true}).withMessage("Field 'title' cannot be empty.")
+        .isLength({min: 3, max: 10}).withMessage("Min length of field 'content' 3 max 10.")
 const passwordValidation= body("password")
         .isString().withMessage("Field 'login' is not a string.")
         .notEmpty({ignore_whitespace: true}).withMessage("Field 'title' cannot be empty.")
+        .isLength({min: 6, max: 20}).withMessage("Min length of field 'content' 6 max 20.")
 const emailValidation = body("email")
         .isString().withMessage("Field 'email' is not a string.")
         .notEmpty({ignore_whitespace: true}).withMessage("Field 'title' cannot be empty.")
-
+        .isURL().withMessage("Field 'youtubeUrl' is invalid.")// патеран надо дабвить
 export const blogsValidation = [nameValidation, youtubeUrlValition]
+export const postsOnBlogValidation = [titleValidation, shortDescriptionValidation, contentValidation]
 
 export const postsValidation = [titleValidation, shortDescriptionValidation, contentValidation, blogIdValidation]
+
 
 export const usersValidation = [loginValidation, passwordValidation, emailValidation]
 
