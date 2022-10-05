@@ -35,16 +35,16 @@ const contentValidation = body("content")
     .isLength({min: 1, max: 1000}).withMessage("Min length of field 'content' 1 max 1000.")
 const loginValidation = body("login")
         .isString().withMessage("Field 'login' is not a string.")
-        .notEmpty({ignore_whitespace: true}).withMessage("Field 'title' cannot be empty.")
-        .isLength({min: 3, max: 10}).withMessage("Min length of field 'content' 3 max 10.")
+        .notEmpty({ignore_whitespace: true}).withMessage("Field 'login' cannot be empty.")
+        .isLength({min: 3, max: 10}).withMessage("Min length of field 'login' 3 max 10.")
 const passwordValidation= body("password")
-        .isString().withMessage("Field 'login' is not a string.")
-        .notEmpty({ignore_whitespace: true}).withMessage("Field 'title' cannot be empty.")
-        .isLength({min: 6, max: 20}).withMessage("Min length of field 'content' 6 max 20.")
+        .isString().withMessage("Field 'password' is not a string.")
+        .notEmpty({ignore_whitespace: true}).withMessage("Field 'password' cannot be empty.")
+        .isLength({min: 6, max: 20}).withMessage("Min length of field 'password' 6 max 20.")
 const emailValidation = body("email")
         .isString().withMessage("Field 'email' is not a string.")
-        .notEmpty({ignore_whitespace: true}).withMessage("Field 'title' cannot be empty.")
-        .isURL().withMessage("Field 'youtubeUrl' is invalid.")// патеран надо дабвить
+        .notEmpty({ignore_whitespace: true}).withMessage("Field 'email' cannot be empty.")
+        .matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/).withMessage("Field 'email' is invalid.")
 export const blogsValidation = [nameValidation, youtubeUrlValition]
 export const postsOnBlogValidation = [titleValidation, shortDescriptionValidation, contentValidation]
 

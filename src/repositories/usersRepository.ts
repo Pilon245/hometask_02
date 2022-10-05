@@ -4,8 +4,8 @@ import {UsersDbType} from "../types/usersTypes";
 
 export const usersRepository = {
     async findUsers(login: string, password: string){
-     const loginUser = await usersCollection.find({login: login, password: password})
-        return loginUser
+     const result = await usersCollection.findOne({login: login, password: password})
+     return result
     },
     async createUsers(newUsers: UsersDbType): Promise<UsersDbType> {
         await usersCollection.insertOne(newUsers)
