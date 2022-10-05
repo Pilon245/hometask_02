@@ -17,7 +17,7 @@ type FindUsersPayload = {
 export const usersQueryRepository = {
     async findUsers({searchLoginTerm, searchEmailTerm, sortDirection, sortBy, pageSize, pageNumber}: FindUsersPayload)
         : Promise<PagesUsersType> {
-        const filter = {login: {$regex: searchLoginTerm, $options: "(?i)a(?-i)cme"}, email: {$regex: searchEmailTerm, $options: "(?i)a(?-i)cme"}}
+        const filter = {$or: [{login: {$regex: searchLoginTerm, $options: "(?i)a(?-i)cme"}}, {email: {$regex: searchEmailTerm, $options: "(?i)a(?-i)cme"}}]}
         const users = await usersCollection
             .find(filter)
             .sort(sortBy, sortDirection === 'asc' ? 1 : -1)

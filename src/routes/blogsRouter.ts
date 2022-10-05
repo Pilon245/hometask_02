@@ -3,7 +3,7 @@ import {blogsControllers} from "../controller/blogsControllers";
 import {authMiddleware} from "../middlewares/authMiddleware";
 import {inputBodyValidation, inputQueryValidation} from "../middlewares/inputValidation";
 import {postControllers} from "../controller/postControllers";
-import {blogsValidation, postsOnBlogValidation, postsValidation} from "../middlewares/bodyValidation";
+import {blogsValidation, postsOnBlogValidation} from "../middlewares/bodyValidation";
 import {postOnblogIdValodation} from "../middlewares/paramsValidation";
 
 export const blogsRouter = Router({})

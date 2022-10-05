@@ -14,8 +14,7 @@ app.use (express.json())
 
 const port = process.env.PORT || 5002
 
-app.use("/api",blogsRouter,postRouter,usersRouter,authRouter)
-app.use('/api',delRouter)
+app.use("/api",blogsRouter,postRouter,delRouter,usersRouter,authRouter)
 
 const startApp = async () => {
     await runDb()

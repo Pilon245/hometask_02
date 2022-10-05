@@ -3,9 +3,13 @@ import {ObjectId} from "mongodb";
 import {UsersDbType} from "../types/usersTypes";
 
 export const usersRepository = {
-    async findUsers(login: string, password: string){
+    async findUsers(login: string, password: string):Promise<boolean>{
      const result = await usersCollection.findOne({login: login, password: password})
-     return result
+        if(result){
+            return true
+        }else {
+            return false
+        }
     },
     async createUsers(newUsers: UsersDbType): Promise<UsersDbType> {
         await usersCollection.insertOne(newUsers)
