@@ -16,7 +16,6 @@ export const usersService = {
         const outCreateUser: OutputUsersDbType = {
             id: createdUser._id,
             login: createdUser.login,
-            password: createdUser.password,
             email: createdUser.email,
             createdAt: createdUser.createdAt
         }

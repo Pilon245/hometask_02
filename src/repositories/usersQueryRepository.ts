@@ -2,6 +2,7 @@ import {SortDirection} from "../middlewares/queryValidation";
 import {usersCollection} from "./db";
 import {getPagesCounts, getSkipNumber} from "../helpers/getSkipNumber";
 import {PagesUsersType} from "../types/usersTypes";
+import {PagesBlogType} from "../types/blogsTypes";
 
 type FindUsersPayload = {
     pageSize: number,
@@ -35,7 +36,6 @@ export const usersQueryRepository = {
                 {
                     id: u._id,
                     login: u.login,
-                    password: u.password,
                     email: u.email,
                     createdAt: u.createdAt
                 }))}

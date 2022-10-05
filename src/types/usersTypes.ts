@@ -19,7 +19,6 @@ export type PagesUsersType = {
 export type OutputUsersDbType = {
         id: ObjectId
         login: string
-        password: string
         email: string
         createdAt: string
 }
