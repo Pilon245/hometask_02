@@ -24,7 +24,7 @@ export const usersRepository = {
     // },
     //TODO посмотреть запросы монго запросы
     async findLoginOrEmail(LoginOrEmailL: string) {
-        const user = await usersCollection.findOne({$or: [{email: LoginOrEmailL}, {login: LoginOrEmailL}]})
+        const user = await usersCollection.findOne({login: LoginOrEmailL})
         return user
     },
     async createUsers(newUsers: UsersDbType): Promise<UsersDbType> {

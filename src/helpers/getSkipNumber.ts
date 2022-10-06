@@ -6,8 +6,8 @@ export const getSkipNumber = (pageNumber: number,pageSize: number) => {
 
 export const getPagesCounts= (totalCount: number, pageSize: number) => {return (Math.ceil(totalCount/pageSize))}
 //TODO перенести SoltOrRounds в переменную окружения
-export const generatePasswordForDb = async (password: string, ) => {
-        const hash = await bcrypt.hash(password, 10)
-        // console.log('hash' + hash)
+export const _generatePasswordForDb = async (password: string, ) => {
+        const salt = await bcrypt.genSalt(6)
+        const hash = await bcrypt.hash(password, salt)
         return hash
     }

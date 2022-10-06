@@ -2,7 +2,7 @@ import {ObjectId} from "mongodb";
 import {OutputUsersDbType, UsersDbType} from "../types/usersTypes";
 import {usersRepository} from "../repositories/usersRepository";
 import bcrypt from "bcrypt";
-import {generatePasswordForDb} from "../helpers/getSkipNumber";
+import {_generatePasswordForDb} from "../helpers/getSkipNumber";
 
 export const usersService = {
     async checkCredentials(loginOrEmail: string, password: string){
@@ -11,24 +11,31 @@ export const usersService = {
             return false
         }
         console.log("login",password)
-        const passwordHash = await generatePasswordForDb(password)
+        // const passwordHash = await _generatePasswordForDb(password)
+        const passwordHash = await this._generatePasswordForDb(password)
         console.log("auth", passwordHash)
-        if (user.passwordHash !== passwordHash) {
+        // if (user.passwordHash !== passwordHash) {
+        const isValid = await bcrypt.compare(password, user.passwordHash)
+        console.log("isValid", isValid)
+        if (!isValid) {
             return false
         }
         return true
     },
+    async _generatePasswordForDb(password: string, ) {
+        const salt = await bcrypt.genSalt(6)
+        const hash = await bcrypt.hash(password, salt)
+        return hash
+    },
     async createUsers(login: string,password: string, email: string): Promise<OutputUsersDbType> {
-        // const passwordSalt = await bcrypt.genSalt(10)
         console.log("create password",password)
-        const passwordHash = await generatePasswordForDb(password)
+        const passwordHash = await this._generatePasswordForDb(password)
         console.log("create Hash",passwordHash)
         const newUsers: UsersDbType = {
             _id: new ObjectId(),
             id: String(+new Date()),
             login: login,
-            passwordHash: passwordHash,
-            // passwordSalt: passwordSalt,
+            passwordHash,
             email: email,
             createdAt: new Date().toISOString()
         }
