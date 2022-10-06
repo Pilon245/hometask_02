@@ -4,7 +4,8 @@ export type UsersDbType = {
         _id: ObjectId
         id: string
         login: string
-        password: string
+        passwordHash: any
+        // passwordSalt: any
         email: string
         createdAt: string
 }

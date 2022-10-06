@@ -45,11 +45,11 @@ const emailValidation = body("email")
         .isString().withMessage("Field 'email' is not a string.")
         .notEmpty({ignore_whitespace: true}).withMessage("Field 'email' cannot be empty.")
         .matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/).withMessage("Field 'email' is invalid.")
+
 export const blogsValidation = [nameValidation, youtubeUrlValition]
 export const postsOnBlogValidation = [titleValidation, shortDescriptionValidation, contentValidation]
 
 export const postsValidation = [titleValidation, shortDescriptionValidation, contentValidation, blogIdValidation]
-
 
 export const usersValidation = [loginValidation, passwordValidation, emailValidation]
 

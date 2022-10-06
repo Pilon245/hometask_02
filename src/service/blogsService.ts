@@ -3,26 +3,26 @@ import {BlogsDbType, OutputBlogsDbType, PagesBlogType} from "../types/blogsTypes
 import {ObjectId} from "mongodb";
 
 export const blogsService = {
-    async findBlogs(pageNumber: number, pageSize: number, sortBy: string, sortDirection: string, searchNameTerm: string)
-        : Promise<PagesBlogType> {
-        let skip = pageNumber * pageSize
-        const blogs = await blogsRepository.findBlogs(skip, pageSize, sortBy, sortDirection, searchNameTerm)
-
-        const totalCount = await blogsRepository.countBlogs(sortBy, sortDirection,searchNameTerm)
-        const outBlog: PagesBlogType = {
-            pagesCount: (Math.ceil(totalCount/pageSize)),
-            page: pageNumber,
-            pageSize: pageSize,
-            totalCount: totalCount,
-            items: blogs.map(b => (
-            {
-                id: b._id,
-                name: b.name,
-                youtubeUrl: b.youtubeUrl,
-                createdAt: b.createdAt
-        }))}
-            return outBlog
-    },
+    // async findBlogs(pageNumber: number, pageSize: number, sortBy: string, sortDirection: string, searchNameTerm: string)
+    //     : Promise<PagesBlogType> {
+    //     let skip = pageNumber * pageSize
+    //     const blogs = await blogsRepository.findBlogs(skip, pageSize, sortBy, sortDirection, searchNameTerm)
+    //
+    //     const totalCount = await blogsRepository.countBlogs(sortBy, sortDirection,searchNameTerm)
+    //     const outBlog: PagesBlogType = {
+    //         pagesCount: (Math.ceil(totalCount/pageSize)),
+    //         page: pageNumber,
+    //         pageSize: pageSize,
+    //         totalCount: totalCount,
+    //         items: blogs.map(b => (
+    //         {
+    //             id: b._id,
+    //             name: b.name,
+    //             youtubeUrl: b.youtubeUrl,
+    //             createdAt: b.createdAt
+    //     }))}
+    //         return outBlog
+    // },
     async findBlogsById(id: string): Promise<OutputBlogsDbType | null> {
         const blog =  await blogsRepository.findBlogsById(id)
         if(blog){

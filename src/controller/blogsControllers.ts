@@ -15,10 +15,8 @@ export const blogsControllers = {
             sortDirection,
             searchNameTerm
         })
-
         return res.status(200).send(foundBlogs)
     },
-
     async getBlogsById(req: Request, res: Response) {
         const blog = await blogsService.findBlogsById(req.params.id)
         if(blog) {
