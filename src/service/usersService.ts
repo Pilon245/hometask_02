@@ -10,10 +10,8 @@ export const usersService = {
         if (!user) {
             return false
         }
-        console.log("login",password)
         // const passwordHash = await _generatePasswordForDb(password)
         const passwordHash = await this._generatePasswordForDb(password)
-        console.log("auth", passwordHash)
         // if (user.passwordHash !== passwordHash) {
         const isValid = await bcrypt.compare(password, user.passwordHash)
         console.log("isValid", isValid)
@@ -23,8 +21,8 @@ export const usersService = {
         return true
     },
     async _generatePasswordForDb(password: string, ) {
-        const salt = await bcrypt.genSalt(6)
-        const hash = await bcrypt.hash(password, salt)
+        // const salt = await bcrypt.genSalt(6)
+        const hash = await bcrypt.hash(password, 6)
         return hash
     },
     async createUsers(login: string,password: string, email: string): Promise<OutputUsersDbType> {

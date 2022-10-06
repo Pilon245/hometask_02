@@ -26,6 +26,7 @@ export const queryValidation  = (query: any): QueryValidationResult => {
     const parsedPageSize = parseInt(pageSize, 10 )
     if (!pageSize || !parsedPageSize|| parsedPageSize <= 0) pageSize = defaultPageSize
     pageSize = parseInt(pageSize, 10 )
+
     const sortBy = typeof query.sortBy === "string" ? query.sortBy : "createdAt"
     const sortDirection = typeof query.sortDirection === "string" ? query.sortDirection : "desc"
     const searchNameTerm  = typeof query.searchNameTerm === "string" ? query.searchNameTerm?.toString() : ""
