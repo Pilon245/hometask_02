@@ -1,5 +1,8 @@
 import {Response, Request, NextFunction} from 'express';
 import {validationResult} from "express-validator";
+import {jwtService} from "../service/jwtService";
+import {usersService} from "../service/usersService";
+import {usersRepository} from "../repositories/usersRepository";
 
 export const inputBodyValidation = (req: Request, res: Response, next: NextFunction)  => {
     const errors = validationResult(req)
@@ -28,6 +31,21 @@ export const inputQueryValidation = (req: Request, res: Response, next: NextFunc
     } else {
         next()
     }
+}
+export const authTokenMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+    if (!req.headers.authorization) {
+        res.send(401)
+        return
+    }
+
+    const token = req.headers.authorization.split(' ')[1]
+
+    const userId = await jwtService.getUserIdByToken(token)
+    if (userId) {
+        req.user = await usersRepository.findUserById(userId)
+            next()
+    }
+    res.send(401)
 }
 
 

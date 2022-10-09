@@ -5,6 +5,24 @@ import bcrypt from "bcrypt";
 import {_generatePasswordForDb} from "../helpers/getSkipNumber";
 
 export const usersService = {
+    // async checkCredentials(loginOrEmail: string, password: string){
+    //     const user = await usersRepository.findLoginOrEmail(loginOrEmail)
+    //     if (!user) {
+    //         return false
+    //     }
+    //     // const passwordHash = await _generatePasswordForDb(password)
+    //     const passwordHash = await this._generatePasswordForDb(password)
+    //     // if (user.passwordHash !== passwordHash) {
+    //     const isValid = await bcrypt.compare(password, user.passwordHash)
+    //     console.log("isValid", isValid)
+    //     if (!isValid) {
+    //         return false
+    //     }},
+    async findUserById(id: string, ) {
+        // const salt = await bcrypt.genSalt(6)
+        const user = await usersRepository.findUserById(new ObjectId(id))
+        return user
+    },
     async checkCredentials(loginOrEmail: string, password: string){
         const user = await usersRepository.findLoginOrEmail(loginOrEmail)
         if (!user) {
@@ -18,7 +36,7 @@ export const usersService = {
         if (!isValid) {
             return false
         }
-        return true
+        return user
     },
     async _generatePasswordForDb(password: string, ) {
         // const salt = await bcrypt.genSalt(6)

@@ -12,6 +12,10 @@ export const usersRepository = {
             return false
         }
     },
+    async findUserById(id: ObjectId) {
+        const result = await usersCollection.findOne({_id: new  ObjectId(id)})
+        return  result
+    },
     // async testTwoOr(){
     //     const LoginOrEmailL = '123'
     //     const user = await usersCollection.findOne({
