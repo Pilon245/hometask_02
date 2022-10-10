@@ -18,6 +18,7 @@ const port = process.env.PORT || 5002
 app.use("/api",blogsRouter,postRouter,delRouter,usersRouter,authRouter,commentsRouter)
 
 const startApp = async () => {
+    console.log("ff", process.env)
     await runDb()
     app.listen(port, () => {
         console.log(`Server stared on port ${port}`)
