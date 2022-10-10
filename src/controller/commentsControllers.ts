@@ -34,8 +34,6 @@ export const commentsControllers = {
     },
     async updateComment(req: Request, res: Response) {
         const isUpdate = await commentsService.updateComment(req.params.commentId, req.body.content )
-        console.log("id", req.params.commentId)
-        console.log("isUpdate", isUpdate)
         if (isUpdate) {
             res.send(204)
         } else {

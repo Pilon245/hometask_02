@@ -8,6 +8,7 @@ import {commentIdValidation} from "../middlewares/paramsValidation";
 export const commentsRouter = Router({})
 
 commentsRouter.get('/comments/:id', commentsControllers.getCommentById)
-commentsRouter.put('/comments/:commentId', authTokenMiddleware, //commentIdValidation, inputQueryValidation,
+commentsRouter.put('/comments/:commentId', authTokenMiddleware, commentIdValidation, inputQueryValidation,
     commentOnPostValidation,inputBodyValidation, commentsControllers.updateComment)
-commentsRouter.delete('/comments/:commentId', authTokenMiddleware,commentsControllers.deleteComment)
+commentsRouter.delete('/comments/:commentId', authTokenMiddleware,commentIdValidation, inputQueryValidation,
+    commentsControllers.deleteComment)

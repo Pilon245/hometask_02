@@ -19,7 +19,7 @@ const postsIdValidation = param("postsId")
         }
         return true
     })
-const commentsIdValidation = param("commentsId")
+const commentsIdValidation = param("commentId")
     .custom(async (value) => {
         const comment: any = await commentsRepository.findCommentById(value)
         if(!comment){
