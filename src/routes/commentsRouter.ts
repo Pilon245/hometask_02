@@ -3,7 +3,7 @@ import {authTokenMiddleware, inputBodyValidation} from "../middlewares/inputVali
 import {authControllers} from "../controller/authControllers";
 import {authValidation} from "../middlewares/bodyValidation";
 
-export const authRouter = Router({})
+export const commentsRouter = Router({})
 
-authRouter.get('/auth/me',authTokenMiddleware, authControllers.myAccount)
-authRouter.post('/auth/login',authValidation,inputBodyValidation,authControllers.singInAccount )
+commentsRouter.get('/',authTokenMiddleware, authControllers.myAccount)
+commentsRouter.post('/auth/login',authControllers.singInAccount, authValidation,inputBodyValidation)

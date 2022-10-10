@@ -19,7 +19,7 @@ export const postsService = {
             totalCount: totalCount,
             items: posts.map(p => (
                 {
-                    id: p._id,
+                    id: p.id,
                     title: p.title,
                     shortDescription: p.shortDescription,
                     content: p.content,
@@ -34,7 +34,7 @@ export const postsService = {
         const post = await postsRepository.findPostById(id)
         if (post) {
             const outPost: OutputPostDbType = {
-                id: post._id,
+                id: post.id,
                 title: post.title,
                 shortDescription: post.shortDescription,
                 content: post.content,
@@ -66,7 +66,7 @@ export const postsService = {
                 totalCount: totalCount,
                 items: posts.map(p => (
                     {
-                        id: p._id,
+                        id: p.id,
                         title: p.title,
                         shortDescription: p.shortDescription,
                         content: p.content,
@@ -84,7 +84,6 @@ export const postsService = {
         : Promise<OutputPostDbType> {
         const blogName: BlogsDbType | null = await blogsRepository.findBlogsById(blogId)
         const newPost: PostDbType = {
-            _id: new ObjectId(),
             id: String(+(new Date())),
             title: title,
             shortDescription: shortDescription,
@@ -96,7 +95,7 @@ export const postsService = {
         }
         const createdPost = await postsRepository.createPost(newPost)
         const outNewPost: OutputPostDbType = {
-            id: createdPost._id,
+            id: createdPost.id,
             title: createdPost.title,
             shortDescription: createdPost.shortDescription,
             content: createdPost.content,

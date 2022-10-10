@@ -12,7 +12,7 @@ type FindPostsPayload = {
 
 export const postsQeuryRepository = {
     async findPost({pageSize, pageNumber, sortBy, sortDirection}: FindPostsPayload)
-        : Promise<PagesPostType> {
+         {
         const posts = await postsCollection
             .find({})
             .sort(sortBy, sortDirection === 'asc' ? 1 : -1)
@@ -29,7 +29,7 @@ export const postsQeuryRepository = {
             totalCount: totalCount,
             items: posts.map(p => (
                 {
-                    id: p._id,
+                    id: p.id,
                     title: p.title,
                     shortDescription: p.shortDescription,
                     content: p.content,
@@ -40,7 +40,7 @@ export const postsQeuryRepository = {
         }
     },
     async findPostOnBlog(blogId: string,{pageSize, pageNumber, sortBy, sortDirection}: FindPostsPayload)
-    :Promise <PagesPostType | null > {
+    {
             const posts =  await postsCollection
                 .find({blogId: blogId})
                 .sort(sortBy, sortDirection)
@@ -57,7 +57,7 @@ export const postsQeuryRepository = {
             totalCount: totalCount,
             items: posts.map(p => (
                 {
-                    id: p._id,
+                    id: p.id,
                     title: p.title,
                     shortDescription: p.shortDescription,
                     content: p.content,

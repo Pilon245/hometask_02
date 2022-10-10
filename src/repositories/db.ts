@@ -4,6 +4,7 @@ dotenv.config()
 import {BlogsDbType} from "../types/blogsTypes";
 import {PostDbType} from "../types/postsTypes";
 import {UsersDbType} from "../types/usersTypes";
+import {CommentsDbType} from "../types/commentsTypes";
 
 
 
@@ -17,6 +18,7 @@ const db = client.db("network");
 export const blogsCollection = db.collection<BlogsDbType>("blogs")
 export const postsCollection = db.collection<PostDbType>("posts")
 export const usersCollection = db.collection<UsersDbType>("users")
+export const commentsCollection = db.collection<CommentsDbType>("comments")
 
 export async function runDb(){
     try{

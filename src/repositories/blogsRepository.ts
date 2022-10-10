@@ -13,18 +13,18 @@ export const blogsRepository = {
             .toArray()
     },
     async findBlogsById(id: string): Promise<BlogsDbType | null> {
-        return await blogsCollection.findOne({_id: new ObjectId(id)})
+        return await blogsCollection.findOne({id: id})
     },
     async createBlogs(newBlogs: BlogsDbType): Promise<BlogsDbType> {
         await blogsCollection.insertOne(newBlogs)
         return newBlogs
     },
     async updateBlogs(id: string,name: string, youtubeUrl: string) : Promise<boolean> {
-        const result = await blogsCollection.updateOne({_id:new ObjectId(id)}, {$set: {name:name, youtubeUrl: youtubeUrl}})
+        const result = await blogsCollection.updateOne({id: id}, {$set: {name:name, youtubeUrl: youtubeUrl}})
         return result.matchedCount === 1
     },
     async deleteBlogs(id: string) : Promise<boolean> {
-        const result = await blogsCollection.deleteOne({_id: new ObjectId(id)})
+        const result = await blogsCollection.deleteOne({id: id})
         return result.deletedCount === 1
     },
     async countBlogs(sortBy: string, sortDirection: any, searchNameTerm: string) {

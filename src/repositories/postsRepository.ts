@@ -12,7 +12,7 @@ export const postsRepository = {
             .toArray()
     },
     async findPostById(id: string): Promise<PostDbType | null> {
-        let post: PostDbType | null = await postsCollection.findOne({_id: new ObjectId(id)})
+        let post: PostDbType | null = await postsCollection.findOne({id: id})
         return post
     },
     async findPostOnBlog(blogId: string, skip: number, pageSize: number, sortBy: string, sortDirection: any)
@@ -29,7 +29,7 @@ export const postsRepository = {
         return newPost
     },
     async updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string) {
-        const result = await postsCollection.updateOne({_id: new ObjectId(id)},
+        const result = await postsCollection.updateOne({id: id},
             {
                 $set: {
                     title: title, shortDescription: shortDescription,
@@ -39,7 +39,7 @@ export const postsRepository = {
         return result.matchedCount === 1
     },
     async deletePost(id: string) {
-        const result = await postsCollection.deleteOne({_id: new ObjectId(id)})
+        const result = await postsCollection.deleteOne({id: id})
         return result.deletedCount === 1
     },
     async countPosts(sortBy: string, sortDirection: any) {

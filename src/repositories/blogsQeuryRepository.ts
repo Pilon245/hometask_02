@@ -34,7 +34,7 @@ export const blogsQueryRepository = {
             totalCount: totalCount,
             items: blogs.map(b => (
                 {
-                    id: b._id,
+                    id: b.id,
                     name: b.name,
                     youtubeUrl: b.youtubeUrl,
                     createdAt: b.createdAt

@@ -27,7 +27,7 @@ export const blogsService = {
         const blog =  await blogsRepository.findBlogsById(id)
         if(blog){
             const outBlog : OutputBlogsDbType = {
-                id: blog._id,
+                id: blog.id,
                 name: blog.name,
                 youtubeUrl: blog.youtubeUrl,
                 createdAt: blog.createdAt
@@ -39,7 +39,6 @@ export const blogsService = {
     },
     async createBlogs(name: string, youtubeUrl: string): Promise<OutputBlogsDbType> {
     const newBlogs : BlogsDbType = {
-        _id : new ObjectId(),
         id: String(+new Date()),
         name: name,
         youtubeUrl: youtubeUrl,
@@ -47,7 +46,7 @@ export const blogsService = {
     }
     const createdBlog = await blogsRepository.createBlogs(newBlogs)
     const  outCreateBlog : OutputBlogsDbType = {
-            id: createdBlog._id,
+            id: createdBlog.id,
             name: createdBlog.name,
             youtubeUrl: createdBlog.youtubeUrl,
             createdAt: createdBlog.createdAt
@@ -65,7 +64,7 @@ export const blogsService = {
         const sortBlogs =  await blogsRepository.sortBlogsByName(skip, PageSize)
         return sortBlogs.map(b => (
             {
-                id: b._id,
+                id: b.id,
                 name: b.name,
                 youtubeUrl: b.youtubeUrl,
                 createdAt: b.createdAt

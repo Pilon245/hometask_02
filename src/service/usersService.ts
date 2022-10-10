@@ -20,7 +20,7 @@ export const usersService = {
     //     }},
     async findUserById(id: string, ) {
         // const salt = await bcrypt.genSalt(6)
-        const user = await usersRepository.findUserById(new ObjectId(id))
+        const user = await usersRepository.findUserById(id)
         return user
     },
     async checkCredentials(loginOrEmail: string, password: string){
@@ -29,7 +29,7 @@ export const usersService = {
             return false
         }
         // const passwordHash = await _generatePasswordForDb(password)
-        const passwordHash = await this._generatePasswordForDb(password)
+        const passwordHash = await _generatePasswordForDb(password)
         // if (user.passwordHash !== passwordHash) {
         const isValid = await bcrypt.compare(password, user.passwordHash)
         console.log("isValid", isValid)
@@ -38,17 +38,14 @@ export const usersService = {
         }
         return user
     },
-    async _generatePasswordForDb(password: string, ) {
-        // const salt = await bcrypt.genSalt(6)
-        const hash = await bcrypt.hash(password, 6)
-        return hash
-    },
+    // async _generatePasswordForDb(password: string, ) {
+    //     // const salt = await bcrypt.genSalt(6)
+    //     const hash = await bcrypt.hash(password, 6)
+    //     return hash
+    // },
     async createUsers(login: string,password: string, email: string): Promise<OutputUsersDbType> {
-        console.log("create password",password)
-        const passwordHash = await this._generatePasswordForDb(password)
-        console.log("create Hash",passwordHash)
+        const passwordHash = await _generatePasswordForDb(password)
         const newUsers: UsersDbType = {
-            _id: new ObjectId(),
             id: String(+new Date()),
             login: login,
             passwordHash,
@@ -57,7 +54,7 @@ export const usersService = {
         }
         const createdUser = await usersRepository.createUsers(newUsers)
         const outCreateUser: OutputUsersDbType = {
-            id: createdUser._id,
+            id: createdUser.id,
             login: createdUser.login,
             email: createdUser.email,
             createdAt: createdUser.createdAt

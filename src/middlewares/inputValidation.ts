@@ -3,6 +3,7 @@ import {validationResult} from "express-validator";
 import {jwtService} from "../service/jwtService";
 import {usersService} from "../service/usersService";
 import {usersRepository} from "../repositories/usersRepository";
+import {ObjectId} from "mongodb";
 
 export const inputBodyValidation = (req: Request, res: Response, next: NextFunction)  => {
     const errors = validationResult(req)
@@ -44,10 +45,11 @@ export const authTokenMiddleware = async (req: Request, res: Response, next: Nex
     if (userId) {
         req.user = await usersRepository.findUserById(userId)
             next()
+        return
     }
-    res.send(401)
+    res.sendStatus(401)
 }
-
+//todo перенести авторизацю
 
 // export const inputAuthValidation = (req: Request, res: Response, next: NextFunction) => {
 //     export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {

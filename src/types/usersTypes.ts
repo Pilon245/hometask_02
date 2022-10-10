@@ -1,7 +1,6 @@
 import {ObjectId} from "mongodb";
 
 export type UsersDbType = {
-        _id: ObjectId
         id: string
         login: string
         passwordHash: any
@@ -15,10 +14,10 @@ export type PagesUsersType = {
         page: number
         pageSize: number
         totalCount: number
-        items: Array<OutputUsersDbType>
+        items: Array<UsersDbType>
 }
 export type OutputUsersDbType = {
-        id: ObjectId
+        id: string
         login: string
         email: string
         createdAt: string

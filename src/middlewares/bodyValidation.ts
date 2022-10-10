@@ -45,12 +45,22 @@ const emailValidation = body("email")
         .isString().withMessage("Field 'email' is not a string.")
         .notEmpty({ignore_whitespace: true}).withMessage("Field 'email' cannot be empty.")
         .matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/).withMessage("Field 'email' is invalid.")
+const loginAuthValidation = body("login")
+    .isString().withMessage("Field 'login' is not a string.")
+const passwordAuthValidation= body("password")
+    .isString().withMessage("Field 'password' is not a string.")
+const contentCommentValidation = body("content")
+    .isString().withMessage("Field 'content' is not a string.")
+    .notEmpty({ignore_whitespace: true}).withMessage("Field 'content' cannot be empty.")
+    .isLength({min: 20, max: 300}).withMessage("Min length of field 'content' 20 max 300.")
 
 export const blogsValidation = [nameValidation, youtubeUrlValition]
 export const postsOnBlogValidation = [titleValidation, shortDescriptionValidation, contentValidation]
 
 export const postsValidation = [titleValidation, shortDescriptionValidation, contentValidation, blogIdValidation]
+export const commentOnPostValidation = [contentCommentValidation]
 
 export const usersValidation = [loginValidation, passwordValidation, emailValidation]
 
-export const authValidation = [loginValidation, passwordValidation]
+export const authValidation = [loginAuthValidation, passwordAuthValidation]
+

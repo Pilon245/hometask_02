@@ -1,7 +1,6 @@
 import {ObjectId} from "mongodb";
 
 export type BlogsDbType = {
-    _id: ObjectId
     id: string
     name: string
     youtubeUrl: string
@@ -13,10 +12,10 @@ export type PagesBlogType = {
     page: number
     pageSize: number
     totalCount: number
-    items: Array<OutputBlogsDbType>
+    items: Array<BlogsDbType>
 }
 export type OutputBlogsDbType = {
-    id: ObjectId
+    id: string
     name: string
     youtubeUrl: string
     createdAt: string

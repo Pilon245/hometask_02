@@ -12,8 +12,8 @@ export const usersRepository = {
             return false
         }
     },
-    async findUserById(id: ObjectId) {
-        const result = await usersCollection.findOne({_id: new  ObjectId(id)})
+    async findUserById(id: string) {
+        const result = await usersCollection.findOne({id:id}) // тут как делать с ид
         return  result
     },
     // async testTwoOr(){
@@ -36,7 +36,7 @@ export const usersRepository = {
         return newUsers
     },
     async deleteUsers(id: string): Promise<boolean> {
-        const result = await usersCollection.deleteOne({_id: new ObjectId(id)})
+        const result = await usersCollection.deleteOne({id: id})
         return result.deletedCount === 1
     },
     async deleteAllUsers() {

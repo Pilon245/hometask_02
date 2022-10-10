@@ -1,7 +1,6 @@
 import {ObjectId} from "mongodb";
 
 export type PostDbType = {
-    _id: ObjectId
     id: string
     title: string
     shortDescription: string
@@ -12,7 +11,7 @@ export type PostDbType = {
 }
 
 export type OutputPostDbType = {
-    id: ObjectId
+    id: string
     title: string
     shortDescription: string
     content: string
@@ -25,5 +24,5 @@ export type PagesPostType = {
     page: number
     pageSize: number
     totalCount: number
-    items: Array<OutputPostDbType>
+    items: Array<PostDbType>
 }
