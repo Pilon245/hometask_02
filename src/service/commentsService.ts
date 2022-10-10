@@ -6,9 +6,25 @@ import {BlogsDbType, OutputBlogsDbType} from "../types/blogsTypes";
 import {blogsRepository} from "../repositories/blogsRepository";
 import {CommentsDbType} from "../types/commentsTypes";
 import {commentsRepository} from "../repositories/commentsRepository";
+import {postsRepository} from "../repositories/postsRepository";
 
 
 export const commentsService = {
+    async findCommentById(id: string) {
+        const comment =  await commentsRepository.findCommentById(id)
+        if(comment){
+            const outComment = {
+                id: comment.id,
+                content: comment.content,
+                userId: comment.userId,
+                userLogin: comment.userLogin,
+                createdAt: new Date().toISOString()
+            }
+            return outComment
+        }
+        return comment
+
+    },
     async createComment(content: string, userId: string, userLogin: string): Promise<CommentsDbType> {
         const newComment = {
             id: String(+new Date()),
@@ -26,5 +42,12 @@ export const commentsService = {
             createdAt: createdComment.createdAt
         }
         return outCreateComment
-    }
+    },
+    async updateComment(id: string, content: string) {
+        return await commentsRepository.updateComment(id,content)
+    },
+    async deleteComment(id: string): Promise<boolean> {
+        return await commentsRepository.deleteComment(id)
+    },
+
 }

@@ -2,6 +2,7 @@ import {Request, Response} from "express";
 import {postsService} from "../service/postsService";
 import {queryValidation} from "../middlewares/queryValidation";
 import {postsQeuryRepository} from "../repositories/postsQeuryRepository";
+import {log} from "util";
 
 export const postControllers = {
     async getPost(req: Request, res: Response) {

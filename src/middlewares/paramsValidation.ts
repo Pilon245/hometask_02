@@ -1,6 +1,7 @@
 import {param} from "express-validator";
 import {blogsRepository} from "../repositories/blogsRepository";
 import {postsRepository} from "../repositories/postsRepository";
+import {commentsRepository} from "../repositories/commentsRepository";
 
 const blogIdValidation = param("blogId")
         .custom(async (value) => {
@@ -18,7 +19,17 @@ const postsIdValidation = param("postsId")
         }
         return true
     })
+const commentsIdValidation = param("commentsId")
+    .custom(async (value) => {
+        const comment: any = await commentsRepository.findCommentById(value)
+        if(!comment){
+            throw new Error("Field 'commentsId' is not in id.")
+        }
+        return true
+    })
 
 export const postOnblogIdValidation = [blogIdValidation]
 
 export const commentOnPostIdValidation = [postsIdValidation]
+
+export const commentIdValidation = [commentsIdValidation]
