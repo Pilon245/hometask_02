@@ -9,7 +9,8 @@ export const authControllers = {
         const user = await usersService.checkCredentials(req.body.login, req.body.password)
         if(user) {
             const token = await jwtService.createdJWT(user)
-            return res.status(200).send(token)
+            const result = {accessToken: token}
+            return res.status(200).send(result)
         }else {
             return res.sendStatus(401)
         }
