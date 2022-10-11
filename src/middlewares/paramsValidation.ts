@@ -11,7 +11,7 @@ const blogIdValidation = param("blogId")
             }
             return true
         })
-const postsIdValidation = param("postsId")
+const postsIdValidation = param("postId")
     .custom(async (value) => {
         const post: any = await postsRepository.findPostById(value)
         if(!post){
