@@ -4,6 +4,7 @@ export type CommentsDbType = {
     id: string
     content: string
     userId: string
+    postId: string
     userLogin: string
     createdAt: string
 }

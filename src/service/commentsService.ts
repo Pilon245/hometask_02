@@ -25,16 +25,17 @@ export const commentsService = {
         return comment
 
     },
-    async createComment(content: string, userId: string, userLogin: string): Promise<CommentsDbType> {
+    async createComment(postId:string, content: string, userId: string, userLogin: string) {
         const newComment = {
             id: String(+new Date()),
             content: content,
             userId: userId,
+            postId: postId,
             userLogin: userLogin,
             createdAt: new Date().toISOString()
         }
         const createdComment = await commentsRepository.createComment(newComment)
-        const outCreateComment: CommentsDbType = {
+        const outCreateComment = {
             id: createdComment.id,
             content: createdComment.content,
             userId: createdComment.userId,
