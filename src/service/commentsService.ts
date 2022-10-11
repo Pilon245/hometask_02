@@ -25,7 +25,7 @@ export const commentsService = {
         return comment
 
     },
-    async createComment(postId:string, content: string, userId: string, userLogin: string) {
+    async createComment(postId: string, content: string, userId: string, userLogin: string) {
         const newComment = {
             id: String(+new Date()),
             content: content,

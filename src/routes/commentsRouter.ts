@@ -9,7 +9,7 @@ import {forbiddenValidation} from "../middlewares/forbiddenValidation";
 export const commentsRouter = Router({})
 
 commentsRouter.get('/comments/:id', commentsControllers.getCommentById)
-commentsRouter.put('/comments/:commentId', authTokenMiddleware,forbiddenValidation, commentIdValidation, inputQueryValidation,
+commentsRouter.put('/comments/:commentId', authTokenMiddleware, commentIdValidation, inputQueryValidation,forbiddenValidation,
     commentOnPostValidation,inputBodyValidation, commentsControllers.updateComment)
-commentsRouter.delete('/comments/:commentId', authTokenMiddleware,forbiddenValidation, commentIdValidation, inputQueryValidation,
+commentsRouter.delete('/comments/:commentId', authTokenMiddleware, commentIdValidation, inputQueryValidation,forbiddenValidation,
     commentsControllers.deleteComment)

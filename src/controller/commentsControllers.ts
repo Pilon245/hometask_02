@@ -10,7 +10,8 @@ import {usersService} from "../service/usersService";
 export const commentsControllers = {
     async getComment(req: Request, res: Response) {
         const {pageNumber, pageSize, sortBy, sortDirection} = queryValidation(req.query)
-        const foundComments = await commentsQueryRepository.findCommentOnPost(req.params.postId,{
+        const foundComments = await commentsQueryRepository.findCommentOnPost(req.params.postId,
+            {
             pageNumber,
             pageSize,
             sortBy,
@@ -28,10 +29,11 @@ export const commentsControllers = {
     },
     async createComment(req: Request, res: Response) {
         const newComment = await commentsService.createComment(
+            req.params.postId,
             req.body.content,
             req.user!.id,
-            req.user!.login,
-            req.params.postId)
+            req.user!.login
+            )
         if (newComment) {
             res.status(201).send(newComment)
         }
