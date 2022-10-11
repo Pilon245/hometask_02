@@ -1,18 +1,10 @@
 import {SortDirection} from "../middlewares/queryValidation";
 import {usersCollection} from "./db";
 import {getPagesCounts, getSkipNumber} from "../helpers/getSkipNumber";
-import {PagesUsersType} from "../types/usersTypes";
+import {FindUsersPayload, PagesUsersType} from "../types/usersTypes";
 import {PagesBlogType} from "../types/blogsTypes";
 
-type FindUsersPayload = {
-    pageSize: number,
-    pageNumber: number,
-    sortBy: string,
-    sortDirection: SortDirection,
-    searchLoginTerm?: string
-    searchEmailTerm?: string
 
-}
 
 export const usersQueryRepository = {
     async findUsers({searchLoginTerm, searchEmailTerm, sortDirection, sortBy, pageSize, pageNumber}: FindUsersPayload) {

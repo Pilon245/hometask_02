@@ -1,15 +1,9 @@
-import {PagesBlogType} from "../types/blogsTypes";
+import {FindBlogsPayload, PagesBlogType} from "../types/blogsTypes";
 import {blogsCollection} from "./db";
 import {getPagesCounts, getSkipNumber} from "../helpers/getSkipNumber";
 import {SortDirection} from "../middlewares/queryValidation";
 
-type FindBlogsPayload = {
-    pageSize: number,
-     pageNumber: number,
-     sortBy: string,
-     sortDirection: SortDirection,
-     searchNameTerm?: string
-}
+
 
 export const blogsQueryRepository = {
     async findBlogs({searchNameTerm, sortDirection, sortBy, pageSize, pageNumber}: FindBlogsPayload)

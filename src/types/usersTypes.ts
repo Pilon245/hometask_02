@@ -1,4 +1,5 @@
 import {ObjectId} from "mongodb";
+import {SortDirection} from "../middlewares/queryValidation";
 
 export type UsersDbType = {
         id: string
@@ -21,4 +22,13 @@ export type OutputUsersDbType = {
         login: string
         email: string
         createdAt: string
+}
+export type FindUsersPayload = {
+        pageSize: number,
+        pageNumber: number,
+        sortBy: string,
+        sortDirection: SortDirection,
+        searchLoginTerm?: string
+        searchEmailTerm?: string
+
 }

@@ -3,13 +3,7 @@ import {commentsCollection, usersCollection} from "./db";
 import {getPagesCounts, getSkipNumber} from "../helpers/getSkipNumber";
 import {PagesUsersType} from "../types/usersTypes";
 import {PagesBlogType} from "../types/blogsTypes";
-
-type FindCommentsPayload = {
-    pageSize: number,
-    pageNumber: number,
-    sortBy: string,
-    sortDirection: SortDirection,
-}
+import {FindCommentsPayload} from "../types/commentsTypes";
 
 export const commentsQueryRepository = {
     async findUsers({sortDirection, sortBy, pageSize, pageNumber}: FindCommentsPayload) {

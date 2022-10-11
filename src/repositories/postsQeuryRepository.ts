@@ -1,14 +1,9 @@
-import {PagesPostType, PostDbType} from "../types/postsTypes";
+import {FindPostsPayload, PagesPostType, PostDbType} from "../types/postsTypes";
 import {postsCollection} from "./db";
 import {SortDirection} from "../middlewares/queryValidation";
 import {getSkipNumber} from "../helpers/getSkipNumber";
 
-type FindPostsPayload = {
-    pageSize: number,
-    pageNumber: number,
-    sortBy: string,
-    sortDirection: SortDirection,
-}
+
 
 export const postsQeuryRepository = {
     async findPost({pageSize, pageNumber, sortBy, sortDirection}: FindPostsPayload)

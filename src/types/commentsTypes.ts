@@ -1,4 +1,5 @@
 import {ObjectId} from "mongodb";
+import {SortDirection} from "../middlewares/queryValidation";
 
 export type CommentsDbType = {
     id: string
@@ -15,4 +16,10 @@ export type PagesUsersType = {
     pageSize: number
     totalCount: number
     items: Array<CommentsDbType>
+}
+export type FindCommentsPayload = {
+    pageSize: number,
+    pageNumber: number,
+    sortBy: string,
+    sortDirection: SortDirection,
 }

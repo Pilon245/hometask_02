@@ -1,4 +1,5 @@
 import {ObjectId} from "mongodb";
+import {SortDirection} from "../middlewares/queryValidation";
 
 export type PostDbType = {
     id: string
@@ -25,4 +26,10 @@ export type PagesPostType = {
     pageSize: number
     totalCount: number
     items: Array<PostDbType>
+}
+export type FindPostsPayload = {
+    pageSize: number,
+    pageNumber: number,
+    sortBy: string,
+    sortDirection: SortDirection,
 }
