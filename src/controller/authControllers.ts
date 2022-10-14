@@ -6,6 +6,7 @@ import nodemailer from 'nodemailer'
 import {emailAdapter} from "../adapters/emailAdapter";
 import {OutputUsersDbType} from "../types/usersTypes";
 import {usersRepository} from "../repositories/usersRepository";
+import {v4 as uuidv4} from "uuid";
 
 export const authControllers = {
     async singInAccount(req: Request, res: Response) {
@@ -32,6 +33,7 @@ export const authControllers = {
         res.sendStatus(204)
     },
     async resendingEmail(req: Request, res: Response) {
+        const updateCode = await authService.updateCode(req.body.email)
         const user = await usersRepository.findLoginOrEmail(req.body.email)
         const emailSend = await emailAdapter.sendEmail(user!.accountData.email, user!.emailConfirmation.confirmationCode)
         return res.sendStatus(204)
