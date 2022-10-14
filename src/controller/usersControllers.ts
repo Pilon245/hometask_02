@@ -2,6 +2,7 @@ import {Request, Response} from "express";
 import {queryValidation} from "../middlewares/queryValidation";
 import {usersQueryRepository} from "../repositories/usersQueryRepository";
 import {usersService} from "../service/usersService";
+import {OutputUsersDbType} from "../types/usersTypes";
 
 
 export const usersControllers = {
@@ -14,7 +15,13 @@ export const usersControllers = {
     },
     async createUsers ( req: Request, res: Response) {
         const newUsers = await usersService.createUsers(req.body.login,req.body.password, req.body.email)
-        return res.status(201).send(newUsers)
+        const outCreateUser: OutputUsersDbType = {
+            id: newUsers.id,
+            login: newUsers.accountData.login,
+            email: newUsers.accountData.email,
+            createdAt: newUsers.accountData.createdAt
+        }
+        return res.status(201).send(outCreateUser)
 
     },
     async deleteUsers( req: Request, res: Response) {

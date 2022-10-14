@@ -1,6 +1,6 @@
 import {usersCollection} from "./db";
 import {ObjectId} from "mongodb";
-import {UsersDbType} from "../types/usersTypes";
+import {UserAccountDBType, UsersDbType} from "../types/usersTypes";
 
 export const usersRepository = {
     async findUsers(login: string, password: string): Promise<boolean> {
@@ -31,7 +31,7 @@ export const usersRepository = {
         const user = await usersCollection.findOne({login: LoginOrEmailL})
         return user
     },
-    async createUsers(newUsers: UsersDbType): Promise<UsersDbType> {
+    async createUsers(newUsers: UserAccountDBType): Promise<UserAccountDBType> {
         await usersCollection.insertOne(newUsers)
         return newUsers
     },

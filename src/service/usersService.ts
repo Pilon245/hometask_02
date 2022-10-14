@@ -1,25 +1,13 @@
 import {ObjectId} from "mongodb";
-import {OutputUsersDbType, UsersDbType} from "../types/usersTypes";
+import {OutputUsersDbType, UserAccountDBType, UsersDbType} from "../types/usersTypes";
 import {usersRepository} from "../repositories/usersRepository";
 import bcrypt from "bcrypt";
 import {_generatePasswordForDb} from "../helpers/getSkipNumber";
+import add from "date-fns/add";
+import {v4 as uuidv4} from "uuid";
 
 export const usersService = {
-    // async checkCredentials(loginOrEmail: string, password: string){
-    //     const user = await usersRepository.findLoginOrEmail(loginOrEmail)
-    //     if (!user) {
-    //         return false
-    //     }
-    //     // const passwordHash = await _generatePasswordForDb(password)
-    //     const passwordHash = await this._generatePasswordForDb(password)
-    //     // if (user.passwordHash !== passwordHash) {
-    //     const isValid = await bcrypt.compare(password, user.passwordHash)
-    //     console.log("isValid", isValid)
-    //     if (!isValid) {
-    //         return false
-    //     }},
     async findUserById(id: string, ) {
-        // const salt = await bcrypt.genSalt(6)
         const user = await usersRepository.findUserById(id)
         return user
     },
@@ -28,7 +16,6 @@ export const usersService = {
         if (!user) {
             return false
         }
-        // const passwordHash = await _generatePasswordForDb(password)
         const passwordHash = await _generatePasswordForDb(password)
         // if (user.passwordHash !== passwordHash) {
         const isValid = await bcrypt.compare(password, user.passwordHash)
@@ -38,28 +25,25 @@ export const usersService = {
         }
         return user
     },
-    // async _generatePasswordForDb(password: string, ) {
-    //     // const salt = await bcrypt.genSalt(6)
-    //     const hash = await bcrypt.hash(password, 6)
-    //     return hash
-    // },
-    async createUsers(login: string,password: string, email: string): Promise<OutputUsersDbType> {
+    async createUsers(login: string,password: string, email: string): Promise<UserAccountDBType> {
         const passwordHash = await _generatePasswordForDb(password)
-        const newUsers: UsersDbType = {
+        const newUsers: UserAccountDBType = {
             id: String(+new Date()),
-            login: login,
-            passwordHash,
-            email: email,
-            createdAt: new Date().toISOString()
-        }
+            accountData: {
+                login: login,
+                email: email,
+                passwordHash,
+                createdAt: new Date().toISOString()
+            },
+            emailConfirmation: {
+                confirmationCode: uuidv4(),
+                expirationDate: add(new Date(), {hours: 1, minutes: 1}),
+                isConfirmed: false
+            }}
+
         const createdUser = await usersRepository.createUsers(newUsers)
-        const outCreateUser: OutputUsersDbType = {
-            id: createdUser.id,
-            login: createdUser.login,
-            email: createdUser.email,
-            createdAt: createdUser.createdAt
-        }
-        return outCreateUser
+
+        return newUsers
     },
     async deleteUsers(id: string): Promise<boolean> {
         return await usersRepository.deleteUsers(id)

@@ -1,4 +1,5 @@
 import {usersRepository} from "../repositories/usersRepository";
+import {emailManager} from "../managers/emailManager";
 
 export const authService = {
     async loginUsers(login: string, password: string): Promise<boolean> {
@@ -8,5 +9,10 @@ export const authService = {
         }else {
             return false
         }
+    },
+    async sendEmail(email: string) {
+        // save to repo
+        // get user to repo
+      await emailManager.sendPasswordRecoveryMessage(email)
     }
 }

@@ -22,7 +22,6 @@ const startApp = async () => {
     app.listen(port, () => {
         console.log(`Server stared on port ${port}`)
 })}
-//tyutyu
 //start app
 startApp()
 
