@@ -3,7 +3,7 @@ import {ObjectId} from "mongodb";
 import {UserAccountDBType, UsersDbType} from "../types/usersTypes";
 
 export const usersRepository = {
-    async findUsers(login: string, password: string): Promise<boolean> {
+    async findUsers(login: string, password: string) {
         const result = await usersCollection.findOne({login: login, password: password})
       //  return  result ? true : false
         if (result) {
@@ -28,7 +28,7 @@ export const usersRepository = {
     // },
     //TODO посмотреть запросы монго запросы
     async findLoginOrEmail(LoginOrEmailL: string) {
-        const user = await usersCollection.findOne({login: LoginOrEmailL})
+        const user = await usersCollection.findOne({$or: [{login: LoginOrEmailL},{email: LoginOrEmailL}]})
         return user
     },
     async createUsers(newUsers: UserAccountDBType): Promise<UserAccountDBType> {

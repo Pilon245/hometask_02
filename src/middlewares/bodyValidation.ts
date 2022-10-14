@@ -37,7 +37,7 @@ const loginValidation = body("login")
         .isString().withMessage("Field 'login' is not a string.")
         .notEmpty({ignore_whitespace: true}).withMessage("Field 'login' cannot be empty.")
         .isLength({min: 3, max: 10}).withMessage("Min length of field 'login' 3 max 10.")
-const passwordValidation= body("password")
+const passwordValidation = body("password")
         .isString().withMessage("Field 'password' is not a string.")
         .notEmpty({ignore_whitespace: true}).withMessage("Field 'password' cannot be empty.")
         .isLength({min: 6, max: 20}).withMessage("Min length of field 'password' 6 max 20.")
@@ -47,12 +47,14 @@ const emailValidation = body("email")
         .matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/).withMessage("Field 'email' is invalid.")
 const loginAuthValidation = body("login")
     .isString().withMessage("Field 'login' is not a string.")
-const passwordAuthValidation= body("password")
+const passwordAuthValidation = body("password")
     .isString().withMessage("Field 'password' is not a string.")
 const contentCommentValidation = body("content")
     .isString().withMessage("Field 'content' is not a string.")
     .notEmpty({ignore_whitespace: true}).withMessage("Field 'content' cannot be empty.")
     .isLength({min: 20, max: 300}).withMessage("Min length of field 'content' 20 max 300.")
+const code = body("code")
+    .isString().withMessage("Field 'code' is not a string.")
 
 export const blogsValidation = [nameValidation, youtubeUrlValition]
 export const postsOnBlogValidation = [titleValidation, shortDescriptionValidation, contentValidation]
@@ -63,4 +65,8 @@ export const commentOnPostValidation = [contentCommentValidation]
 export const usersValidation = [loginValidation, passwordValidation, emailValidation]
 
 export const authValidation = [loginAuthValidation, passwordAuthValidation]
+
+export const confirmationValidation = [code]
+
+export const resendingValidation = [emailValidation]
 

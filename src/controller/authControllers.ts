@@ -5,6 +5,7 @@ import {jwtService} from "../service/jwtService";
 import nodemailer from 'nodemailer'
 import {emailAdapter} from "../adapters/emailAdapter";
 import {OutputUsersDbType} from "../types/usersTypes";
+import {usersRepository} from "../repositories/usersRepository";
 
 export const authControllers = {
     async singInAccount(req: Request, res: Response) {
@@ -23,7 +24,7 @@ export const authControllers = {
     },
     async createRegistrationUser(req: Request, res: Response) {
         const newUsers = await usersService.createUsers(req.body.login,req.body.password, req.body.email)
-        const emailSend = await emailAdapter.sendEmail(newUsers!.accountData.email, newUsers!.emailConfirmation.confirmationCode)
+        const emailSend = await emailAdapter.sendEmail(newUsers.accountData.email, newUsers.emailConfirmation.confirmationCode)
         return res.sendStatus(204)
     },
     async confirmationEmail(req: Request, res: Response) {
@@ -33,5 +34,15 @@ export const authControllers = {
         } else {
             res.status(400).send({errorMessage: "email"})
         }
-    }
+    },
+    async resendingEmail(req: Request, res: Response) {
+        const user = await usersRepository.findLoginOrEmail(req.body.email)
+        if (user) {
+            const emailSend = await emailAdapter.sendEmail(user.accountData.email, user.emailConfirmation.confirmationCode)
+            return res.sendStatus(204)
+        }else {
+            return res.status(400).send({errorMessage: "email"})
+        }
+
+    },
 }
