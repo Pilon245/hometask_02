@@ -32,7 +32,7 @@ export const commentsControllers = {
             req.params.postId,
             req.body.content,
             req.user!.id,
-            req.user!.login
+            req.user!.accountData.login
             )
         if (newComment) {
             res.status(201).send(newComment)

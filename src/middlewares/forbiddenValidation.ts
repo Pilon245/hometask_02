@@ -6,7 +6,7 @@ import {commentsRepository} from "../repositories/commentsRepository";
 export const forbiddenValidation = async (req: Request, res: Response, next: NextFunction) => {
     const commentId = await commentsRepository.findCommentById(req.params.commentId)
 
-    if(req.user!.login === commentId?.userLogin){
+    if(req.user!.accountData.login === commentId?.userLogin){
         next()
         return
     }

@@ -23,9 +23,15 @@ export const authControllers = {
     },
     async createRegistrationUser(req: Request, res: Response) {
         const newUsers = await usersService.createUsers(req.body.login,req.body.password, req.body.email)
-        const emailSend = await emailAdapter.sendEmail(newUsers.accountData.email, newUsers.emailConfirmation.confirmationCode)
+        const emailSend = await emailAdapter.sendEmail(newUsers!.accountData.email, newUsers!.emailConfirmation.confirmationCode)
         return res.sendStatus(204)
-
-
+    },
+    async confirmationEmail(req: Request, res: Response) {
+        const result = await authService.confirmationEmail(req.body.code)
+        if (result) {
+            res.sendStatus(204)
+        } else {
+            res.status(400).send({errorMessage: "email"})
+        }
     }
 }

@@ -14,5 +14,14 @@ export const authService = {
         // save to repo
         // get user to repo
       await emailManager.sendPasswordRecoveryMessage(email)
+    },
+    async confirmationEmail(code: string) {
+        let user = await usersRepository.findUserByConfirmationCode(code)
+        if (!user) return false
+        if (user.emailConfirmation.isConfirmed) return false
+        if (user.emailConfirmation.confirmationCode !== code) return false
+        if (user.emailConfirmation.expirationDate < new Date()) return  false
+        let result = await usersRepository.updateConfirmation(user.id)
+        return result
     }
 }

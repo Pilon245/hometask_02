@@ -35,6 +35,11 @@ export const usersRepository = {
         await usersCollection.insertOne(newUsers)
         return newUsers
     },
+    async updateConfirmation(id: string) {
+        let result = await usersCollection
+            .updateOne({id: id}, {$set: {'emailConfirmation.isConfirmed': true}})
+        return result.modifiedCount === 1
+    },
     async deleteUsers(id: string): Promise<boolean> {
         const result = await usersCollection.deleteOne({id: id})
         return result.deletedCount === 1
@@ -42,6 +47,9 @@ export const usersRepository = {
     async deleteAllUsers() {
         await usersCollection.deleteMany({})
         return true
+    },
+    async findUserByConfirmationCode(emailConfirmationCode: string) {
+        const user = await usersCollection.findOne({'emailConfirmation.confirmationCode': emailConfirmationCode})
+        return user
     }
-
 }

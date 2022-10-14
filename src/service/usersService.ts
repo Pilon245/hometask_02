@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import {_generatePasswordForDb} from "../helpers/getSkipNumber";
 import add from "date-fns/add";
 import {v4 as uuidv4} from "uuid";
+import {emailManager} from "../managers/emailManager";
 
 export const usersService = {
     async findUserById(id: string, ) {
@@ -16,9 +17,14 @@ export const usersService = {
         if (!user) {
             return false
         }
+
+        // if (!user.emailConfirmation.isConfirmed){
+        //     return null
+        // }
+
         const passwordHash = await _generatePasswordForDb(password)
         // if (user.passwordHash !== passwordHash) {
-        const isValid = await bcrypt.compare(password, user.passwordHash)
+        const isValid = await bcrypt.compare(password, user.accountData.passwordHash)
         console.log("isValid", isValid)
         if (!isValid) {
             return false
@@ -42,7 +48,13 @@ export const usersService = {
             }}
 
         const createdUser = await usersRepository.createUsers(newUsers)
-
+        // try {
+        //     await emailManager.sendPasswordRecoveryMessage(newUsers)
+        //
+        // }catch (error) {
+        //     await usersRepository.deleteUsers(newUsers.id)
+        //     return null
+        // }
         return newUsers
     },
     async deleteUsers(id: string): Promise<boolean> {
