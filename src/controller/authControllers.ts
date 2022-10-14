@@ -10,11 +10,11 @@ import {usersRepository} from "../repositories/usersRepository";
 export const authControllers = {
     async singInAccount(req: Request, res: Response) {
         const user = await usersService.checkCredentials(req.body.login, req.body.password)
-        if(user) {
+        if (user) {
             const token = await jwtService.createdJWT(user)
             const result = {accessToken: token}
             return res.status(200).send(result)
-        }else {
+        } else {
             return res.sendStatus(401)
         }
     },
@@ -23,26 +23,18 @@ export const authControllers = {
         return res.status(200).send(Account)
     },
     async createRegistrationUser(req: Request, res: Response) {
-        const newUsers = await usersService.createUsers(req.body.login,req.body.password, req.body.email)
+        const newUsers = await usersService.createUsers(req.body.login, req.body.password, req.body.email)
         const emailSend = await emailAdapter.sendEmail(newUsers.accountData.email, newUsers.emailConfirmation.confirmationCode)
         return res.sendStatus(204)
     },
     async confirmationEmail(req: Request, res: Response) {
         const result = await authService.confirmationEmail(req.body.code)
-        if (result) {
-            res.sendStatus(204)
-        } else {
-            res.status(400).send({errorMessage: "email"})
-        }
+        res.sendStatus(204)
     },
     async resendingEmail(req: Request, res: Response) {
         const user = await usersRepository.findLoginOrEmail(req.body.email)
-        if (user) {
-            const emailSend = await emailAdapter.sendEmail(user.accountData.email, user.emailConfirmation.confirmationCode)
-            return res.sendStatus(204)
-        }else {
-            return res.status(400).send({errorMessage: "email"})
-        }
+        const emailSend = await emailAdapter.sendEmail(user!.accountData.email, user!.emailConfirmation.confirmationCode)
+        return res.sendStatus(204)
 
     },
 }

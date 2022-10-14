@@ -1,5 +1,6 @@
 import {body} from "express-validator";
 import {blogsRepository} from "../repositories/blogsRepository";
+import {usersRepository} from "../repositories/usersRepository";
 
 
 const nameValidation = body( "name")
@@ -55,6 +56,49 @@ const contentCommentValidation = body("content")
     .isLength({min: 20, max: 300}).withMessage("Min length of field 'content' 20 max 300.")
 const code = body("code")
     .isString().withMessage("Field 'code' is not a string.")
+    .custom( async (value) => {
+        const user = await usersRepository.findUserByConfirmationCode(value);
+        if (!user || user.emailConfirmation.isConfirmed || user.emailConfirmation.confirmationCode !== value || user.emailConfirmation.expirationDate < new Date()) {
+            throw new Error("Field 'code' is not correct.");
+        }
+        return true;
+    })
+const emailResendingValidation = body("email")
+    .isString().withMessage("Field 'email' is not a string.")
+    .notEmpty({ignore_whitespace: true}).withMessage("Field 'email' cannot be empty.")
+    .matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/).withMessage("Field 'email' is invalid.")
+    .custom(async (value) => {
+        const user = await usersRepository.findLoginOrEmail(value);
+        if (!user || user.emailConfirmation.isConfirmed || user.emailConfirmation.expirationDate < new Date()) {
+            throw new Error("Field 'email' is not correct.");
+        }
+        return true;
+    })
+const emailRegistrationValidation = body('email')
+    .isString().withMessage("Field 'email' is not a string.")
+    .notEmpty({ignore_whitespace: true}).withMessage("Field 'email' cannot be empty.")
+    .isEmail().withMessage("Field 'email' is invalid.")
+    .custom( async (value) => {
+        const user = await usersRepository.findLoginOrEmail(value);
+        if (user) {
+            throw new Error("Field 'email' is not correct.");
+        }
+        return true;
+    })
+export const loginRegistrationValidation = body('login')
+    .isString().withMessage("Field 'login' is not a string.")
+    .notEmpty({ignore_whitespace: true}).withMessage("Field 'login' cannot be empty.")
+    .isLength({min: 3, max: 10}).withMessage("Min length of field 'login' 3 max 10.")
+    .custom( async (value) => {
+        const user = await usersRepository.findLoginOrEmail(value);
+        if (user) {
+            throw new Error("Field 'login' is not correct.");
+        }
+        return true;
+    })
+
+
+
 
 export const blogsValidation = [nameValidation, youtubeUrlValition]
 export const postsOnBlogValidation = [titleValidation, shortDescriptionValidation, contentValidation]
@@ -68,5 +112,6 @@ export const authValidation = [loginAuthValidation, passwordAuthValidation]
 
 export const confirmationValidation = [code]
 
-export const resendingValidation = [emailValidation]
+export const registrationValidation = [emailRegistrationValidation, loginRegistrationValidation, passwordValidation]
+export const resendingValidation = [emailResendingValidation]
 
