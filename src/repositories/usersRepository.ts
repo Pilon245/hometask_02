@@ -31,9 +31,16 @@ export const usersRepository = {
         const user = await usersCollection.findOne({$or: [{'accountData.login': LoginOrEmailL},{'accountData.email': LoginOrEmailL}]})
         return user
     },
-    async createUsers(newUsers: UserAccountDBType): Promise<UserAccountDBType> {
+    async createUsers(newUsers: UserAccountDBType): Promise<UserAccountDBType> { //todo any исправить на  UserAccountDBType
         await usersCollection.insertOne(newUsers)
         return newUsers
+    },
+    async createToken(id: string, accessToken: string, refreshToken: string) {
+        let result = await usersCollection
+            .updateOne({id: id},
+                {$set: {'accountData.accessToken': accessToken,
+                        'accountData.refreshToken': refreshToken}})
+        return result.modifiedCount === 1
     },
     async updateConfirmation(id: string) {
         let result = await usersCollection
@@ -45,6 +52,7 @@ export const usersRepository = {
             .updateOne({id: id}, {$set: {'emailConfirmation.confirmationCode': code}})
         return result.modifiedCount === 1
     },
+
     async deleteUsers(id: string): Promise<boolean> {
         const result = await usersCollection.deleteOne({id: id})
         return result.deletedCount === 1

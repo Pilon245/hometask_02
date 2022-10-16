@@ -40,6 +40,8 @@ export type UsersAccountDataType = {
         login: string
         email: string
         passwordHash: string
+        accessToken: string
+        refreshToken: string
         createdAt: string
 }
 export type EmailConfirmationType = {

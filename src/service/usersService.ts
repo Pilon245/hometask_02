@@ -6,6 +6,7 @@ import {_generatePasswordForDb} from "../helpers/getSkipNumber";
 import add from "date-fns/add";
 import {v4 as uuidv4} from "uuid";
 import {emailManager} from "../managers/emailManager";
+import {jwtService} from "./jwtService";
 
 export const usersService = {
     async findUserById(id: string, ) {
@@ -31,14 +32,23 @@ export const usersService = {
         }
         return user
     },
+    async checkRefreshToken(loginOrEmail: string){
+        const user = await usersRepository.findLoginOrEmail(loginOrEmail)
+        if (!user) {
+            return false
+        }
+        return user
+    },
     async createUsers(login: string,password: string, email: string): Promise<UserAccountDBType> {
         const passwordHash = await _generatePasswordForDb(password)
-        const newUsers: UserAccountDBType = {
+        const newUsers : UserAccountDBType = {
             id: String(+new Date()),
             accountData: {
                 login: login,
                 email: email,
                 passwordHash,
+                accessToken: "",
+                refreshToken: "",
                 createdAt: new Date().toISOString()
             },
             emailConfirmation: {

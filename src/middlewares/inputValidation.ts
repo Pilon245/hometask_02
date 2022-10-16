@@ -42,9 +42,26 @@ export const authTokenMiddleware = async (req: Request, res: Response, next: Nex
     const token = req.headers.authorization.split(' ')[1]
 
     const userId = await jwtService.getUserIdByToken(token)
+    // const resreshToken = uuidv(4)
     if (userId) {
         req.user = await usersRepository.findUserById(userId)
             next()
+        return
+    }
+    res.sendStatus(401)
+}
+export const refreshTokenMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+    if (!req.cookies.refreshToken) {
+        res.send(401)
+        return
+    }
+
+    const token = req.cookies.refreshToken.split(' ')[1]
+
+    const userId = await jwtService.getUserIdByToken(token)
+    if (userId) {
+        req.user = await usersRepository.findUserById(userId)
+        next()
         return
     }
     res.sendStatus(401)

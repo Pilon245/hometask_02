@@ -12,13 +12,32 @@ export const authControllers = {
     async singInAccount(req: Request, res: Response) {
         const user = await usersService.checkCredentials(req.body.login, req.body.password)
         if (user) {
-            const token = await jwtService.createdJWT(user)
-            const result = {accessToken: token}
-            return res.status(200).send(result)
+            const accessToken = await jwtService.createdJWT(user)
+            const refreshToken = await jwtService.createdRefreshJWT(user)
+            await usersRepository.createToken(user.id, accessToken, refreshToken) //todo  через  сервис нужно делать?
+            const result = {accessToken: accessToken}
+            return res.status(200).cookie("refresh_token", refreshToken,
+                {expires: new Date(Date.now()+ 20000), httpOnly: true, secure: true})
+                .send(result)
+            //todo cookie parser
         } else {
             return res.sendStatus(401)
         }
     },
+    async updateResfreshToken(req: Request, res: Response) {
+        const user = await usersService.checkRefreshToken(req.user!.accountData.login)
+        if (user) {
+            const accessToken = await jwtService.createdJWT(user)
+            const refreshToken = await jwtService.createdRefreshJWT(user)
+            await usersRepository.createToken(user.id, accessToken, refreshToken)
+            const result = {accessToken: accessToken}
+            return res.status(200).cookie("refreshtoken", refreshToken,
+                {expires: new Date(Date.now()+ 20000), httpOnly: true, secure: true})
+                .send(result)
+            //todo cookie parser
+        } else {
+            return res.sendStatus(401)
+        }},
     async myAccount(req: Request, res: Response) {
         const Account = await usersService.findUserById(req.user!.id)
         return res.status(200).send(Account)
