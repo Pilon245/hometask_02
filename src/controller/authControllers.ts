@@ -7,6 +7,7 @@ import {emailAdapter} from "../adapters/emailAdapter";
 import {OutputUsersDbType} from "../types/usersTypes";
 import {usersRepository} from "../repositories/usersRepository";
 import {v4 as uuidv4} from "uuid";
+import cookieParser from "cookie-parser";
 
 export const authControllers = {
     async singInAccount(req: Request, res: Response) {
@@ -16,7 +17,9 @@ export const authControllers = {
             const refreshToken = await jwtService.createdRefreshJWT(user)
             await usersRepository.createToken(user.id, accessToken, refreshToken) //todo  через  сервис нужно делать?
             const result = {accessToken: accessToken}
-            return res.status(200).cookie("refresh_token", refreshToken,
+            console.log("user.accountData.refreshToken", user.accountData.refreshToken)
+            console.log("user.accountData.accessToken", user.accountData.accessToken)
+            return res.status(200).cookie("refreshToken", refreshToken,
                 {expires: new Date(Date.now()+ 20000), httpOnly: true, secure: true})
                 .send(result)
             //todo cookie parser
@@ -31,7 +34,9 @@ export const authControllers = {
             const refreshToken = await jwtService.createdRefreshJWT(user)
             await usersRepository.createToken(user.id, accessToken, refreshToken)
             const result = {accessToken: accessToken}
-            return res.status(200).cookie("refreshtoken", refreshToken,
+            console.log("user.accountData.refreshToken", user.accountData.refreshToken)
+            console.log("user.accountData.accessToken", user.accountData.accessToken)
+            return res.status(200).cookie("refreshToken", refreshToken,
                 {expires: new Date(Date.now()+ 20000), httpOnly: true, secure: true})
                 .send(result)
             //todo cookie parser

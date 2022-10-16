@@ -7,11 +7,15 @@ import {runDb} from "./repositories/db";
 import * as dotenv from "dotenv";
 import {authRouter} from "./routes/authRouter";
 import {commentsRouter} from "./routes/commentsRouter";
+import cookieParser from "cookie-parser";
+
 dotenv.config()
 
 export const app = express()
 
 app.use (express.json())
+app.use(cookieParser())
+
 
 const port = process.env.PORT || 5002
 

@@ -4,6 +4,9 @@ import {jwtService} from "../service/jwtService";
 import {usersService} from "../service/usersService";
 import {usersRepository} from "../repositories/usersRepository";
 import {ObjectId} from "mongodb";
+import {blogsQueryRepository} from "../repositories/blogsQeuryRepository";
+import cookieParser from "cookie-parser";
+
 
 export const inputBodyValidation = (req: Request, res: Response, next: NextFunction)  => {
     const errors = validationResult(req)
@@ -51,12 +54,15 @@ export const authTokenMiddleware = async (req: Request, res: Response, next: Nex
     res.sendStatus(401)
 }
 export const refreshTokenMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-    if (!req.cookies.refreshToken) {
+    const refToken = req.cookies.refreshToken
+    console.dir("cokie", req.cookies.refreshToken)
+    if (!refToken) {
+        console.log("reftoken", refToken)
         res.send(401)
         return
     }
-
-    const token = req.cookies.refreshToken.split(' ')[1]
+    console.log('token exists', refToken.split(' ')[0])
+    const token = refToken.split(' ')[0]
 
     const userId = await jwtService.getUserIdByToken(token)
     if (userId) {
