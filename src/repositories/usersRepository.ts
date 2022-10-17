@@ -35,12 +35,17 @@ export const usersRepository = {
         await usersCollection.insertOne(newUsers)
         return newUsers
     },
-    async updateToken(id: string, accessToken: string, refreshToken: string) {
+    async createToken(id: string, accessToken: string, refreshToken: string) {
         let result = await usersCollection
             .updateOne({id: id},
                 {$set: {'accountData.accessToken': accessToken,
                         'accountData.refreshToken': refreshToken}})
         return result.modifiedCount === 1
+    },
+    async findRefreshToken(refToken: string) {
+        let result = await usersCollection
+            .findOne({'accountData.refreshToken': refToken})
+        return result
     },
     async updateConfirmation(id: string) {
         let result = await usersCollection

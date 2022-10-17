@@ -15,7 +15,7 @@ export const authControllers = {
         if (user) {
             const accessToken = await jwtService.createdJWT(user)
             const refreshToken = await jwtService.createdRefreshJWT(user)
-            await usersRepository.updateToken(user.id, accessToken, refreshToken) //todo  через  сервис нужно делать?
+            await usersRepository.createToken(user.id, accessToken, refreshToken) //todo  через  сервис нужно делать?
             const result = {accessToken: accessToken}
             console.log("user.accountData.refreshToken", user.accountData.refreshToken)
             console.log("user.accountData.accessToken", user.accountData.accessToken)
@@ -31,7 +31,7 @@ export const authControllers = {
         if (user) {
             const accessToken = await jwtService.createdJWT(user)
             const refreshToken = await jwtService.createdRefreshJWT(user)
-            await usersRepository.updateToken(user.id, accessToken, refreshToken)
+            await usersRepository.createToken(user.id, accessToken, refreshToken)
             const result = {accessToken: accessToken}
             console.log("user.accountData.refreshToken", user.accountData.refreshToken)
             console.log("user.accountData.accessToken", user.accountData.accessToken)

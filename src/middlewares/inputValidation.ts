@@ -65,6 +65,11 @@ export const refreshTokenMiddleware = async (req: Request, res: Response, next: 
     console.log('token exists', refToken.split(' ')[0])
     const token = refToken.split(' ')[0]
 
+    const findRefToken = await usersRepository.findRefreshToken(refToken)
+    if(!findRefToken) {
+        res.sendStatus(401)
+    }
+
     const userId = await jwtService.getUserIdByToken(token)
     if (userId) {
         req.user = await usersRepository.findUserById(userId)
