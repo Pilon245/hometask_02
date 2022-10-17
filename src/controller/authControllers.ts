@@ -22,7 +22,6 @@ export const authControllers = {
             return res.status(200).cookie("refreshToken", refreshToken,
                 {expires: new Date(Date.now()+ 20000), httpOnly: true, secure: true})
                 .send(result)
-            //todo cookie parser
         } else {
             return res.sendStatus(401)
         }
@@ -71,10 +70,7 @@ export const authControllers = {
             const result = {accessToken: accessToken}
             console.log("user.accountData.refreshToken", user.accountData.refreshToken)
             console.log("user.accountData.accessToken", user.accountData.accessToken)
-            return res.status(200).cookie("refreshToken", refreshToken,
-                {expires: new Date(Date.now()+ 20000), httpOnly: true, secure: true})
-                .send(result)
-            //todo cookie parser
+            return res.sendStatus(204)
         } else {
             return res.sendStatus(401)
         }},

@@ -18,4 +18,4 @@ authRouter.post('/auth/registration-confirmation',confirmationValidation, inputB
     authControllers.confirmationEmail)
 authRouter.post('/auth/registration-email-resending',resendingValidation, inputBodyValidation,
     authControllers.resendingEmail)
-authRouter.post('/auth/logout', authControllers.logOutAccount)
+authRouter.post('/auth/logout', refreshTokenMiddleware,authControllers.logOutAccount)
