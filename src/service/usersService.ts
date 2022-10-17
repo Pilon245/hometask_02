@@ -11,7 +11,13 @@ import {jwtService} from "./jwtService";
 export const usersService = {
     async findUserById(id: string, ) {
         const user = await usersRepository.findUserById(id)
-        return user
+        //todo тут как правильнее выводить
+        const userOutput = {
+            email: user?.accountData.email,
+            login: user?.accountData.login,
+            userId: user?.id
+        }
+        return userOutput
     },
     async checkCredentials(loginOrEmail: string, password: string){
         const user = await usersRepository.findLoginOrEmail(loginOrEmail)
@@ -48,7 +54,7 @@ export const usersService = {
                 email: email,
                 passwordHash,
                 accessToken: "",
-                refreshToken: "",
+                refreshToken: "",//todo тут как сделать с пустой строкой
                 createdAt: new Date().toISOString()
             },
             emailConfirmation: {

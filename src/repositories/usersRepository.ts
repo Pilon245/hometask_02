@@ -35,7 +35,7 @@ export const usersRepository = {
         await usersCollection.insertOne(newUsers)
         return newUsers
     },
-    async createToken(id: string, accessToken: string, refreshToken: string) {
+    async updateToken(id: string, accessToken: string, refreshToken: string) {
         let result = await usersCollection
             .updateOne({id: id},
                 {$set: {'accountData.accessToken': accessToken,
@@ -64,5 +64,12 @@ export const usersRepository = {
     async findUserByConfirmationCode(emailConfirmationCode: string) {
         const user = await usersCollection.findOne({'emailConfirmation.confirmationCode': emailConfirmationCode})
         return user
-    }
+    },
+    async deleteToken(id: string, accessToken: string, refreshToken: string) {
+        let result = await usersCollection
+            .updateOne({id: id},
+                {$set: {'accountData.accessToken': "",
+                        'accountData.refreshToken': ""}})
+        return result.modifiedCount === 1
+    },
 }

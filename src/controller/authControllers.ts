@@ -15,7 +15,7 @@ export const authControllers = {
         if (user) {
             const accessToken = await jwtService.createdJWT(user)
             const refreshToken = await jwtService.createdRefreshJWT(user)
-            await usersRepository.createToken(user.id, accessToken, refreshToken) //todo  через  сервис нужно делать?
+            await usersRepository.updateToken(user.id, accessToken, refreshToken) //todo  через  сервис нужно делать?
             const result = {accessToken: accessToken}
             console.log("user.accountData.refreshToken", user.accountData.refreshToken)
             console.log("user.accountData.accessToken", user.accountData.accessToken)
@@ -32,7 +32,7 @@ export const authControllers = {
         if (user) {
             const accessToken = await jwtService.createdJWT(user)
             const refreshToken = await jwtService.createdRefreshJWT(user)
-            await usersRepository.createToken(user.id, accessToken, refreshToken)
+            await usersRepository.updateToken(user.id, accessToken, refreshToken)
             const result = {accessToken: accessToken}
             console.log("user.accountData.refreshToken", user.accountData.refreshToken)
             console.log("user.accountData.accessToken", user.accountData.accessToken)
@@ -61,6 +61,21 @@ export const authControllers = {
         const user = await usersRepository.findLoginOrEmail(req.body.email)
         const emailSend = await emailAdapter.sendEmail(user!.accountData.email, user!.emailConfirmation.confirmationCode)
         return res.sendStatus(204)
-
     },
+    async logOutAccount(req: Request, res: Response) {
+        const user = await usersService.checkRefreshToken(req.user!.accountData.login)
+        if (user) {
+            const accessToken = await jwtService.createdJWT(user)
+            const refreshToken = await jwtService.createdRefreshJWT(user)
+            await usersRepository.deleteToken(user.id, accessToken, refreshToken)
+            const result = {accessToken: accessToken}
+            console.log("user.accountData.refreshToken", user.accountData.refreshToken)
+            console.log("user.accountData.accessToken", user.accountData.accessToken)
+            return res.status(200).cookie("refreshToken", refreshToken,
+                {expires: new Date(Date.now()+ 20000), httpOnly: true, secure: true})
+                .send(result)
+            //todo cookie parser
+        } else {
+            return res.sendStatus(401)
+        }},
 }
