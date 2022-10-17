@@ -47,6 +47,7 @@ export const usersRepository = {
             .findOne({'accountData.refreshToken': refToken})
         return result
     },
+
     async updateConfirmation(id: string) {
         let result = await usersCollection
             .updateOne({id: id}, {$set: {'emailConfirmation.isConfirmed': true}})
