@@ -43,10 +43,7 @@ export const authTokenMiddleware = async (req: Request, res: Response, next: Nex
     }
 
     const token = req.headers.authorization.split(' ')[1]
-    console.log("token", token)
     const userId = await jwtService.getUserIdByToken(token)
-    // const resreshToken = uuidv(4)
-    console.log("userId", userId)
     if (userId) {
         req.user = await usersRepository.findUserById(userId)
             next()
@@ -56,17 +53,13 @@ export const authTokenMiddleware = async (req: Request, res: Response, next: Nex
 }
 export const refreshTokenMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     const refToken = req.cookies.refreshToken
-    console.dir("cokie", req.cookies.refreshToken)
     if (!refToken) {
-        console.log("reftoken", refToken)
         res.send(401)
         return
     }
-    console.log('token exists', refToken.split(' ')[0])
     const token = refToken.split(' ')[0]
 
     const findRefToken = await usersRepository.findRefreshToken(refToken)
-    console.log("findRefToken", findRefToken)
     if(!findRefToken) {
         res.sendStatus(401)
         return

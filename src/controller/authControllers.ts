@@ -8,6 +8,7 @@ import {OutputUsersDbType} from "../types/usersTypes";
 import {usersRepository} from "../repositories/usersRepository";
 import {v4 as uuidv4} from "uuid";
 import cookieParser from "cookie-parser";
+import {strict} from "assert";
 
 export const authControllers = {
     async singInAccount(req: Request, res: Response) {
@@ -68,8 +69,6 @@ export const authControllers = {
             const refreshToken = await jwtService.createdRefreshJWT(user)
             await usersRepository.deleteToken(user.id, accessToken, refreshToken)
             const result = {accessToken: accessToken}
-            console.log("user.accountData.refreshToken", user.accountData.refreshToken)
-            console.log("user.accountData.accessToken", user.accountData.accessToken)
             return res.sendStatus(204)
         } else {
             return res.sendStatus(401)

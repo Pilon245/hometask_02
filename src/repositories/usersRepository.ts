@@ -28,7 +28,8 @@ export const usersRepository = {
     // },
     //TODO посмотреть запросы монго запросы
     async findLoginOrEmail(LoginOrEmailL: string) {
-        const user = await usersCollection.findOne({$or: [{'accountData.login': LoginOrEmailL},{'accountData.email': LoginOrEmailL}]})
+        const user = await usersCollection.findOne(
+            {$or: [{'accountData.login': LoginOrEmailL},{'accountData.email': LoginOrEmailL}]})
         return user
     },
     async createUsers(newUsers: UserAccountDBType): Promise<UserAccountDBType> { //todo any исправить на  UserAccountDBType
@@ -75,7 +76,7 @@ export const usersRepository = {
         let result = await usersCollection
             .updateOne({id: id},
                 {$set: {'accountData.accessToken': "",
-                        'accountData.refreshToken': ""}})
+                        'accountData.refreshToken': ""}})//todo как правильно удалить токен
         return result.modifiedCount === 1
     },
 }
