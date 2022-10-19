@@ -18,8 +18,6 @@ export const authControllers = {
             const refreshToken = await jwtService.createdRefreshJWT(user)
             await usersRepository.createToken(user.id, accessToken, refreshToken) //todo  через  сервис нужно делать?
             const result = {accessToken: accessToken}
-            console.log("user.accountData.refreshToken", user.accountData.refreshToken)
-            console.log("user.accountData.accessToken", user.accountData.accessToken)
             return res.status(200).cookie("refreshToken", refreshToken,
                 {expires: new Date(Date.now()+ 20000), httpOnly: true, secure: true})
                 .send(result)
@@ -63,14 +61,7 @@ export const authControllers = {
         return res.sendStatus(204)
     },
     async logOutAccount(req: Request, res: Response) {
-        const user = await usersService.checkRefreshToken(req.user!.accountData.login)
-        if (user) {
-            const accessToken = await jwtService.createdJWT(user)
-            const refreshToken = await jwtService.createdRefreshJWT(user)
-            await usersRepository.deleteToken(user.id, accessToken, refreshToken)
-            const result = {accessToken: accessToken}
+            await usersRepository.deleteToken(req.user!.id)
             return res.sendStatus(204)
-        } else {
-            return res.sendStatus(401)
-        }},
+       },
 }

@@ -72,7 +72,7 @@ export const usersRepository = {
         const user = await usersCollection.findOne({'emailConfirmation.confirmationCode': emailConfirmationCode})
         return user
     },
-    async deleteToken(id: string, accessToken: string, refreshToken: string) {
+    async deleteToken(id: string) {
         let result = await usersCollection
             .updateOne({id: id},
                 {$set: {'accountData.accessToken': "",
