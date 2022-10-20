@@ -24,7 +24,7 @@ export const blogsControllers = {
         } else {
             res.send(404)
         }
-    },
+    },//pp
     async createBlogs( req: Request, res: Response) {
         const newBlog = await blogsService.createBlogs(req.body.name, req.body.youtubeUrl)
         if(newBlog){
