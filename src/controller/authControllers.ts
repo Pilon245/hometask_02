@@ -22,7 +22,7 @@ export const authControllers = {
             // await usersRepository.createToken(user.id, accessToken, refreshToken) //todo  через  сервис нужно делать?
             const result = {accessToken: accessToken}
             return res.status(200).cookie("refreshToken", refreshToken,
-                {expires: new Date(Date.now()+ 20000), httpOnly: true, secure: false})
+                {expires: new Date(Date.now()+ 20000), httpOnly: true, secure: true})
                 .send(result)
         } else {
             return res.sendStatus(401)
