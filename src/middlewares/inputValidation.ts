@@ -79,7 +79,7 @@ export const refreshTokenMiddleware = async (req: Request, res: Response, next: 
 
 }
 export const connectionControlMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-    const maxCountOfConnections = 4
+    const maxCountOfConnections = 5
     const blockInterval = 10000
 
     const connectionAt = +new Date()
