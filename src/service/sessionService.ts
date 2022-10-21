@@ -15,6 +15,10 @@ export const sessionService = {
         const devices = await sessionRepository.findDevices(id)
         return devices
     },
+    async findDevicesByDeviceId(deviceId: string) {
+        const devices = await sessionRepository.findDevices(deviceId)
+        return devices
+    },
     async createSession(user: UserAccountDBType, ip: string, deviceName: string, token: string){
       const userId = user.id
       const deviceId = uuidv4()

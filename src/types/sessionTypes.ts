@@ -17,3 +17,10 @@ export type SessionDBType = {
     deviceId: string
     userId: string
 }
+
+export type SessionType = {
+    ip: string
+    title: string
+    lastActiveDate: Date
+    deviceId: string
+}

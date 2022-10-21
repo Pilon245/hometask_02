@@ -1,11 +1,17 @@
 import {commentsCollection, sessionCollection, usersCollection} from "./db";
-import {SessionDBType} from "../types/sessionTypes";
+import {SessionDBType, SessionType} from "../types/sessionTypes";
 
 export const sessionRepository = {
-    async findDevices(userId: string): Promise<SessionDBType> {
-        // console.log("find", await sessionCollection.find({userId: userId}))
-        const result =  await sessionCollection.find({userId: userId}).toArray()
-        return result//todo На что он ругается?
+    async findDevices(userId: string): Promise<SessionType []> {
+        const result =  await sessionCollection.find({userId: userId})
+            .project({_id:0, userId: 0, expiresDate: 0})
+            .toArray()
+        return result as SessionType []
+    },
+    async findDevicesByDeviceId(userId: string, deviceId: string): Promise<SessionType | null> {
+        const result =  await sessionCollection.findOne( {
+        $and: [{userId: userId},{deviceId: deviceId}]})
+        return result
     },
     async createSecurityDevices(device: SessionDBType){
         return await sessionCollection.insertOne(device)

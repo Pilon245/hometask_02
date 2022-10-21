@@ -1,11 +1,12 @@
 import {Router} from "express";
 import {sessionService} from "../service/sessionService";
-import {devicesControllers} from "../controller/devicesControllers";
+import {sessionControllers} from "../controller/sessionControllers";
 import {refreshTokenMiddleware} from "../middlewares/inputValidation";
+import {findDeviceIdOnUserId} from "../middlewares/forbiddenValidation";
 
 export const devicesRouter = Router({})
 
-devicesRouter.get('/security/devices',refreshTokenMiddleware,devicesControllers.getDevices)
-devicesRouter.delete('/security/devices',refreshTokenMiddleware,devicesControllers.deleteDevices)
-devicesRouter.delete('/security/devices/:deviceId',refreshTokenMiddleware,
-    devicesControllers.deleteDevicesById)
+devicesRouter.get('/security/devices',refreshTokenMiddleware,sessionControllers.getDevices)
+devicesRouter.delete('/security/devices',refreshTokenMiddleware,sessionControllers.deleteDevices)
+devicesRouter.delete('/security/devices/:deviceId',refreshTokenMiddleware,findDeviceIdOnUserId,
+    sessionControllers.deleteDevicesById)

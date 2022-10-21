@@ -2,7 +2,7 @@ import {commentsRepository} from "../repositories/commentsRepository";
 import {Request, Response} from "express";
 import {sessionService} from "../service/sessionService";
 
-export const devicesControllers = {
+export const sessionControllers = {
     async getDevices(req: Request, res: Response) {
         const devices =  await sessionService.findDevices(req.user!.id)
         res.status(200).send(devices)
@@ -13,7 +13,9 @@ export const devicesControllers = {
     },
     async deleteDevicesById(req: Request, res: Response) {
         const devices =  await sessionService.deleteDevicesById(req.params.deviceId)
-        res.sendStatus(204)
+        if (devices) res.sendStatus(204)
+        res.sendStatus(404)
+
     },
 
 }
