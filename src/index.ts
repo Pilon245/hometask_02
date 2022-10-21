@@ -9,11 +9,13 @@ import {usersRouter} from "./routes/usersRouter";
 import {authRouter} from "./routes/authRouter";
 import {commentsRouter} from "./routes/commentsRouter";
 import {devicesRouter} from "./routes/devicesRouter";
+import cors from 'cors';
 
 dotenv.config()
 
 export const app = express()
 
+app.use(cors())
 app.use(express.json())
 app.use(cookieParser())
 

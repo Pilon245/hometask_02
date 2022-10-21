@@ -35,7 +35,6 @@ export type UserAccountDBType = {
         id: string
         accountData: UsersAccountDataType
         emailConfirmation: EmailConfirmationType
-        // securityDevices?: Array<SecurityDevicesDBType>
 }
 export type UsersAccountDataType = {
         login: string

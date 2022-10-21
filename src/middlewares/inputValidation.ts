@@ -7,12 +7,14 @@ import {v4 as uuidv4} from "uuid";
 import {ObjectId} from "mongodb";
 import {blogsQueryRepository} from "../repositories/blogsQeuryRepository";
 import cookieParser from "cookie-parser";
+import {blockIpCollection, connectionsCountCollection} from "../repositories/db";
+import { secondsToMilliseconds } from 'date-fns'
 
 
-export const inputBodyValidation = (req: Request, res: Response, next: NextFunction)  => {
+export const inputBodyValidation = (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req)
-    if(!errors.isEmpty()) {
-        const errorsArray = errors.array({onlyFirstError: true}).map( (error)  => {
+    if (!errors.isEmpty()) {
+        const errorsArray = errors.array({onlyFirstError: true}).map((error) => {
             return {
                 message: error.msg,
                 field: error.param
@@ -20,10 +22,10 @@ export const inputBodyValidation = (req: Request, res: Response, next: NextFunct
         })
         return res.status(400).send({"errorsMessages": errorsArray})
     } else {
-       next()
+        next()
+    }
 }
-}
-export const inputQueryValidation = (req: Request, res: Response, next: NextFunction)  => {
+export const inputQueryValidation = (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
         const errorsArray = errors.array({onlyFirstError: true}).map((error) => {
@@ -48,7 +50,7 @@ export const authTokenMiddleware = async (req: Request, res: Response, next: Nex
     const payload = await jwtService.getUserIdByRefreshToken(token.split(".")[1])
     if (userId) {
         req.user = await usersRepository.findUserById(userId)
-            next()
+        next()
         return
     }
     res.sendStatus(401)
@@ -56,28 +58,49 @@ export const authTokenMiddleware = async (req: Request, res: Response, next: Nex
 export const refreshTokenMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     const refToken = req.cookies.refreshToken
     if (!refToken) {
-        res.send(401)
+        res.sendStatus(401)
         return
     }
     const token = refToken.split(' ')[0]
 
 
-
-
-    const findRefToken = await usersRepository.findRefreshToken(refToken)
-    if(!findRefToken) {
-        res.sendStatus(401)
-        return
-    }
+    // const findRefToken = await usersRepository.findRefreshToken(refToken)
+    // if(!findRefToken) {
+    //     res.sendStatus(401)
+    //     return
+    // }
 
     const userId = await jwtService.getUserIdByToken(token)
-    if (userId) {
-        req.user = await usersRepository.findUserById(userId)
-        next()
-        return
-    }
-    res.sendStatus(401)
+    if (!userId) return res.sendStatus(401)
+    const user = await usersRepository.findUserById(userId)
+    if (!user) return res.sendStatus(401)
+    req.user = user
+    return next()
+
 }
+export const connectionControlMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+    const maxCountOfConnections = 4
+    const blockInterval = 10000
+
+    const connectionAt = +new Date()
+    const ip = req.ip
+    const endpoint = req.url.split('/')[2]
+
+    const isBlocked = await blockIpCollection.findOne({ip, endpoint,
+        blockedAt: {$gte: (connectionAt - blockInterval)}})
+    if (isBlocked) return res.sendStatus(429)
+    const connectionsCount = await connectionsCountCollection.countDocuments({ip, endpoint,
+        connectionAt: {$gte: (connectionAt - blockInterval)}})
+    if (connectionsCount + 1 > maxCountOfConnections) {
+        await blockIpCollection.insertOne({ip, endpoint, blockedAt: connectionAt})
+        return res.sendStatus(429)
+    }
+    await connectionsCountCollection.insertOne({ip, endpoint, connectionAt})
+    return next()
+}
+
+
+
 //todo перенести авторизацю
 
 // export const inputAuthValidation = (req: Request, res: Response, next: NextFunction) => {

@@ -41,13 +41,13 @@ export const usersRepository = {
         await usersCollection.insertOne(newUsers)
         return newUsers
     },
-    async createToken(id: string, accessToken: string, refreshToken: string) {
-        let result = await usersCollection
-            .updateOne({id: id},
-                {$set: {'accountData.accessToken': accessToken,
-                        'accountData.refreshToken': refreshToken}})
-        return result.modifiedCount === 1
-    },
+    // async createToken(id: string, accessToken: string, refreshToken: string) {
+    //     let result = await usersCollection
+    //         .updateOne({id: id},
+    //             {$set: {'accountData.accessToken': accessToken,
+    //                     'accountData.refreshToken': refreshToken}})
+    //     return result.modifiedCount === 1
+    // },
     // async createDevice(id: string, ip: string, title: string, lastActiveDate: string, deviceId: string){
     //     let result = await usersCollection
     //         .insertOne({id: id},
