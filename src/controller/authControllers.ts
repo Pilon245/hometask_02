@@ -19,7 +19,6 @@ export const authControllers = {
             const accessToken = await jwtService.createdJWT(user)
             const refreshToken = await jwtService.createdRefreshJWT(user,String(uuidv4()))
             await sessionService.createSession(user, req.ip, req.headers['user-agent']!,refreshToken)
-            // await usersRepository.createToken(user.id, accessToken, refreshToken) //todo  через  сервис нужно делать?
             const result = {accessToken: accessToken}
             return res.status(200).cookie("refreshToken", refreshToken,
                 {expires: new Date(Date.now()+ 20000), httpOnly: true, secure: true})
