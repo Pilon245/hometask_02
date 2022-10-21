@@ -3,6 +3,7 @@ import {validationResult} from "express-validator";
 import {jwtService} from "../service/jwtService";
 import {usersService} from "../service/usersService";
 import {usersRepository} from "../repositories/usersRepository";
+import {v4 as uuidv4} from "uuid";
 import {ObjectId} from "mongodb";
 import {blogsQueryRepository} from "../repositories/blogsQeuryRepository";
 import cookieParser from "cookie-parser";
@@ -44,6 +45,7 @@ export const authTokenMiddleware = async (req: Request, res: Response, next: Nex
 
     const token = req.headers.authorization.split(' ')[1]
     const userId = await jwtService.getUserIdByToken(token)
+    const payload = await jwtService.getUserIdByRefreshToken(token.split(".")[1])
     if (userId) {
         req.user = await usersRepository.findUserById(userId)
             next()
@@ -58,6 +60,9 @@ export const refreshTokenMiddleware = async (req: Request, res: Response, next: 
         return
     }
     const token = refToken.split(' ')[0]
+
+
+
 
     const findRefToken = await usersRepository.findRefreshToken(refToken)
     if(!findRefToken) {

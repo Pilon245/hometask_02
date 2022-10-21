@@ -1,25 +1,27 @@
 import express from 'express'
+import cookieParser from "cookie-parser";
+import {runDb} from "./repositories/db";
+import * as dotenv from "dotenv";
 import {blogsRouter} from "./routes/blogsRouter";
 import {postRouter} from "./routes/postRouter";
 import {delRouter} from "./routes/delRouter";
 import {usersRouter} from "./routes/usersRouter";
-import {runDb} from "./repositories/db";
-import * as dotenv from "dotenv";
 import {authRouter} from "./routes/authRouter";
 import {commentsRouter} from "./routes/commentsRouter";
-import cookieParser from "cookie-parser";
+import {devicesRouter} from "./routes/devicesRouter";
 
 dotenv.config()
 
 export const app = express()
 
-app.use (express.json())
+app.use(express.json())
 app.use(cookieParser())
 
+app.set('trust proxy', true)// чтобы получать ip
 
 const port = process.env.PORT || 5002
 
-app.use("/api",blogsRouter,postRouter,delRouter,usersRouter,authRouter,commentsRouter)
+app.use("/api",blogsRouter,postRouter,delRouter,usersRouter,authRouter,commentsRouter,devicesRouter)
 
 const startApp = async () => {
     await runDb()

@@ -32,6 +32,11 @@ export const usersRepository = {
             {$or: [{'accountData.login': LoginOrEmailL},{'accountData.email': LoginOrEmailL}]})
         return user
     },
+    async findRefreshToken(refToken: string) {
+        let result = await usersCollection
+            .findOne({'accountData.refreshToken': refToken})
+        return result
+    },
     async createUsers(newUsers: UserAccountDBType): Promise<UserAccountDBType> { //todo any исправить на  UserAccountDBType
         await usersCollection.insertOne(newUsers)
         return newUsers
@@ -43,12 +48,15 @@ export const usersRepository = {
                         'accountData.refreshToken': refreshToken}})
         return result.modifiedCount === 1
     },
-    async findRefreshToken(refToken: string) {
-        let result = await usersCollection
-            .findOne({'accountData.refreshToken': refToken})
-        return result
-    },
-
+    // async createDevice(id: string, ip: string, title: string, lastActiveDate: string, deviceId: string){
+    //     let result = await usersCollection
+    //         .insertOne({id: id},
+    //             {$push: {"securityDevices.ip": ip,
+    //     "securityDevices.title": title,
+    //     "securityDevices.lastActiveDate": lastActiveDate,
+    //     "securityDevices.deviceId": deviceId}})
+    //     return result.modifiedCount === 1
+    // },
     async updateConfirmation(id: string) {
         let result = await usersCollection
             .updateOne({id: id}, {$set: {'emailConfirmation.isConfirmed': true}})

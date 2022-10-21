@@ -9,17 +9,20 @@ import {usersRepository} from "../repositories/usersRepository";
 import {v4 as uuidv4} from "uuid";
 import cookieParser from "cookie-parser";
 import {strict} from "assert";
+import {agent} from "supertest";
+import {sessionService} from "../service/sessionService";
 
 export const authControllers = {
     async singInAccount(req: Request, res: Response) {
         const user = await usersService.checkCredentials(req.body.login, req.body.password)
         if (user) {
             const accessToken = await jwtService.createdJWT(user)
-            const refreshToken = await jwtService.createdRefreshJWT(user)
+            const refreshToken = await jwtService.createdRefreshJWT(user,String(uuidv4()))
+            await sessionService.createSession(user, req.ip, req.headers['user-agent']!,refreshToken)
             await usersRepository.createToken(user.id, accessToken, refreshToken) //todo  через  сервис нужно делать?
             const result = {accessToken: accessToken}
             return res.status(200).cookie("refreshToken", refreshToken,
-                {expires: new Date(Date.now()+ 20000), httpOnly: true, secure: true})
+                {expires: new Date(Date.now()+ 20000), httpOnly: false, secure: false})
                 .send(result)
         } else {
             return res.sendStatus(401)
@@ -29,11 +32,9 @@ export const authControllers = {
         const user = await usersService.checkRefreshToken(req.user!.accountData.login)
         if (user) {
             const accessToken = await jwtService.createdJWT(user)
-            const refreshToken = await jwtService.createdRefreshJWT(user)
+            const refreshToken = await jwtService.createdRefreshJWT(user, String(new Date()))
             await usersRepository.createToken(user.id, accessToken, refreshToken)
             const result = {accessToken: accessToken}
-            console.log("user.accountData.refreshToken", user.accountData.refreshToken)
-            console.log("user.accountData.accessToken", user.accountData.accessToken)
             return res.status(200).cookie("refreshToken", refreshToken,
                 {expires: new Date(Date.now()+ 20000), httpOnly: true, secure: true})
                 .send(result)

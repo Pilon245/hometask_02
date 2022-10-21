@@ -24,13 +24,7 @@ export const usersService = {
         if (!user) {
             return false
         }
-
-        // if (!user.emailConfirmation.isConfirmed){
-        //     return null
-        // }
-
         const passwordHash = await _generatePasswordForDb(password)
-        // if (user.passwordHash !== passwordHash) {
         const isValid = await bcrypt.compare(password, user.accountData.passwordHash)
         console.log("isValid", isValid)
         if (!isValid) {

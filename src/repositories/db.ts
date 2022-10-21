@@ -5,6 +5,8 @@ import {BlogsDbType} from "../types/blogsTypes";
 import {PostDbType} from "../types/postsTypes";
 import {UserAccountDBType, UsersDbType} from "../types/usersTypes";
 import {CommentsDbType} from "../types/commentsTypes";
+import {SessionDBType} from "../types/sessionTypes";
+// import {SecurityDevicesDBType} from "../types/SecurityDevicesTypes";
 
 
 
@@ -19,6 +21,7 @@ export const blogsCollection = db.collection<BlogsDbType>("blogs")
 export const postsCollection = db.collection<PostDbType>("posts")
 export const usersCollection = db.collection<UserAccountDBType>("users")
 export const commentsCollection = db.collection<CommentsDbType>("comments")
+export const sessionCollection = db.collection<SessionDBType>("session")
 
 export async function runDb(){
     try{
