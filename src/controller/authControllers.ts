@@ -9,7 +9,6 @@ import {usersRepository} from "../repositories/usersRepository";
 import {v4 as uuidv4} from "uuid";
 import cookieParser from "cookie-parser";
 import {strict} from "assert";
-import {agent} from "supertest";
 import {sessionService} from "../service/sessionService";
 
 export const authControllers = {
