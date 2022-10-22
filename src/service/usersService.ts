@@ -43,8 +43,6 @@ export const usersService = {
                 login: login,
                 email: email,
                 passwordHash,
-                accessToken: "",
-                refreshToken: "",//todo тут как сделать с пустой строкой
                 createdAt: new Date().toISOString()
             },
             emailConfirmation: {

@@ -16,6 +16,7 @@ export const authControllers = {
             const accessToken = await jwtService.createdJWT(user)
             const refreshToken = await jwtService.createdRefreshJWT(user,deviceId)
             await sessionService.createSession(user, req.ip, req.headers['user-agent']!,refreshToken, deviceId)
+            await usersRepository.createToken(user.id, refreshToken, deviceId)
             const result = {accessToken: accessToken}
             return res.status(200).cookie("refreshToken", refreshToken,
                 {expires: new Date(Date.now()+ 20000), httpOnly: true, secure: true})
@@ -31,6 +32,7 @@ export const authControllers = {
             const accessToken = await jwtService.createdJWT(user)
             const refreshToken = await jwtService.createdRefreshJWT(user, token.deviceId)
             await sessionService.updateSession(user, refreshToken)
+            await usersRepository.updateToken(user.id, refreshToken, token.deviceId)
             const result = {accessToken: accessToken}
             return res.status(200).cookie("refreshToken", refreshToken,
                 {expires: new Date(Date.now()+ 20000), httpOnly: true, secure: true})
@@ -65,9 +67,8 @@ export const authControllers = {
     async logOutAccount(req: Request, res: Response) {
         const payload = await jwtService.getUserIdByRefreshToken(req.cookies.refreshToken.split(" ")[0])
         await sessionService.deleteDevicesById(payload.deviceId)
-        console.log("deviceId",  payload.deviceId)
-            await usersRepository.deleteToken(req.cookies.refreshToken)
-            return res.sendStatus(204)
+        await usersRepository.deleteToken(req.user!.id, req.cookies.refreshToken, payload.deviceId)
+        return res.sendStatus(204)
        },
 
 }

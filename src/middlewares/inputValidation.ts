@@ -3,6 +3,7 @@ import {validationResult} from "express-validator";
 import {jwtService} from "../service/jwtService";
 import {usersRepository} from "../repositories/usersRepository";
 import {blockIpCollection, connectionsCountCollection} from "../repositories/db";
+import {payloadRefreshToken} from "../helpers/getSkipNumber";
 
 
 export const inputBodyValidation = (req: Request, res: Response, next: NextFunction) => {
@@ -56,10 +57,14 @@ export const refreshTokenMiddleware = async (req: Request, res: Response, next: 
     }
     const token = refToken.split(' ')[0]
 
+
     const userId = await jwtService.getUserIdByToken(token)
     if (!userId) return res.sendStatus(401)
     const user = await usersRepository.findUserById(userId)
     if (!user) return res.sendStatus(401)
+    const deviceId = await payloadRefreshToken(refToken)
+    await usersRepository.findTokenByUserIdAndDeviceId(user.id, deviceId)
+    if(!deviceId) return res.sendStatus(401)
     req.user = user
     return next()
 
