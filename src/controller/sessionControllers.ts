@@ -15,7 +15,6 @@ export const sessionControllers = {
     async deleteDevicesById(req: Request, res: Response) {
         const devices =  await sessionService.deleteDevicesById(req.params.deviceId)
         if (devices) res.sendStatus(204)
-        res.sendStatus(404)
 
     },
 
