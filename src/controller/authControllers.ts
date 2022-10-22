@@ -6,6 +6,7 @@ import {emailAdapter} from "../adapters/emailAdapter";
 import {usersRepository} from "../repositories/usersRepository";
 import {v4 as uuidv4} from "uuid";
 import {sessionService} from "../service/sessionService";
+import {payloadRefreshToken} from "../helpers/getSkipNumber";
 
 export const authControllers = {
     async singInAccount(req: Request, res: Response) {
@@ -26,8 +27,9 @@ export const authControllers = {
     async updateResfreshToken(req: Request, res: Response) {
         const user = await usersService.checkRefreshToken(req.user!.accountData.login)
         if (user) {
+            const token = await payloadRefreshToken(req.cookies.refreshToken)
             const accessToken = await jwtService.createdJWT(user)
-            const refreshToken = await jwtService.createdRefreshJWT(user, String(new Date()))
+            const refreshToken = await jwtService.createdRefreshJWT(user, token.deviceId)
             await sessionService.updateSession(user, refreshToken)
             const result = {accessToken: accessToken}
             return res.status(200).cookie("refreshToken", refreshToken,
