@@ -26,7 +26,6 @@ export const usersService = {
         }
         const passwordHash = await _generatePasswordForDb(password)
         const isValid = await bcrypt.compare(password, user.accountData.passwordHash)
-        console.log("isValid", isValid)
         if (!isValid) {
             return false
         }

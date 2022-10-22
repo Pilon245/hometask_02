@@ -21,7 +21,7 @@ export const sessionService = {
     },
     async createSession(user: UserAccountDBType, ip: string, deviceName: string, token: string){
       const userId = user.id
-      const deviceId = uuidv4()
+      const deviceId = String(+new Date())
       const payload = await jwtService.getUserIdByRefreshToken(token.split(" ")[0])
       const session: SessionDBType = {
           ip: ip,
