@@ -57,14 +57,13 @@ export const refreshTokenMiddleware = async (req: Request, res: Response, next: 
     }
     const token = refToken.split(' ')[0]
 
-
     const userId = await jwtService.getUserIdByToken(token)
     if (!userId) return res.sendStatus(401)
     const user = await usersRepository.findUserById(userId)
     if (!user) return res.sendStatus(401)
-    const deviceId = await payloadRefreshToken(refToken)
-    await usersRepository.findTokenByUserIdAndDeviceId(user.id, deviceId)
-    if(!deviceId) return res.sendStatus(401)
+    const payload = await payloadRefreshToken(refToken)
+    const isValid = await usersRepository.findTokenByUserIdAndDeviceId(user.id, payload.deviceId)
+    if(!isValid) return res.sendStatus(401)
     req.user = user
     return next()
 
