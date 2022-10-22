@@ -18,7 +18,6 @@ export const sessionService = {
     async createSession(user: UserAccountDBType, ip: string, deviceName: string, token: string, device: string){
       const userId = user.id
       const deviceId = device
-        console.log("deviceID create", deviceId)
       const payload = await jwtService.getUserIdByRefreshToken(token.split(" ")[0])
       const session: SessionDBType = {
           ip: ip,
@@ -30,8 +29,14 @@ export const sessionService = {
       }
       await sessionRepository.createSecurityDevices(session)
     },
-    async deleteDevices(id: string) {
-        return  await sessionRepository.deleteDevices(id)
+    async updateSession(user: UserAccountDBType,token: string, ){
+        const userId = user.id
+        const payload = await jwtService.getUserIdByRefreshToken(token.split(" ")[0])
+        const lastActiveDate = new Date(payload.iat * 1000).toISOString()
+        await sessionRepository.updateSecurityDevices(userId, payload.deviceId, lastActiveDate)
+    },
+    async deleteDevices(id: string, deviceId: string) {
+        return  await sessionRepository.deleteDevices(id, deviceId)
     },
     async deleteDevicesById(deviceId: string) {
         return  await sessionRepository.deleteDeviceById(deviceId)

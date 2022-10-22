@@ -14,7 +14,7 @@ export const forbiddenValidation = async (req: Request, res: Response, next: Nex
     res.sendStatus(403)
 }
 export const findDeviceIdOnUserId = async (req: Request, res: Response, next: NextFunction) => {
-    const deviceId = await sessionRepository.findDevicesByDeviceId(req.user!.id, req.params.deviceId)
+    const deviceId = await sessionRepository.findDevicesByDeviceIdAndUserId(req.user!.id, req.params.deviceId)
     if (deviceId) {
         next()
         return

@@ -8,16 +8,26 @@ export const sessionRepository = {
             .toArray()
         return result as SessionType []
     },
-    async findDevicesByDeviceId(userId: string, deviceId: string) {
+    async findDevicesByDeviceIdAndUserId(userId: string, deviceId: string) {
         const result =  await sessionCollection.findOne( {
         $and: [{userId: userId},{deviceId: deviceId}]})
+        return result
+    },
+    async findDevicesByDeviceId(deviceId: string) {
+        const result =  await sessionCollection.findOne(
+            {deviceId: deviceId})
         return result
     },
     async createSecurityDevices(device: SessionDBType){
         return await sessionCollection.insertOne(device)
     },
-    async deleteDevices(userId: string){
-        const result = await sessionCollection.deleteMany({userId: userId})
+    async updateSecurityDevices(userId: string, deviceId: string, lastActiveDate: string){
+        return await sessionCollection.updateOne({userId: userId, deviceId: deviceId},
+                            {$set: {lastActiveDate: lastActiveDate}})
+    },
+    async deleteDevices(userId: string, deviceId: string){
+        const result = await sessionCollection.deleteMany(
+            {userId: userId, deviceId: {$ne: deviceId}})
         return result.deletedCount === 1
     },
     async deleteDeviceById(deviceId: string){

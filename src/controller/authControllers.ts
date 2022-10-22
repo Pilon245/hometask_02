@@ -28,6 +28,7 @@ export const authControllers = {
         if (user) {
             const accessToken = await jwtService.createdJWT(user)
             const refreshToken = await jwtService.createdRefreshJWT(user, String(new Date()))
+            await sessionService.updateSession(user, refreshToken)
             const result = {accessToken: accessToken}
             return res.status(200).cookie("refreshToken", refreshToken,
                 {expires: new Date(Date.now()+ 20000), httpOnly: true, secure: true})

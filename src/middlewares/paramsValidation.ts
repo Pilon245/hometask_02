@@ -2,6 +2,7 @@ import {param} from "express-validator";
 import {blogsRepository} from "../repositories/blogsRepository";
 import {postsRepository} from "../repositories/postsRepository";
 import {commentsRepository} from "../repositories/commentsRepository";
+import {sessionRepository} from "../repositories/sessionRepository";
 
 const blogIdValidation = param("blogId")
         .custom(async (value) => {
@@ -27,9 +28,19 @@ const commentsIdValidation = param("commentId")
         }
         return true
     })
+const devicesIdValidation = param("deviceId")
+    .custom(async (value) => {
+        const device: any = await sessionRepository.findDevicesByDeviceId(value)
+        if(!device){
+            throw new Error("Field 'deviceId' is not in id.")
+        }
+        return true
+    })
 
 export const postOnblogIdValidation = [blogIdValidation]
 
 export const commentOnPostIdValidation = [postsIdValidation]
 
 export const commentIdValidation = [commentsIdValidation]
+
+export const deviceIdValidation = [devicesIdValidation]

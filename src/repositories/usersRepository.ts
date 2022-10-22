@@ -65,7 +65,7 @@ export const usersRepository = {
     //     let result = await usersCollection
     //         .updateOne({id: id},
     //             {$set: {'accountData.accessToken': "",
-    //                     'accountData.refreshToken': ""}})//todo как правильно удалить токен
+    //                     'accountData.refreshToken': ""}}) //todo как правильно удалить токен
     //     return result.modifiedCount === 1
     // },
     async deleteToken(token: string) {
