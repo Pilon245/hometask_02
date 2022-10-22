@@ -1,4 +1,3 @@
-import {ObjectId} from "mongodb";
 import {SortDirection} from "../middlewares/queryValidation";
 
 export type CommentsDbType = {
@@ -10,13 +9,6 @@ export type CommentsDbType = {
     createdAt: string
 }
 
-export type PagesUsersType = {
-    pagesCount: number
-    page: number
-    pageSize: number
-    totalCount: number
-    items: Array<CommentsDbType>
-}
 export type FindCommentsPayload = {
     pageSize: number,
     pageNumber: number,

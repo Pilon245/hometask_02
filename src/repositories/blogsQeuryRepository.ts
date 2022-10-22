@@ -1,7 +1,6 @@
 import {FindBlogsPayload, PagesBlogType} from "../types/blogsTypes";
 import {blogsCollection} from "./db";
 import {getPagesCounts, getSkipNumber} from "../helpers/getSkipNumber";
-import {SortDirection} from "../middlewares/queryValidation";
 
 
 

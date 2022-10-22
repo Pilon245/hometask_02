@@ -1,17 +1,7 @@
 import {blogsCollection} from "./db";
-import {ObjectId} from "mongodb";
 import {BlogsDbType} from "../types/blogsTypes";
 
 export const blogsRepository = {
-    async findBlogs(skip: number, pageSize: number, sortBy: string, sortDirection: any, searchNameTerm: string)
-        : Promise<BlogsDbType []> {
-        return  await blogsCollection
-            .find({name: {$regex: searchNameTerm}})
-            .sort(sortBy, sortDirection)
-            .skip(skip)
-            .limit(pageSize)
-            .toArray()
-    },
     async findBlogsById(id: string): Promise<BlogsDbType | null> {
         return await blogsCollection.findOne({id: id})
     },

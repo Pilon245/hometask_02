@@ -1,32 +1,13 @@
-import {usersCollection} from "./db";
-import {ObjectId} from "mongodb";
-import {UserAccountDBType, UsersDbType} from "../types/usersTypes";
+import {blockTokenCollection, usersCollection} from "./db";
+import {UserAccountDBType} from "../types/usersTypes";
+import {blockIpDBType} from "../types/ipTypes";
+import {BlockTokenDBType} from "../types/blockTokenTypes";
 
 export const usersRepository = {
-    async findUsers(login: string, password: string) {
-        const result = await usersCollection.findOne({login: login, password: password})
-      //  return  result ? true : false
-        if (result) {
-            return true
-        } else {
-            return false
-        }
-    },
     async findUserById(id: string) {
-        const result = await usersCollection.findOne({id:id}) // тут как делать с ид
+        const result = await usersCollection.findOne({id:id})
         return  result
     },
-    // async testTwoOr(){
-    //     const LoginOrEmailL = '123'
-    //     const user = await usersCollection.findOne({
-    //         $and: [
-    //             {$or: [{email: LoginOrEmailL}, {login: LoginOrEmailL}]},
-    //             {$or: [{email: LoginOrEmailL}, {login: LoginOrEmailL}]},
-    //         ]
-    //
-    //     })
-    // },
-    //TODO посмотреть запросы монго запросы
     async findLoginOrEmail(LoginOrEmailL: string) {
         const user = await usersCollection.findOne(
             {$or: [{'accountData.login': LoginOrEmailL},{'accountData.email': LoginOrEmailL}]})
@@ -37,7 +18,7 @@ export const usersRepository = {
             .findOne({'accountData.refreshToken': refToken})
         return result
     },
-    async createUsers(newUsers: UserAccountDBType): Promise<UserAccountDBType> { //todo any исправить на  UserAccountDBType
+    async createUsers(newUsers: UserAccountDBType): Promise<UserAccountDBType> {
         await usersCollection.insertOne(newUsers)
         return newUsers
     },
@@ -80,11 +61,16 @@ export const usersRepository = {
         const user = await usersCollection.findOne({'emailConfirmation.confirmationCode': emailConfirmationCode})
         return user
     },
-    async deleteToken(id: string) {
-        let result = await usersCollection
-            .updateOne({id: id},
-                {$set: {'accountData.accessToken': "",
-                        'accountData.refreshToken': ""}})//todo как правильно удалить токен
-        return result.modifiedCount === 1
+    // async deleteToken(id: string) {
+    //     let result = await usersCollection
+    //         .updateOne({id: id},
+    //             {$set: {'accountData.accessToken': "",
+    //                     'accountData.refreshToken': ""}})//todo как правильно удалить токен
+    //     return result.modifiedCount === 1
+    // },
+    async deleteToken(token: string) {
+        let result = await blockTokenCollection
+            .insertOne({token: token})
+        return true
     },
 }

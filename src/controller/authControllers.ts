@@ -2,22 +2,19 @@ import {Request, Response} from "express";
 import {authService} from "../service/authService";
 import {usersService} from "../service/usersService";
 import {jwtService} from "../service/jwtService";
-import nodemailer from 'nodemailer'
 import {emailAdapter} from "../adapters/emailAdapter";
-import {OutputUsersDbType} from "../types/usersTypes";
 import {usersRepository} from "../repositories/usersRepository";
 import {v4 as uuidv4} from "uuid";
-import cookieParser from "cookie-parser";
-import {strict} from "assert";
 import {sessionService} from "../service/sessionService";
 
 export const authControllers = {
     async singInAccount(req: Request, res: Response) {
         const user = await usersService.checkCredentials(req.body.login, req.body.password)
         if (user) {
+            const deviceId = String(uuidv4())
             const accessToken = await jwtService.createdJWT(user)
-            const refreshToken = await jwtService.createdRefreshJWT(user,String(uuidv4()))
-            await sessionService.createSession(user, req.ip, req.headers['user-agent']!,refreshToken)
+            const refreshToken = await jwtService.createdRefreshJWT(user,deviceId)
+            await sessionService.createSession(user, req.ip, req.headers['user-agent']!,refreshToken, deviceId)
             const result = {accessToken: accessToken}
             return res.status(200).cookie("refreshToken", refreshToken,
                 {expires: new Date(Date.now()+ 20000), httpOnly: true, secure: true})
@@ -58,8 +55,16 @@ export const authControllers = {
         const emailSend = await emailAdapter.sendEmail(user!.accountData.email, user!.emailConfirmation.confirmationCode)
         return res.sendStatus(204)
     },
+    // async logOutAccount(req: Request, res: Response) {
+    //         await usersRepository.deleteToken(req.user!.id)
+    //         return res.sendStatus(204)
+    //    },
     async logOutAccount(req: Request, res: Response) {
-            await usersRepository.deleteToken(req.user!.id)
+        const payload = await jwtService.getUserIdByRefreshToken(req.cookies.refreshToken.split(" ")[0])
+        await sessionService.deleteDevicesById(payload.deviceId)
+        console.log("deviceId",  payload.deviceId)
+            await usersRepository.deleteToken(req.cookies.refreshToken)
             return res.sendStatus(204)
        },
+
 }

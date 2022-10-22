@@ -1,4 +1,3 @@
-import {ObjectId} from "mongodb";
 import {SortDirection} from "../middlewares/queryValidation";
 
 export type BlogsDbType = {

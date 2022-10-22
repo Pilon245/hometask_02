@@ -1,12 +1,4 @@
-import {OutputUsersDbType, UsersDbType} from "../types/usersTypes";
-import {_generatePasswordForDb} from "../helpers/getSkipNumber";
-import {ObjectId} from "mongodb";
-import {usersRepository} from "../repositories/usersRepository";
-import {BlogsDbType, OutputBlogsDbType} from "../types/blogsTypes";
-import {blogsRepository} from "../repositories/blogsRepository";
-import {CommentsDbType} from "../types/commentsTypes";
 import {commentsRepository} from "../repositories/commentsRepository";
-import {postsRepository} from "../repositories/postsRepository";
 
 
 export const commentsService = {
@@ -50,5 +42,8 @@ export const commentsService = {
     async deleteComment(id: string): Promise<boolean> {
         return await commentsRepository.deleteComment(id)
     },
+    async deleteAllComment() {
+        return await commentsRepository.deleteAllComment()
+    }
 
 }

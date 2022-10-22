@@ -1,12 +1,8 @@
-import {OutputBlogsDbType} from "../types/blogsTypes";
-import {blogsRepository} from "../repositories/blogsRepository";
 import {sessionRepository} from "../repositories/sessionRepository";
-import {usersRepository} from "../repositories/usersRepository";
 import {UserAccountDBType} from "../types/usersTypes";
 import {v4 as uuidv4} from "uuid";
 import {jwtService} from "./jwtService";
 import {SessionDBType} from "../types/sessionTypes";
-import {postsRepository} from "../repositories/postsRepository";
 
 
 
@@ -19,15 +15,16 @@ export const sessionService = {
         const devices = await sessionRepository.findDevices(deviceId)
         return devices
     },
-    async createSession(user: UserAccountDBType, ip: string, deviceName: string, token: string){
+    async createSession(user: UserAccountDBType, ip: string, deviceName: string, token: string, device: string){
       const userId = user.id
-      const deviceId = String(+new Date())
+      const deviceId = device
+        console.log("deviceID create", deviceId)
       const payload = await jwtService.getUserIdByRefreshToken(token.split(" ")[0])
       const session: SessionDBType = {
           ip: ip,
           title: deviceName,
-          lastActiveDate: new Date(payload.iat * 1000),
-          expiresDate: new Date(payload.iat * 1000),
+          lastActiveDate: new Date(payload.iat * 1000).toISOString(),
+          expiresDate: new Date(payload.iat * 1000).toDateString(),
           deviceId: deviceId,
           userId: userId
       }

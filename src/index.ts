@@ -19,7 +19,7 @@ app.use(cors())
 app.use(express.json())
 app.use(cookieParser())
 
-app.set('trust proxy', true)// чтобы получать ip22
+app.set('trust proxy', true)// чтобы получать ip
 
 const port = process.env.PORT || 5002
 

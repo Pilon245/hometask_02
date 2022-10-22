@@ -1,28 +1,7 @@
 import {blogsRepository} from "../repositories/blogsRepository";
-import {BlogsDbType, OutputBlogsDbType, PagesBlogType} from "../types/blogsTypes"
-import {ObjectId} from "mongodb";
+import {BlogsDbType, OutputBlogsDbType} from "../types/blogsTypes"
 
 export const blogsService = {
-    // async findBlogs(pageNumber: number, pageSize: number, sortBy: string, sortDirection: string, searchNameTerm: string)
-    //     : Promise<PagesBlogType> {
-    //     let skip = pageNumber * pageSize
-    //     const blogs = await blogsRepository.findBlogs(skip, pageSize, sortBy, sortDirection, searchNameTerm)
-    //
-    //     const totalCount = await blogsRepository.countBlogs(sortBy, sortDirection,searchNameTerm)
-    //     const outBlog: PagesBlogType = {
-    //         pagesCount: (Math.ceil(totalCount/pageSize)),
-    //         page: pageNumber,
-    //         pageSize: pageSize,
-    //         totalCount: totalCount,
-    //         items: blogs.map(b => (
-    //         {
-    //             id: b._id,
-    //             name: b.name,
-    //             youtubeUrl: b.youtubeUrl,
-    //             createdAt: b.createdAt
-    //     }))}
-    //         return outBlog
-    // },
     async findBlogsById(id: string): Promise<OutputBlogsDbType | null> {
         const blog =  await blogsRepository.findBlogsById(id)
         if(blog){
@@ -58,18 +37,6 @@ export const blogsService = {
     },
     async deleteBlogs(id: string): Promise<boolean> {
         return await blogsRepository.deleteBlogs(id)
-    },
-    async sortBlogsByName(PageNumber: number, PageSize: number): Promise<OutputBlogsDbType[]> {
-        let skip = (Math.ceil(PageNumber/PageSize) - 1)*PageSize
-        const sortBlogs =  await blogsRepository.sortBlogsByName(skip, PageSize)
-        return sortBlogs.map(b => (
-            {
-                id: b.id,
-                name: b.name,
-                youtubeUrl: b.youtubeUrl,
-                createdAt: b.createdAt
-
-            }))
     },
     async deleteAllBlogs() {
     return blogsRepository.deleteAllBlogs()

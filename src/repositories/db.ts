@@ -7,12 +7,7 @@ import {UserAccountDBType, UsersDbType} from "../types/usersTypes";
 import {CommentsDbType} from "../types/commentsTypes";
 import {SessionDBType} from "../types/sessionTypes";
 import {blockIpDBType, connectionsDBType} from "../types/ipTypes";
-// import {SecurityDevicesDBType} from "../types/SecurityDevicesTypes";
-
-
-
-
-
+import {BlockTokenDBType} from "../types/blockTokenTypes";
 
 const mongoUri = process.env.MONGODB_URL || ""
 
@@ -25,6 +20,7 @@ export const commentsCollection = db.collection<CommentsDbType>("comments")
 export const sessionCollection = db.collection<SessionDBType>("session")
 export const blockIpCollection = db.collection<blockIpDBType>("blockIp")
 export const connectionsCountCollection = db.collection<connectionsDBType>("connections")
+export const blockTokenCollection = db.collection<BlockTokenDBType>("token")
 
 export async function runDb(){
     try{

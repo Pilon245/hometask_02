@@ -1,8 +1,6 @@
-import {SortDirection} from "../middlewares/queryValidation";
 import {usersCollection} from "./db";
 import {getPagesCounts, getSkipNumber} from "../helpers/getSkipNumber";
-import {FindUsersPayload, PagesUsersType} from "../types/usersTypes";
-import {PagesBlogType} from "../types/blogsTypes";
+import {FindUsersPayload} from "../types/usersTypes";
 
 
 

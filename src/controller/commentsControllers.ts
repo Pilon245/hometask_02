@@ -1,11 +1,7 @@
 import {Request, Response} from "express";
-import {blogsService} from "../service/blogsService";
 import {commentsService} from "../service/commentsService";
 import {queryValidation} from "../middlewares/queryValidation";
-import {postsQeuryRepository} from "../repositories/postsQeuryRepository";
 import {commentsQueryRepository} from "../repositories/commentsQeuryRepository";
-import {postsService} from "../service/postsService";
-import {usersService} from "../service/usersService";
 
 export const commentsControllers = {
     async getComment(req: Request, res: Response) {

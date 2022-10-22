@@ -1,4 +1,4 @@
-import {commentsCollection, sessionCollection, usersCollection} from "./db";
+import {sessionCollection} from "./db";
 import {SessionDBType, SessionType} from "../types/sessionTypes";
 
 export const sessionRepository = {
@@ -8,7 +8,7 @@ export const sessionRepository = {
             .toArray()
         return result as SessionType []
     },
-    async findDevicesByDeviceId(userId: string, deviceId: string): Promise<SessionType | null> {
+    async findDevicesByDeviceId(userId: string, deviceId: string) {
         const result =  await sessionCollection.findOne( {
         $and: [{userId: userId},{deviceId: deviceId}]})
         return result

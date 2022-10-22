@@ -1,4 +1,3 @@
-import {commentsRepository} from "../repositories/commentsRepository";
 import {Request, Response} from "express";
 import {sessionService} from "../service/sessionService";
 

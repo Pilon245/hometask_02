@@ -1,12 +1,9 @@
-import {ObjectId} from "mongodb";
-import {OutputUsersDbType, UserAccountDBType, UsersDbType} from "../types/usersTypes";
+import {UserAccountDBType} from "../types/usersTypes";
 import {usersRepository} from "../repositories/usersRepository";
 import bcrypt from "bcrypt";
 import {_generatePasswordForDb} from "../helpers/getSkipNumber";
 import add from "date-fns/add";
 import {v4 as uuidv4} from "uuid";
-import {emailManager} from "../managers/emailManager";
-import {jwtService} from "./jwtService";
 
 export const usersService = {
     async findUserById(id: string, ) {

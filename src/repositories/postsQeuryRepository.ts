@@ -1,6 +1,5 @@
-import {FindPostsPayload, PagesPostType, PostDbType} from "../types/postsTypes";
+import {FindPostsPayload} from "../types/postsTypes";
 import {postsCollection} from "./db";
-import {SortDirection} from "../middlewares/queryValidation";
 import {getSkipNumber} from "../helpers/getSkipNumber";
 
 

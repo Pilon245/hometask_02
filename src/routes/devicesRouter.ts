@@ -1,5 +1,4 @@
 import {Router} from "express";
-import {sessionService} from "../service/sessionService";
 import {sessionControllers} from "../controller/sessionControllers";
 import {refreshTokenMiddleware} from "../middlewares/inputValidation";
 import {findDeviceIdOnUserId} from "../middlewares/forbiddenValidation";

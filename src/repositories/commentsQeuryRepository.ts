@@ -1,8 +1,5 @@
-import {SortDirection} from "../middlewares/queryValidation";
-import {commentsCollection, usersCollection} from "./db";
+import {commentsCollection} from "./db";
 import {getPagesCounts, getSkipNumber} from "../helpers/getSkipNumber";
-import {PagesUsersType} from "../types/usersTypes";
-import {PagesBlogType} from "../types/blogsTypes";
 import {FindCommentsPayload} from "../types/commentsTypes";
 
 export const commentsQueryRepository = {
@@ -32,7 +29,6 @@ export const commentsQueryRepository = {
                 }))
         }
     },
-
 
     async findCommentOnPost(postId: string, {sortDirection, sortBy, pageSize, pageNumber}: FindCommentsPayload) {
         const comments = await commentsCollection

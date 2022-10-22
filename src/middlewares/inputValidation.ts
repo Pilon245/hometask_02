@@ -1,14 +1,8 @@
 import {Response, Request, NextFunction} from 'express';
 import {validationResult} from "express-validator";
 import {jwtService} from "../service/jwtService";
-import {usersService} from "../service/usersService";
 import {usersRepository} from "../repositories/usersRepository";
-import {v4 as uuidv4} from "uuid";
-import {ObjectId} from "mongodb";
-import {blogsQueryRepository} from "../repositories/blogsQeuryRepository";
-import cookieParser from "cookie-parser";
 import {blockIpCollection, connectionsCountCollection} from "../repositories/db";
-import { secondsToMilliseconds } from 'date-fns'
 
 
 export const inputBodyValidation = (req: Request, res: Response, next: NextFunction) => {
@@ -47,7 +41,6 @@ export const authTokenMiddleware = async (req: Request, res: Response, next: Nex
 
     const token = req.headers.authorization.split(' ')[1]
     const userId = await jwtService.getUserIdByToken(token)
-    const payload = await jwtService.getUserIdByRefreshToken(token.split(".")[1])
     if (userId) {
         req.user = await usersRepository.findUserById(userId)
         next()
@@ -62,13 +55,6 @@ export const refreshTokenMiddleware = async (req: Request, res: Response, next: 
         return
     }
     const token = refToken.split(' ')[0]
-
-
-    // const findRefToken = await usersRepository.findRefreshToken(refToken)
-    // if(!findRefToken) {
-    //     res.sendStatus(401)
-    //     return
-    // }
 
     const userId = await jwtService.getUserIdByToken(token)
     if (!userId) return res.sendStatus(401)
@@ -89,31 +75,14 @@ export const connectionControlMiddleware = async (req: Request, res: Response, n
     const isBlocked = await blockIpCollection.findOne({ip, endpoint,
         blockedAt: {$gte: (connectionAt - blockInterval)}})
     if (isBlocked) return res.sendStatus(429)
+
     const connectionsCount = await connectionsCountCollection.countDocuments({ip, endpoint,
         connectionAt: {$gte: (connectionAt - blockInterval)}})
     if (connectionsCount + 1 > maxCountOfConnections) {
         await blockIpCollection.insertOne({ip, endpoint, blockedAt: connectionAt})
         return res.sendStatus(429)
     }
+
     await connectionsCountCollection.insertOne({ip, endpoint, connectionAt})
     return next()
 }
-
-
-
-//todo перенести авторизацю
-
-// export const inputAuthValidation = (req: Request, res: Response, next: NextFunction) => {
-//     export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
-//         const creds = 'admin:qwerty'
-//         const authHeader = req.headers.authorization
-//         const base64Data = new Buffer(creds);
-//         let base64String = base64Data.toString('base64');
-//         const validAuthHeader = `Basic ${base64String}`
-//
-//         if (!authHeader || typeof authHeader !== "string" || authHeader !== validAuthHeader) {
-//             res.sendStatus(401);
-//         } else {
-//             next()
-//         }
-//     }
