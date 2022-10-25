@@ -109,6 +109,17 @@ const newPasswordValidation = body("newPassword")
     .isString().withMessage("Field 'password' is not a string.")
     .notEmpty({ignore_whitespace: true}).withMessage("Field 'password' cannot be empty.")
     .isLength({min: 6, max: 20}).withMessage("Min length of field 'password' 6 max 20.")
+const emailPasswordValidation = body("email")
+    .isString().withMessage("Field 'email' is not a string.")
+    .notEmpty({ignore_whitespace: true}).withMessage("Field 'email' cannot be empty.")
+    .matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/).withMessage("Field 'email' is invalid.")
+    .custom(async (value) => {
+        const user = await usersRepository.findLoginOrEmail(value);
+        if (!user || user.passwordConfirmation.isConfirmed || user.passwordConfirmation.expirationDate < new Date()) {
+            throw new Error("Field 'email' is not correct.");
+        }
+        return true;
+    })
 
 
 
@@ -127,7 +138,7 @@ export const confirmationValidation = [code]
 
 export const registrationValidation = [emailRegistrationValidation, loginRegistrationValidation, passwordValidation]
 export const resendingValidation = [emailResendingValidation]
-export const recoveryPassValidation = [emailValidation]
+export const recoveryPassValidation = [emailPasswordValidation]
 export const newPassValidation = [newPasswordValidation]
 export const newPassCodeValidation = [passwordCode]
 
