@@ -24,8 +24,11 @@ export const authService = {
         let user = await usersRepository.findLoginOrEmail(email)
         const newCode = uuidv4()
         console.log("user", user)
-        let result = await usersRepository.updatePasswordCode(user!.id, newCode)
-        return result
+        if (user){
+            let result = await usersRepository.updatePasswordCode(user!.id, newCode)
+            return result
+        }
+        return true
     },
     async updatePasswordUsers(code: string, password: string) {
         let user = await usersRepository.findUserByConfirmationPasswordCode(code)
