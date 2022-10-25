@@ -64,8 +64,11 @@ export const authControllers = {
     async recoveryPassword(req: Request, res: Response) {
         const updateCode = await authService.updatePasswordCode(req.body.email)
         const user = await usersRepository.findLoginOrEmail(req.body.email)
-        if(user) {const passwordEmail = passwordEmailAdapter.sendPasswordOnEmail(
-            user!.accountData.email, user!.emailConfirmation.confirmationCode)}
+        if(user) {
+            const update = usersRepository.updatePasswordUsers(user!.id, "password")
+            const passwordEmail = passwordEmailAdapter.sendPasswordOnEmail(
+            user!.accountData.email, user!.emailConfirmation.confirmationCode)
+        }
         return res.sendStatus(204)
     },
     async confirmationRecoveryPassword(req: Request, res: Response) {

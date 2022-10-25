@@ -96,7 +96,7 @@ export const loginRegistrationValidation = body('login')
         }
         return true;
     })
-const passwordCode = body("code")
+const passwordCode = body("recoveryCode")
     .isString().withMessage("Field 'code' is not a string.")
     .custom( async (value) => {
         const user = await usersRepository.findUserByConfirmationPasswordCode(value);
@@ -138,7 +138,7 @@ export const confirmationValidation = [code]
 
 export const registrationValidation = [emailRegistrationValidation, loginRegistrationValidation, passwordValidation]
 export const resendingValidation = [emailResendingValidation]
-export const recoveryPassValidation = [emailPasswordValidation]
+export const recoveryPassValidation = [emailValidation]
 export const newPassValidation = [newPasswordValidation]
 export const newPassCodeValidation = [passwordCode]
 

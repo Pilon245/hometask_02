@@ -24,8 +24,8 @@ authRouter.post('/auth/registration-confirmation',connectionControlMiddleware,co
     authControllers.confirmationEmail)
 authRouter.post('/auth/registration-email-resending',connectionControlMiddleware,resendingValidation, inputBodyValidation,
     authControllers.resendingEmail)
-authRouter.post('/auth/password-recovery',connectionControlMiddleware,
+authRouter.post('/auth/password-recovery',connectionControlMiddleware,recoveryPassValidation, inputBodyValidation,
     authControllers.recoveryPassword)
-authRouter.post('/auth/new-password',connectionControlMiddleware,newPassValidation,
+authRouter.post('/auth/new-password',connectionControlMiddleware,newPassValidation,inputBodyValidation,
     newPassCodeValidation, inputBodyValidation, authControllers.confirmationRecoveryPassword)
 authRouter.post('/auth/logout', refreshTokenMiddleware,authControllers.logOutAccount)
