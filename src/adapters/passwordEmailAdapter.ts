@@ -17,7 +17,7 @@ export const passwordEmailAdapter = {
             text: "Hello friends, I'am five age!", // plain text body
             html: " <h1>Password recovery</h1>\n" +
                 "       <p>To finish password recovery please follow the link below:\n" +
-                `         <a href='https://somesite.com/password-recovery?recoveryCode=your_recovery_code'>recovery password</a>\n` +
+                `         <a href='https://somesite.com/password-recovery?recoveryCode=${code}'>recovery password</a>\n` +
                 "      </p>", // html body
         })
         return info
