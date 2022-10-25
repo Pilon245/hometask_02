@@ -8,6 +8,7 @@ import {CommentsDbType} from "../types/commentsTypes";
 import {SessionDBType} from "../types/sessionTypes";
 import {blockIpDBType, connectionsDBType} from "../types/ipTypes";
 import {TokenDBType} from "../types/tokenTypes";
+import mongoose from "mongoose";
 
 const mongoUri = process.env.MONGODB_URL || ""
 
@@ -22,13 +23,23 @@ export const blockIpCollection = db.collection<blockIpDBType>("blockIp")
 export const connectionsCountCollection = db.collection<connectionsDBType>("connections")
 export const tokenCollection = db.collection<TokenDBType>("token")
 
+// const tokenSchema = new mongoose.Schema<TokenDBType>({
+//     refreshToken: String,
+//     userId: String,
+//     deviceId : String
+// })
+
+// export const TokenModel = mongoose.model('token', tokenSchema)
+
 export async function runDb(){
     try{
         await client.connect();
         await client.db
+        // await mongoose.connect(mongoUri + "/" + "network")
         console.log("Connected successfully to mongo server")
     } catch {
         console.log("can't connected to db ")
-        await client.close()
+        // await client.close()
+        await mongoose.disconnect()
     }
 }

@@ -1,4 +1,6 @@
 import {SortDirection} from "../middlewares/queryValidation";
+import {v4 as uuidv4} from "uuid";
+import add from "date-fns/add";
 
 export type UsersDbType = {
         id: string
@@ -26,6 +28,7 @@ export type UserAccountDBType = {
         id: string
         accountData: UsersAccountDataType
         emailConfirmation: EmailConfirmationType
+        passwordConfirmation: PasswordConfirmationType
 }
 export type UsersAccountDataType = {
         login: string
@@ -34,6 +37,11 @@ export type UsersAccountDataType = {
         createdAt: string
 }
 export type EmailConfirmationType = {
+        confirmationCode: string
+        expirationDate: Date
+        isConfirmed: boolean
+}
+export type PasswordConfirmationType = {
         confirmationCode: string
         expirationDate: Date
         isConfirmed: boolean

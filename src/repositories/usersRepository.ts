@@ -41,17 +41,31 @@ export const usersRepository = {
     //     "securityDevices.deviceId": deviceId}})
     //     return result.modifiedCount === 1
     // },
-    async updateConfirmation(id: string) {
+    async updateEmailConfirmation(id: string) {
         let result = await usersCollection
             .updateOne({id: id}, {$set: {'emailConfirmation.isConfirmed': true}})
         return result.modifiedCount === 1
     },
-    async updateCode(id: string, code: any) {
+    async updatePasswordConfirmation(id: string) {
+        let result = await usersCollection
+            .updateOne({id: id}, {$set: {'passwordConfirmation.isConfirmed': true}})
+        return result.modifiedCount === 1
+    },
+    async updateEmailCode(id: string, code: any) {
         let result = await usersCollection
             .updateOne({id: id}, {$set: {'emailConfirmation.confirmationCode': code}})
         return result.modifiedCount === 1
     },
-
+    async updatePasswordCode(id: string, code: any) {
+        let result = await usersCollection
+            .updateOne({id: id}, {$set: {'passwordConfirmation.confirmationCode': code}})
+        return result.modifiedCount === 1
+    },
+    async updatePasswordUsers(id: string, password: string) {
+        let result = await usersCollection
+            .updateOne({id: id}, {$set: {'accountData.passwordHash': password}})
+        return result.modifiedCount === 1
+    },
     async deleteUsers(id: string): Promise<boolean> {
         const result = await usersCollection.deleteOne({id: id})
         return result.deletedCount === 1
@@ -60,8 +74,12 @@ export const usersRepository = {
         await usersCollection.deleteMany({})
         return true
     },
-    async findUserByConfirmationCode(emailConfirmationCode: string) {
+    async findUserByConfirmationEmailCode(emailConfirmationCode: string) {
         const user = await usersCollection.findOne({'emailConfirmation.confirmationCode': emailConfirmationCode})
+        return user
+    },
+    async findUserByConfirmationPasswordCode(passwordConfirmation: string) {
+        const user = await usersCollection.findOne({'passwordConfirmation.confirmationCode': passwordConfirmation})
         return user
     },
     async deleteToken(userId: string, refreshToken: string, deviceId: string) {

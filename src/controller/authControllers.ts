@@ -7,6 +7,7 @@ import {usersRepository} from "../repositories/usersRepository";
 import {v4 as uuidv4} from "uuid";
 import {sessionService} from "../service/sessionService";
 import {payloadRefreshToken} from "../helpers/getSkipNumber";
+import {passwordEmailAdapter} from "../adapters/passwordEmailAdapter";
 
 export const authControllers = {
     async singInAccount(req: Request, res: Response) {
@@ -55,10 +56,22 @@ export const authControllers = {
         res.sendStatus(204)
     },
     async resendingEmail(req: Request, res: Response) {
-        const updateCode = await authService.updateCode(req.body.email)
+        const updateCode = await authService.updateEmailCode(req.body.email)
         const user = await usersRepository.findLoginOrEmail(req.body.email)
         const emailSend = await emailAdapter.sendEmail(user!.accountData.email, user!.emailConfirmation.confirmationCode)
         return res.sendStatus(204)
+    },
+    async recoveryPassword(req: Request, res: Response) {
+        const updateCode = await authService.updatePasswordCode(req.body.email)
+        const user = await usersRepository.findLoginOrEmail(req.body.email)
+        const passwordEmail = passwordEmailAdapter.sendPasswordOnEmail(
+            user!.accountData.email, user!.emailConfirmation.confirmationCode)
+        return res.sendStatus(204)
+    },
+    async confirmationRecoveryPassword(req: Request, res: Response) {
+        // const result = await authService.confirmationPassword(req.body.recoveryCode)
+        const update = await authService.updatePasswordUsers(req.body.recoveryCode, req.body.newPassword)
+        res.sendStatus(204)
     },
     // async logOutAccount(req: Request, res: Response) {
     //         await usersRepository.deleteToken(req.user!.id)

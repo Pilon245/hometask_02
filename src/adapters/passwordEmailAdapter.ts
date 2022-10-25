@@ -1,8 +1,8 @@
 import nodemailer from 'nodemailer'
 
 
-export const emailAdapter = {
-    async sendEmail (email: string, code: string) {
+export const passwordEmailAdapter = {
+    async sendPasswordOnEmail (email: string, code: string) {
         let transporter = nodemailer.createTransport({
             service: "gmail",
             auth: {
@@ -13,13 +13,13 @@ export const emailAdapter = {
         let info = await transporter.sendMail({
             from: 'Said', // sender address
             to: email, // list of receivers
-            subject: "Registration", // Subject line
+            subject: "Recovery Password", // Subject line
             text: "Hello friends, I'am five age!", // plain text body
-            html: " <h1>Thank for your registration</h1>\n" +
-                "       <p>To finish registration please follow the link below:\n" +
-                `          <a href='https://somesite.com/confirm-email?code=${code}'>complete registration</a>\n` +
+            html: " <h1>Password recovery</h1>\n" +
+                "       <p>To finish password recovery please follow the link below:\n" +
+                `         <a href='https://somesite.com/password-recovery?recoveryCode=your_recovery_code'>recovery password</a>\n` +
                 "      </p>", // html body
         })
         return info
-    },
+    }
 }

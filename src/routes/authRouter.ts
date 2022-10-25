@@ -8,7 +8,7 @@ import {
 import {authControllers} from "../controller/authControllers";
 import {
     authValidation,
-    confirmationValidation, registrationValidation,
+    confirmationValidation, newPassValidation, recoveryPassValidation, registrationValidation,
     resendingValidation,
 } from "../middlewares/bodyValidation";
 
@@ -24,4 +24,8 @@ authRouter.post('/auth/registration-confirmation',connectionControlMiddleware,co
     authControllers.confirmationEmail)
 authRouter.post('/auth/registration-email-resending',connectionControlMiddleware,resendingValidation, inputBodyValidation,
     authControllers.resendingEmail)
+authRouter.post('/auth/password-recovery',connectionControlMiddleware,recoveryPassValidation,inputBodyValidation,
+    authControllers.recoveryPassword)
+authRouter.post('/auth/new-password',connectionControlMiddleware,newPassValidation, inputBodyValidation,
+    authControllers.confirmationRecoveryPassword)
 authRouter.post('/auth/logout', refreshTokenMiddleware,authControllers.logOutAccount)

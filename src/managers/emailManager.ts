@@ -6,4 +6,5 @@ export const emailManager  = {
     async sendPasswordRecoveryMessage(user: any) {
         await emailAdapter.sendEmail(user.accountData.email, user.emailConfirmation.confirmationCode)
     }
+
 }

@@ -57,7 +57,7 @@ const contentCommentValidation = body("content")
 const code = body("code")
     .isString().withMessage("Field 'code' is not a string.")
     .custom( async (value) => {
-        const user = await usersRepository.findUserByConfirmationCode(value);
+        const user = await usersRepository.findUserByConfirmationEmailCode(value);
         if (!user || user.emailConfirmation.isConfirmed || user.emailConfirmation.confirmationCode !== value || user.emailConfirmation.expirationDate < new Date()) {
             throw new Error("Field 'code' is not correct.");
         }
@@ -96,6 +96,15 @@ export const loginRegistrationValidation = body('login')
         }
         return true;
     })
+const passwordCode = body("code")
+    .isString().withMessage("Field 'code' is not a string.")
+    .custom( async (value) => {
+        const user = await usersRepository.findUserByConfirmationPasswordCode(value);
+        if (!user || user.passwordConfirmation.isConfirmed || user.passwordConfirmation.confirmationCode !== value || user.passwordConfirmation.expirationDate < new Date()) {
+            throw new Error("Field 'code' is not correct.");
+        }
+        return true;
+    })
 
 
 
@@ -114,4 +123,7 @@ export const confirmationValidation = [code]
 
 export const registrationValidation = [emailRegistrationValidation, loginRegistrationValidation, passwordValidation]
 export const resendingValidation = [emailResendingValidation]
+export const recoveryPassValidation = [emailValidation]
+export const newPassValidation = [passwordValidation, passwordCode]
+
 

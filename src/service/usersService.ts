@@ -49,7 +49,14 @@ export const usersService = {
                 confirmationCode: uuidv4(),
                 expirationDate: add(new Date(), {hours: 1, minutes: 1}),
                 isConfirmed: false
-            }}
+            },
+            passwordConfirmation: {
+                confirmationCode: uuidv4(),
+                expirationDate: add(new Date(), {hours: 1, minutes: 1}),
+                isConfirmed: false
+            }
+
+        }
 
         const createdUser = await usersRepository.createUsers(newUsers)
         // try {
@@ -61,6 +68,7 @@ export const usersService = {
         // }
         return newUsers
     },
+
     async deleteUsers(id: string): Promise<boolean> {
         return await usersRepository.deleteUsers(id)
     },
