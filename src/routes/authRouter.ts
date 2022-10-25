@@ -1,14 +1,14 @@
 import {Router} from "express";
 import {
     authTokenMiddleware,
-    connectionControlMiddleware,
+    connectionControlMiddleware, inputBodyNotViewValidation,
     inputBodyValidation,
     refreshTokenMiddleware
 } from "../middlewares/inputValidation";
 import {authControllers} from "../controller/authControllers";
 import {
     authValidation,
-    confirmationValidation, newPassValidation, recoveryPassValidation, registrationValidation,
+    confirmationValidation, newPassCodeValidation, newPassValidation, recoveryPassValidation, registrationValidation,
     resendingValidation,
 } from "../middlewares/bodyValidation";
 
@@ -27,5 +27,5 @@ authRouter.post('/auth/registration-email-resending',connectionControlMiddleware
 authRouter.post('/auth/password-recovery',connectionControlMiddleware,recoveryPassValidation,inputBodyValidation,
     authControllers.recoveryPassword)
 authRouter.post('/auth/new-password',connectionControlMiddleware,newPassValidation, inputBodyValidation,
-    authControllers.confirmationRecoveryPassword)
+    newPassCodeValidation, inputBodyNotViewValidation, authControllers.confirmationRecoveryPassword)
 authRouter.post('/auth/logout', refreshTokenMiddleware,authControllers.logOutAccount)

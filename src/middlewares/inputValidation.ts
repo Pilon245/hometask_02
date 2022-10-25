@@ -20,6 +20,20 @@ export const inputBodyValidation = (req: Request, res: Response, next: NextFunct
         next()
     }
 }
+    export const inputBodyNotViewValidation = (req: Request, res: Response, next: NextFunction) => {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        const errorsArray = errors.array({onlyFirstError: true}).map((error) => {
+            return {
+                message: error.msg,
+                field: error.param
+            }
+        })
+        return res.status(400)
+    } else {
+        next()
+    }
+}
 export const inputQueryValidation = (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {

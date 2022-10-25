@@ -105,6 +105,10 @@ const passwordCode = body("code")
         }
         return true;
     })
+const newPasswordValidation = body("newPassword")
+    .isString().withMessage("Field 'password' is not a string.")
+    .notEmpty({ignore_whitespace: true}).withMessage("Field 'password' cannot be empty.")
+    .isLength({min: 6, max: 20}).withMessage("Min length of field 'password' 6 max 20.")
 
 
 
@@ -124,6 +128,7 @@ export const confirmationValidation = [code]
 export const registrationValidation = [emailRegistrationValidation, loginRegistrationValidation, passwordValidation]
 export const resendingValidation = [emailResendingValidation]
 export const recoveryPassValidation = [emailValidation]
-export const newPassValidation = [passwordValidation, passwordCode]
+export const newPassValidation = [newPasswordValidation]
+export const newPassCodeValidation = [passwordCode]
 
 
