@@ -97,11 +97,11 @@ export const loginRegistrationValidation = body('login')
         return true;
     })
 const passwordCode = body("recoveryCode")
-    .isString().withMessage("Field 'code' is not a string.")
+    .isString().withMessage("Field 'recoveryCode' is not a string.")
     .custom( async (value) => {
         const user = await usersRepository.findUserByConfirmationPasswordCode(value);
         if (!user || user.passwordConfirmation.isConfirmed || user.passwordConfirmation.confirmationCode !== value || user.passwordConfirmation.expirationDate < new Date()) {
-            throw new Error("Field 'code' is not correct.");
+            throw new Error("Field 'recoveryCode' is not correct.");
         }
         return true;
     })

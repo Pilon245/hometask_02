@@ -23,7 +23,7 @@ export const authService = {
     async updatePasswordCode(email: string) {
         let user = await usersRepository.findLoginOrEmail(email)
         const newCode = uuidv4()
-        console.log("user", user)
+        console.log("newCode", newCode)
         if (user){
             let result = await usersRepository.updatePasswordCode(user!.id, newCode)
             return result
@@ -33,7 +33,8 @@ export const authService = {
     async updatePasswordUsers(code: string, password: string) {
         let user = await usersRepository.findUserByConfirmationPasswordCode(code)
         const passwordHash = await _generatePasswordForDb(password)
-        const update = usersRepository.updatePasswordUsers(user!.id, password)
+        await usersRepository.updatePasswordConfirmation(user!.id)
+        const update = await usersRepository.updatePasswordUsers(user!.id, passwordHash)
         return update
     },
 }
