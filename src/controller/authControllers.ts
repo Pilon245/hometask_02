@@ -67,7 +67,7 @@ export const authControllers = {
         if(user) {
             const update = usersRepository.updatePasswordUsers(user!.id, "password")
             const passwordEmail = passwordEmailAdapter.sendPasswordOnEmail(
-            user!.accountData.email, user!.emailConfirmation.confirmationCode)
+            user!.accountData.email, user!.passwordConfirmation.confirmationCode)
         }
         return res.sendStatus(204)
     },
