@@ -55,7 +55,6 @@ export const usersService = {
                 expirationDate: add(new Date(), {hours: 1, minutes: 1}),
                 isConfirmed: false
             }
-
         }
 
         const createdUser = await usersRepository.createUsers(newUsers)
