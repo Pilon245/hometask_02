@@ -7,14 +7,26 @@ import {LikeValue} from "../types/commentsTypes";
 export const commentsControllers = {
     async getComment(req: Request, res: Response) {
         const {pageNumber, pageSize, sortBy, sortDirection} = queryValidation(req.query)
-        const foundComments = await commentsQueryRepository.findCommentOnPost(req.params.postId,
-            {
-            pageNumber,
-            pageSize,
-            sortBy,
-            sortDirection
-        })
-        return res.status(200).send(foundComments)
+        if(req.user) {
+            const foundComments = await commentsQueryRepository.findCommentOnPost(req.params.postId, req.user.id,
+                {
+                    pageNumber,
+                    pageSize,
+                    sortBy,
+                    sortDirection
+                })
+            return res.status(200).send(foundComments)
+        }
+        if(!req.user){
+            const foundComments = await commentsQueryRepository.findCommentOnPostNoAuth(req.params.postId,
+                {
+                    pageNumber,
+                    pageSize,
+                    sortBy,
+                    sortDirection
+                })
+            return res.status(200).send(foundComments)
+        }
     },
     async getCommentById(req: Request, res: Response) {
         console.log("req.user", req.user)
