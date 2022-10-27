@@ -27,11 +27,7 @@ export const commentsService = {
             postId: postId,
             userLogin: userLogin,
             createdAt: new Date().toISOString(),
-            likeInfo: {
-                likesCount: 0,
-                dislikesCount: 0,
-                myStatus: "None"
-            }
+
         }
         const createdComment = await commentsRepository.createComment(newComment)
         const outCreateComment = {

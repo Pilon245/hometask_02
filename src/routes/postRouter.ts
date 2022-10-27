@@ -14,6 +14,7 @@ postRouter.get('/posts/:id',postControllers.getPostById)
 postRouter.post('/posts',authMiddleware,postsValidation,inputBodyValidation,postControllers.createPost)
 postRouter.put('/posts/:id',authMiddleware,postsValidation,inputBodyValidation,postControllers.updatePost)
 postRouter.delete('/posts/:id',authMiddleware,postControllers.deletePost)
-postRouter.get('/posts/:postId/comments',commentOnPostIdValidation, inputQueryValidation,commentsControllers.getComment)
+postRouter.get('/posts/:postId/comments',commentOnPostIdValidation, inputQueryValidation,
+    commentsControllers.getComment)
 postRouter.post('/posts/:postId/comments', authTokenMiddleware,commentOnPostIdValidation, inputQueryValidation,
 commentOnPostValidation,inputBodyValidation,commentsControllers.createComment)

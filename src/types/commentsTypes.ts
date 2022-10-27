@@ -7,7 +7,7 @@ export type CommentsDbType = {
     postId: string
     userLogin: string
     createdAt: string
-    likeInfo: LikeInfoType
+    likeInfo?: LikeInfoType []
 }
 export type FindCommentsPayload = {
     pageSize: number,

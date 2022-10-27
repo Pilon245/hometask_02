@@ -1,6 +1,6 @@
 import {commentsCollection, likeCollection} from "./db";
 import {getPagesCounts, getSkipNumber} from "../helpers/getSkipNumber";
-import {FindCommentsPayload} from "../types/commentsTypes";
+import {CommentsDbType, FindCommentsPayload} from "../types/commentsTypes";
 import {commentsRepository} from "./commentsRepository";
 
 export const commentsQueryRepository = {
@@ -39,8 +39,36 @@ export const commentsQueryRepository = {
             .skip(getSkipNumber(pageNumber, pageSize))
             .limit(pageSize)
             .toArray()
+        const comment = await commentsCollection.findOne({postId: postId})
+
+        comments.map(c => (
+            {
+                id: c.id,
+                likeInfo: {
+                    likesCount: likecounts("1666881025846"),
+                    dislikesCount: likeCollection.countDocuments(
+                        {$and: [{commentId: c.id}, {dislikesStatus: 1}]}),
+                    myStatus: "None"
+                    //likeCollection.findOne(
+                    // {$and: [{commentId: id}, {authUserId: authUserId}]})
+                }}))
 
         const totalCount = await commentsCollection.countDocuments({postId: postId})
+        // const likesCount = await likesCollection.countDocuments({parentId: comment.id, type: 'Like'})
+        // const dislikesCount = await likesCollection.countDocuments({parentId: comment.id, type: 'Dislike'})
+        //
+        // const totalLike = await likeCollection.countDocuments(
+        //     {commentId: comment.id, likesStatus: 1})
+        // const totalDislike = await likeCollection.countDocuments(
+        //     {$and: [{commentId: comment.id}, {dislikesStatus: 1}]}
+        // )
+        // const likeStatus = await likeCollection.findOne(
+        //     {$and: [{commentId: id}, {authUserId: authUserId}]})
+        // console.log("likeStatus?.myStatus", likeStatus?.myStatus)
+        async function likecounts(id: string): Promise<number> {
+            return likeCollection.countDocuments(
+                 {commentId: id, likesStatus: 1})
+        }
 
         return {
             pagesCount: getPagesCounts(totalCount, pageSize),
@@ -53,8 +81,15 @@ export const commentsQueryRepository = {
                     content: c.content,
                     userId: c.userId,
                     userLogin: c.userLogin,
-                    createdAt: c.createdAt
-                }))
+                    createdAt: c.createdAt,
+                    likeInfo: {
+                        likesCount: likecounts("1666881025846"),
+                        dislikesCount: likeCollection.countDocuments(
+                            {$and: [{commentId: c.id}, {dislikesStatus: 1}]}),
+                        myStatus: "None"
+                        //likeCollection.findOne(
+                           // {$and: [{commentId: id}, {authUserId: authUserId}]})
+                }}))
         }
     },
     async findCommentsNotAuth(id: string ) {
