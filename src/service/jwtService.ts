@@ -6,12 +6,12 @@ import {setting} from "../setting";
 
 export const jwtService = {
     async createdJWT (user: UserAccountDBType) {
-        const token = jwt.sign({id: user.id}, setting.JWT_SECRET, {expiresIn: '600000'})
+        const token = jwt.sign({id: user.id}, setting.JWT_SECRET, {expiresIn: '7m'})
         return token
     },
     async createdRefreshJWT (user: UserAccountDBType, deviceId: string) {
         const refreshToken = jwt.sign({id: user.id, deviceId: deviceId},
-            setting.JWT_SECRET, {expiresIn: '600000'})
+            setting.JWT_SECRET, {expiresIn: '7m'})
         return refreshToken
     },
     async getUserIdByToken (token: string) {

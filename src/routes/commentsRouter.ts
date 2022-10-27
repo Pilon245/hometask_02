@@ -15,7 +15,7 @@ export const commentsRouter = Router({})
 commentsRouter.get('/comments/:id',TokenOnCommentIdMiddleware, commentsControllers.getCommentById)//refresh авторизация
 commentsRouter.put('/comments/:commentId', authTokenMiddleware, commentIdValidation, inputQueryValidation,
     forbiddenValidation, commentOnPostValidation,inputBodyValidation, commentsControllers.updateComment)
-commentsRouter.put('/comments/:commentId/like-status',refreshTokenMiddleware,commentIdValidation,
-    inputQueryValidation,likeValidation, inputBodyValidation, commentsControllers.updateLike)
+commentsRouter.put('/comments/:commentId/like-status',commentIdValidation,
+    inputQueryValidation, refreshTokenMiddleware,likeValidation, inputBodyValidation, commentsControllers.updateLike)
 commentsRouter.delete('/comments/:commentId', authTokenMiddleware, commentIdValidation, inputQueryValidation,
     forbiddenValidation, commentsControllers.deleteComment)
