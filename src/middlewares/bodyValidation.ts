@@ -1,6 +1,7 @@
 import {body} from "express-validator";
 import {blogsRepository} from "../repositories/blogsRepository";
 import {usersRepository} from "../repositories/usersRepository";
+import {LikeValue} from "../types/commentsTypes";
 
 
 const nameValidation = body( "name")
@@ -120,6 +121,18 @@ const emailPasswordValidation = body("email")
         }
         return true;
     })
+const likeStatusValidation = body("likeStatus")
+    .isString().withMessage("Field 'likeStatus' is not a string")
+    .custom(async (value) => {
+        const arrayValue = Object.values(LikeValue)
+        const result = arrayValue.filter((element) => element === value)
+        const likeStatus = result[0]
+
+        if (!likeStatus){
+            throw new Error("Field 'likeStatus' is not a string")
+        }
+        return true
+    })
 
 
 
@@ -132,6 +145,8 @@ export const commentOnPostValidation = [contentCommentValidation]
 
 export const usersValidation = [loginValidation, passwordValidation, emailValidation]
 
+export const likeValidation = [likeStatusValidation]
+
 export const authValidation = [loginAuthValidation, passwordAuthValidation]
 
 export const confirmationValidation = [code]
@@ -139,7 +154,6 @@ export const confirmationValidation = [code]
 export const registrationValidation = [emailRegistrationValidation, loginRegistrationValidation, passwordValidation]
 export const resendingValidation = [emailResendingValidation]
 export const recoveryPassValidation = [emailValidation]
-export const newPassValidation = [newPasswordValidation]
-export const newPassCodeValidation = [passwordCode]
+export const newPassValidation = [passwordCode, newPasswordValidation]
 
 

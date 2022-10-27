@@ -82,6 +82,28 @@ export const refreshTokenMiddleware = async (req: Request, res: Response, next: 
     return next()
 
 }
+export const TokenOnCommentIdMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+    const refToken = req.cookies.refreshToken
+    if (!refToken) {
+        next()
+        return
+    }
+    const token = refToken.split(' ')[0]
+
+    const userId = await jwtService.getUserIdByToken(token)
+    if (!userId) {
+        next()
+        return
+    }
+    const user = await usersRepository.findUserById(userId)
+    if (!user) return next()
+    const payload = await payloadRefreshToken(refToken)
+    const isValid = await usersRepository.findTokenByUserIdAndDeviceId(user.id, payload.deviceId)
+    if(!isValid) return next()
+    req.user = user
+    return next()
+
+}
 export const connectionControlMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     const maxCountOfConnections = 5
     const blockInterval = 10000

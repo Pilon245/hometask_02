@@ -1,6 +1,7 @@
-import {commentsCollection} from "./db";
+import {commentsCollection, likeCollection} from "./db";
 import {getPagesCounts, getSkipNumber} from "../helpers/getSkipNumber";
 import {FindCommentsPayload} from "../types/commentsTypes";
+import {commentsRepository} from "./commentsRepository";
 
 export const commentsQueryRepository = {
     async findUsers({sortDirection, sortBy, pageSize, pageNumber}: FindCommentsPayload) {
@@ -55,5 +56,65 @@ export const commentsQueryRepository = {
                     createdAt: c.createdAt
                 }))
         }
+    },
+    async findCommentsNotAuth(id: string ) {
+        const comments = await commentsCollection
+            .findOne({id: id})
+
+        const totalLike = await likeCollection.countDocuments(
+            {$and: [{commentId: id}, {likesStatus: 1}]})
+        const totalDislike = await likeCollection.countDocuments(
+            {$and: [{commentId: id}, {dislikesStatus: 1}]}
+        )
+
+        if (comments) {
+            const outComment = {
+                id: comments.id,
+                content: comments.content,
+                userId: comments.userId,
+                userLogin: comments.userLogin,
+                createdAt: comments.createdAt,
+                likeInfo: {
+                    likesCount: totalLike,
+                    dislikesCount: totalDislike,
+                    myStatus: "None"
+                }
+            }
+            return outComment
+        }
+        return comments
+
+    },
+    async findComments(id: string, authUserId: string) {
+        const comments = await commentsCollection
+            .findOne({id: id})
+
+        const totalLike = await likeCollection.countDocuments(
+            {$and: [{commentId: id}, {likesStatus: 1}]})
+        const totalDislike = await likeCollection.countDocuments(
+            {$and: [{commentId: id}, {dislikesStatus: 1}]}
+        )
+        const likeStatus = await likeCollection.findOne(
+            {$and: [{commentId: id}, {authUserId: authUserId}]})
+        console.log("likeStatus?.myStatus", likeStatus?.myStatus)
+
+        if (comments) {
+            const outComment = {
+                id: comments.id,
+                content: comments.content,
+                userId: comments.userId,
+                userLogin: comments.userLogin,
+                createdAt: comments.createdAt,
+                likeInfo: {
+                    likesCount: totalLike,
+                    dislikesCount: totalDislike,
+                    myStatus: likeStatus?.myStatus ? likeStatus?.myStatus : "None"
+                }
+            }
+            return outComment
+        }
+        return comments
+
     }
+
 }

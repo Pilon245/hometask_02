@@ -9,6 +9,7 @@ import {SessionDBType} from "../types/sessionTypes";
 import {blockIpDBType, connectionsDBType} from "../types/ipTypes";
 import {TokenDBType} from "../types/tokenTypes";
 import mongoose from "mongoose";
+import {LikeStatusDBType} from "../types/likeTypes";
 
 const mongoUri = process.env.MONGODB_URL || ""
 
@@ -22,6 +23,7 @@ export const sessionCollection = db.collection<SessionDBType>("session")
 export const blockIpCollection = db.collection<blockIpDBType>("blockIp")
 export const connectionsCountCollection = db.collection<connectionsDBType>("connections")
 export const tokenCollection = db.collection<TokenDBType>("token")
+export const likeCollection = db.collection<LikeStatusDBType>("like")
 
 // const tokenSchema = new mongoose.Schema<TokenDBType>({
 //     refreshToken: String,

@@ -20,7 +20,7 @@ export const authControllers = {
             await usersRepository.createToken(user.id, refreshToken, deviceId)
             const result = {accessToken: accessToken}
             return res.status(200).cookie("refreshToken", refreshToken,
-                {expires: new Date(Date.now()+ 20000), httpOnly: true, secure: true})
+                {expires: new Date(Date.now()+ 60000), httpOnly: false, secure: false})
                 .send(result)
         } else {
             return res.sendStatus(401)
@@ -36,7 +36,7 @@ export const authControllers = {
             await usersRepository.updateToken(user.id, refreshToken, token.deviceId)
             const result = {accessToken: accessToken}
             return res.status(200).cookie("refreshToken", refreshToken,
-                {expires: new Date(Date.now()+ 20000), httpOnly: true, secure: true})
+                {expires: new Date(Date.now()+ 600000), httpOnly: false, secure: false})
                 .send(result)
             //todo cookie parser
         } else {

@@ -74,5 +74,4 @@ export const usersService = {
     async deleteAllUsers() {
         return await usersRepository.deleteAllUsers()
     }
-
 }
