@@ -16,6 +16,6 @@ commentsRouter.get('/comments/:id',TokenOnCommentIdMiddleware, commentsControlle
 commentsRouter.put('/comments/:commentId', authTokenMiddleware, commentIdValidation, inputQueryValidation,
     forbiddenValidation, commentOnPostValidation,inputBodyValidation, commentsControllers.updateComment)
 commentsRouter.put('/comments/:commentId/like-status',commentIdValidation,
-    inputQueryValidation, refreshTokenMiddleware,likeValidation, inputBodyValidation, commentsControllers.updateLike)
+    inputQueryValidation, likeValidation, inputBodyValidation,refreshTokenMiddleware, commentsControllers.updateLike)
 commentsRouter.delete('/comments/:commentId', authTokenMiddleware, commentIdValidation, inputQueryValidation,
     forbiddenValidation, commentsControllers.deleteComment)

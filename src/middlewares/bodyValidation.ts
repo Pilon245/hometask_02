@@ -123,6 +123,7 @@ const emailPasswordValidation = body("email")
     })
 const likeStatusValidation = body("likeStatus")
     .isString().withMessage("Field 'likeStatus' is not a string")
+    .notEmpty({ignore_whitespace: true}).withMessage("Field 'likeStatus' cannot be empty.")
     .custom(async (value) => {
         const arrayValue = Object.values(LikeValue)
         const result = arrayValue.filter((element) => element === value)

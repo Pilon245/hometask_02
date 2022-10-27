@@ -44,7 +44,7 @@ export const commentsQueryRepository = {
         comments.map(c => (
             {
                 id: c.id,
-                likeInfo: {
+                likesInfo: {
                     likesCount: likecounts("1666881025846"),
                     dislikesCount: likeCollection.countDocuments(
                         {$and: [{commentId: c.id}, {dislikesStatus: 1}]}),
@@ -82,7 +82,7 @@ export const commentsQueryRepository = {
                     userId: c.userId,
                     userLogin: c.userLogin,
                     createdAt: c.createdAt,
-                    likeInfo: {
+                    likesInfo: {
                         likesCount: likecounts("1666881025846"),
                         dislikesCount: likeCollection.countDocuments(
                             {$and: [{commentId: c.id}, {dislikesStatus: 1}]}),
@@ -109,7 +109,7 @@ export const commentsQueryRepository = {
                 userId: comments.userId,
                 userLogin: comments.userLogin,
                 createdAt: comments.createdAt,
-                likeInfo: {
+                likesInfo: {
                     likesCount: totalLike,
                     dislikesCount: totalDislike,
                     myStatus: "None"
@@ -140,7 +140,7 @@ export const commentsQueryRepository = {
                 userId: comments.userId,
                 userLogin: comments.userLogin,
                 createdAt: comments.createdAt,
-                likeInfo: {
+                likesInfo: {
                     likesCount: totalLike,
                     dislikesCount: totalDislike,
                     myStatus: likeStatus?.myStatus ? likeStatus?.myStatus : "None"
