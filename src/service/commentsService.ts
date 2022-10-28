@@ -81,8 +81,30 @@ export const commentsService = {
 
             }
         }
-
-        if (value === "Like" || user!.likesStatus === 0) {
+        //
+        // if(user!.likesStatus === 1 &&  user!.dislikesStatus === 1 ) {
+        //     if (value === "Like") {
+        //         const likesStatus = 0
+        //         const dislikesStatus = 0
+        //         const myStatus = value
+        //         const authUserId = userId
+        //         const comment = commentId
+        //         return await commentsRepository.updateLike(
+        //             authUserId, comment, likesStatus, dislikesStatus, myStatus
+        //         )
+        //     }
+        //     if (value === "Dislike") {
+        //         const likesStatus = 0
+        //         const dislikesStatus = 0
+        //         const myStatus = value
+        //         const authUserId = userId
+        //         const comment = commentId
+        //         return await commentsRepository.updateLike(
+        //             authUserId, comment, likesStatus, dislikesStatus, myStatus
+        //         )
+        //     }
+        // }
+        if (value === "Like" && user!.likesStatus === 0) {
 
             const likesStatus = 1
             const dislikesStatus = 0
@@ -93,7 +115,8 @@ export const commentsService = {
                 authUserId, comment, likesStatus, dislikesStatus, myStatus
             )
         }
-        if (value === "Dislike" || user!.dislikesStatus === 0) {
+        if (value === "Dislike" && user!.dislikesStatus === 0) {
+            console.log("value22", value)
             const likesStatus = 0
             const dislikesStatus = 1
             const myStatus = value
@@ -103,9 +126,10 @@ export const commentsService = {
                 authUserId, comment, likesStatus, dislikesStatus, myStatus
             )
         }
+
         if (value === "None") {
-            const likesStatus = user!.likesStatus
-            const dislikesStatus = user!.dislikesStatus
+            const likesStatus = 0
+            const dislikesStatus = 0
             const myStatus = value
             const authUserId = userId
             const comment = commentId
