@@ -28,7 +28,7 @@ export const commentsService = {
             userLogin: userLogin,
             createdAt: new Date().toISOString(),
             likesInfo: {
-                likesCount:0,
+                likesCount: 0,
                 dislikesCount: 0,
                 myStatus:  "None",
             }
@@ -41,11 +41,11 @@ export const commentsService = {
             userId: createdComment.userId,
             userLogin: createdComment.userLogin,
             createdAt: createdComment.createdAt,
-            likesInfo: {
-                 dislikesCount: 0,
-                 likesCount:0,
-                 myStatus:  "None",
-               }
+            // likesInfo: {
+            //      dislikesCount: 0,
+            //      likesCount:0,
+            //      myStatus:  "None",
+            //    }
         }
         return outCreateComment
     },
