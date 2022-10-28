@@ -12,10 +12,10 @@ import {forbiddenValidation} from "../middlewares/forbiddenValidation";
 
 export const commentsRouter = Router({})
 
-commentsRouter.get('/comments/:id',TokenOnCommentIdMiddleware, commentsControllers.getCommentById)//refresh авторизация
+commentsRouter.get('/comments/:id',TokenOnCommentIdMiddleware, commentsControllers.getCommentById)
 commentsRouter.put('/comments/:commentId', authTokenMiddleware, commentIdValidation, inputQueryValidation,
     forbiddenValidation, commentOnPostValidation,inputBodyValidation, commentsControllers.updateComment)
 commentsRouter.put('/comments/:commentId/like-status',commentIdValidation,
-    inputQueryValidation, likeValidation, inputBodyValidation,refreshTokenMiddleware, commentsControllers.updateLike)
+    inputQueryValidation,authTokenMiddleware, likeValidation, inputBodyValidation, commentsControllers.updateLike)
 commentsRouter.delete('/comments/:commentId', authTokenMiddleware, commentIdValidation, inputQueryValidation,
     forbiddenValidation, commentsControllers.deleteComment)

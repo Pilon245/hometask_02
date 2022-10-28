@@ -148,6 +148,8 @@ export const commentsQueryRepository = {
                 {commentId: c.id, likesStatus: 1})
             const disLikeCount = await likeCollection.countDocuments(
                 {$and: [{commentId: c.id}, {dislikesStatus: 1}]})
+             const likeStatus = await likeCollection.findOne(
+                 {$and: [{commentId: c.id}, {authUserId: userId}]})
             return {
                 id: c.id,
                 content: c.content,
@@ -157,7 +159,7 @@ export const commentsQueryRepository = {
                 likesInfo: {
                     likesCount: likeCount,
                     dislikesCount: disLikeCount,
-                    myStatus: "None"
+                    myStatus: likeStatus?.myStatus ? likeStatus.myStatus : "None"
                     //likeCollection.findOne(
                     // {$and: [{commentId: id}, {authUserId: authUserId}]})
                 }}})
