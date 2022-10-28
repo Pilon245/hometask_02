@@ -27,6 +27,11 @@ export const commentsService = {
             postId: postId,
             userLogin: userLogin,
             createdAt: new Date().toISOString(),
+            likesInfo: {
+                likesCount:0,
+                dislikesCount: 0,
+                myStatus:  "None",
+            }
 
         }
         const createdComment = await commentsRepository.createComment(newComment)
@@ -35,7 +40,12 @@ export const commentsService = {
             content: createdComment.content,
             userId: createdComment.userId,
             userLogin: createdComment.userLogin,
-            createdAt: createdComment.createdAt
+            createdAt: createdComment.createdAt,
+            likesInfo: {
+                 dislikesCount: 0,
+                 likesCount:0,
+                 myStatus:  "None",
+               }
         }
         return outCreateComment
     },
