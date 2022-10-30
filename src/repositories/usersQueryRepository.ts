@@ -10,7 +10,7 @@ export const usersQueryRepository = {
         const users = await UsersModelClass
             .find({})
             // .project({_id: 0})
-            .sort({sortBy: sortDirection === 'asc' ? 1 : -1})
+            .sort({[sortBy]: sortDirection === 'asc' ? 1 : -1})
             .skip(getSkipNumber(pageNumber, pageSize))
             .limit(pageSize)
             .lean()

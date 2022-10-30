@@ -8,7 +8,7 @@ export const commentsQueryRepository = {
         const comments = await CommentsModelClass
             .find({postId: postId})
             // .project({_id: 0})
-            .sort({sortBy: sortDirection === 'asc' ? 1 : -1})
+            .sort({[sortBy]: sortDirection === 'asc' ? 1 : -1})
             .skip(getSkipNumber(pageNumber, pageSize))
             .limit(pageSize)
             .lean()
@@ -45,7 +45,7 @@ export const commentsQueryRepository = {
         const comments = await CommentsModelClass
             .find({postId: postId})
             // .project({_id: 0})
-            .sort({sortBy: sortDirection === 'asc' ? 1 : -1})
+            .sort({[sortBy]: sortDirection === 'asc' ? 1 : -1})
             .skip(getSkipNumber(pageNumber, pageSize))
             .limit(pageSize)
             .lean()

@@ -14,10 +14,12 @@ export const blogsQueryRepository = {
 
         const blogs = await BlogsModelClass
             .find(filter)
-            .sort({sortBy: sortDirection === 'asc' ? 1 : -1})
+            .sort({[sortBy]: sortDirection === 'asc' ? 1 : -1})
             .skip(getSkipNumber(pageNumber, pageSize))
             .limit(pageSize)
             .lean()
+
+        // const query = await blogs.where(sortBy).sort([sortBy: sortDirection])
 
         const totalCount = await BlogsModelClass.countDocuments(filter)
 

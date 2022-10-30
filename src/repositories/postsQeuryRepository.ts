@@ -9,7 +9,7 @@ export const postsQeuryRepository = {
          {
         const posts = await PostsModelClass
             .find({})
-            .sort({sortBy: sortDirection === 'asc' ? 1 : -1})
+            .sort({[sortBy]: sortDirection === 'asc' ? 1 : -1})
             .skip(getSkipNumber(pageNumber, pageSize))
             .limit(pageSize)
             .lean()
@@ -37,7 +37,7 @@ export const postsQeuryRepository = {
     {
             const posts =  await PostsModelClass
                 .find({blogId: blogId})
-                .sort({sortBy: sortDirection})
+                .sort({[sortBy]: sortDirection})
                 .skip(getSkipNumber(pageNumber,pageSize))
                 .limit(pageSize)
                 .lean()
