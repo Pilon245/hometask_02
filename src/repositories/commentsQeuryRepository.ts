@@ -1,50 +1,24 @@
-import {commentsCollection, likeCollection} from "./db";
+import {CommentsModelClass, LikeModelClass,} from "./db";
 import {getPagesCounts, getSkipNumber} from "../helpers/getSkipNumber";
 import { FindCommentsPayload} from "../types/commentsTypes";
 
 
 export const commentsQueryRepository = {
-    async findUsers({sortDirection, sortBy, pageSize, pageNumber}: FindCommentsPayload) {
-        const comments = await commentsCollection
-            .find({})
-            .project({_id: 0})
-            .sort(sortBy, sortDirection === 'asc' ? 1 : -1)
-            .skip(getSkipNumber(pageNumber, pageSize))
-            .limit(pageSize)
-            .toArray()
-
-        const totalCount = await commentsCollection.countDocuments()
-
-        return {
-            pagesCount: getPagesCounts(totalCount, pageSize),
-            page: pageNumber,
-            pageSize: pageSize,
-            totalCount: totalCount,
-            items: comments.map(c => (
-                {
-                    id: c.id,
-                    content: c.content,
-                    userId: c.userId,
-                    userLogin: c.userLogin,
-                    createdAt: c.createdAt
-                }))
-        }
-    },
     async findCommentOnPostNoAuth (postId: string, {sortDirection, sortBy, pageSize, pageNumber}: FindCommentsPayload) {
-        const comments = await commentsCollection
+        const comments = await CommentsModelClass
             .find({postId: postId})
-            .project({_id: 0})
-            .sort(sortBy, sortDirection === 'asc' ? 1 : -1)
+            // .project({_id: 0})
+            .sort({sortBy: sortDirection === 'asc' ? 1 : -1})
             .skip(getSkipNumber(pageNumber, pageSize))
             .limit(pageSize)
-            .toArray()
+            .lean()
 
-        const totalCount = await commentsCollection.countDocuments({postId: postId})
+        const totalCount = await CommentsModelClass.countDocuments({postId: postId})
 
         const Promises = comments.map(async (c) => {
-            const likeCount = await likeCollection.countDocuments(
+            const likeCount = await LikeModelClass.countDocuments(
                 {commentId: c.id, likesStatus: 1})
-            const disLikeCount = await likeCollection.countDocuments(
+            const disLikeCount = await LikeModelClass.countDocuments(
                 {$and: [{commentId: c.id}, {dislikesStatus: 1}]})
             return {
                 id: c.id,
@@ -68,22 +42,22 @@ export const commentsQueryRepository = {
         }
     },
     async findCommentOnPost(postId: string, userId: string, {sortDirection, sortBy, pageSize, pageNumber}: FindCommentsPayload) {
-        const comments = await commentsCollection
+        const comments = await CommentsModelClass
             .find({postId: postId})
-            .project({_id: 0})
-            .sort(sortBy, sortDirection === 'asc' ? 1 : -1)
+            // .project({_id: 0})
+            .sort({sortBy: sortDirection === 'asc' ? 1 : -1})
             .skip(getSkipNumber(pageNumber, pageSize))
             .limit(pageSize)
-            .toArray()
+            .lean()
 
-        const totalCount = await commentsCollection.countDocuments({postId: postId})
+        const totalCount = await CommentsModelClass.countDocuments({postId: postId})
 
         const Promises = comments.map(async (c) => {
-            const likeCount = await likeCollection.countDocuments(
+            const likeCount = await LikeModelClass.countDocuments(
                 {commentId: c.id, likesStatus: 1})
-            const disLikeCount = await likeCollection.countDocuments(
+            const disLikeCount = await LikeModelClass.countDocuments(
                 {$and: [{commentId: c.id}, {dislikesStatus: 1}]})
-             const likeStatus = await likeCollection.findOne(
+             const likeStatus = await LikeModelClass.findOne(
                  {$and: [{commentId: c.id}, {authUserId: userId}]})
             return {
                 id: c.id,
@@ -107,12 +81,12 @@ export const commentsQueryRepository = {
         }
     },
     async findCommentsNotAuth(id: string ) {
-        const comments = await commentsCollection
+        const comments = await CommentsModelClass
             .findOne({id: id})
 
-        const totalLike = await likeCollection.countDocuments(
+        const totalLike = await LikeModelClass.countDocuments(
             {$and: [{commentId: id}, {likesStatus: 1}]})
-        const totalDislike = await likeCollection.countDocuments(
+        const totalDislike = await LikeModelClass.countDocuments(
             {$and: [{commentId: id}, {dislikesStatus: 1}]}
         )
 
@@ -135,15 +109,15 @@ export const commentsQueryRepository = {
 
     },
     async findComments(id: string, authUserId: string) {
-        const comments = await commentsCollection
+        const comments = await CommentsModelClass
             .findOne({id: id})
 
-        const totalLike = await likeCollection.countDocuments(
+        const totalLike = await LikeModelClass.countDocuments(
             {$and: [{commentId: id}, {likesStatus: 1}]})
-        const totalDislike = await likeCollection.countDocuments(
+        const totalDislike = await LikeModelClass.countDocuments(
             {$and: [{commentId: id}, {dislikesStatus: 1}]}
         )
-        const likeStatus = await likeCollection.findOne(
+        const likeStatus = await LikeModelClass.findOne(
             {$and: [{commentId: id}, {authUserId: authUserId}]})
 
         if (comments) {

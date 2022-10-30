@@ -1,32 +1,24 @@
-import {blogsCollection} from "./db";
 import {BlogsDbType} from "../types/blogsTypes";
+import {BlogsModelClass} from "./db";
 
 export const blogsRepository = {
     async findBlogsById(id: string): Promise<BlogsDbType | null> {
-        return await blogsCollection.findOne({id: id})
+        return await BlogsModelClass.findOne({id: id}).lean()
     },
     async createBlogs(newBlogs: BlogsDbType): Promise<BlogsDbType> {
-        await blogsCollection.insertOne(newBlogs)
+        await BlogsModelClass.insertMany([newBlogs])
         return newBlogs
     },
     async updateBlogs(id: string,name: string, youtubeUrl: string) : Promise<boolean> {
-        const result = await blogsCollection.updateOne({id: id}, {$set: {name:name, youtubeUrl: youtubeUrl}})
+        const result = await BlogsModelClass.updateOne({id: id}, {name, youtubeUrl})
         return result.matchedCount === 1
     },
     async deleteBlogs(id: string) : Promise<boolean> {
-        const result = await blogsCollection.deleteOne({id: id})
+        const result = await BlogsModelClass.deleteOne({id: id})
         return result.deletedCount === 1
     },
-    async countBlogs(sortBy: string, sortDirection: any, searchNameTerm: string) {
-      return await blogsCollection
-          .countDocuments({name: {$regex: searchNameTerm}})
-    },
-    async sortBlogsByName(skip: number, PageSize: number): Promise<BlogsDbType []> {
-        const result = await blogsCollection.find({}).skip(skip).limit(PageSize).toArray()
-        return result
-    },
     async deleteAllBlogs() {
-        await blogsCollection.deleteMany({})
+        await BlogsModelClass.deleteMany({})
         return true
     }
 

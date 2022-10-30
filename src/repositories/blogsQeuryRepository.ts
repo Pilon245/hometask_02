@@ -1,6 +1,7 @@
 import {FindBlogsPayload, PagesBlogType} from "../types/blogsTypes";
-import {blogsCollection} from "./db";
+// import {blogsCollection} from "./db";
 import {getPagesCounts, getSkipNumber} from "../helpers/getSkipNumber";
+import {BlogsModelClass, UsersModelClass} from "./db";
 
 
 
@@ -11,14 +12,14 @@ export const blogsQueryRepository = {
 
         let filter = {name: regExp}
 
-        const blogs = await blogsCollection
+        const blogs = await BlogsModelClass
             .find(filter)
-            .sort(sortBy, sortDirection === 'asc' ? 1 : -1)
+            .sort({sortBy: sortDirection === 'asc' ? 1 : -1})
             .skip(getSkipNumber(pageNumber, pageSize))
             .limit(pageSize)
-            .toArray()
+            .lean()
 
-        const totalCount = await blogsCollection.countDocuments(filter)
+        const totalCount = await BlogsModelClass.countDocuments(filter)
 
         return  {
             pagesCount: getPagesCounts(totalCount, pageSize),

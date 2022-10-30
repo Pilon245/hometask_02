@@ -1,4 +1,4 @@
-import {usersCollection} from "./db";
+import {UsersModelClass} from "./db";
 import {getPagesCounts, getSkipNumber} from "../helpers/getSkipNumber";
 import {FindUsersPayload} from "../types/usersTypes";
 
@@ -7,14 +7,14 @@ import {FindUsersPayload} from "../types/usersTypes";
 export const usersQueryRepository = {
     async findUsers({searchLoginTerm, searchEmailTerm, sortDirection, sortBy, pageSize, pageNumber}: FindUsersPayload) {
         const filter = {$or: [{'accountData.login': {$regex: searchLoginTerm, $options: "(?i)a(?-i)cme"}}, {'accountData.email': {$regex: searchEmailTerm, $options: "(?i)a(?-i)cme"}}]}
-        const users = await usersCollection
-            .find()
-            .project({_id: 0})
-            .sort(sortBy, sortDirection === 'asc' ? 1 : -1)
+        const users = await UsersModelClass
+            .find({})
+            // .project({_id: 0})
+            .sort({sortBy: sortDirection === 'asc' ? 1 : -1})
             .skip(getSkipNumber(pageNumber, pageSize))
             .limit(pageSize)
-            .toArray()
-        const totalCount = await usersCollection.countDocuments(filter)
+            .lean()
+        const totalCount = await UsersModelClass.countDocuments(filter)
 
         return  {
             pagesCount: getPagesCounts(totalCount, pageSize),
@@ -29,5 +29,4 @@ export const usersQueryRepository = {
                     createdAt: u.accountData.createdAt
                 }))}
     }
-
 }

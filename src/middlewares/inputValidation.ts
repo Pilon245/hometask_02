@@ -2,8 +2,8 @@ import {Response, Request, NextFunction} from 'express';
 import {validationResult} from "express-validator";
 import {jwtService} from "../service/jwtService";
 import {usersRepository} from "../repositories/usersRepository";
-import {blockIpCollection, connectionsCountCollection} from "../repositories/db";
 import {payloadRefreshToken} from "../helpers/getSkipNumber";
+import {BlockIpModelClass, ConnectionsModelClass} from "../repositories/db";
 
 
 export const inputBodyValidation = (req: Request, res: Response, next: NextFunction) => {
@@ -96,28 +96,6 @@ export const refreshTokenMiddleware = async (req: Request, res: Response, next: 
     return next()
 
 }
-// export const TokenOnCommentIdMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-//     const refToken = req.cookies.refreshToken
-//     if (!refToken) {
-//         next()
-//         return
-//     }
-//     const token = refToken.split(' ')[0]
-//
-//     const userId = await jwtService.getUserIdByToken(token)
-//     if (!userId) {
-//         next()
-//         return
-//     }
-//     const user = await usersRepository.findUserById(userId)
-//     if (!user) return next()
-//     const payload = await payloadRefreshToken(refToken)
-//     const isValid = await usersRepository.findTokenByUserIdAndDeviceId(user.id, payload.deviceId)
-//     if(!isValid) return next()
-//     req.user = user
-//     return next()
-//
-// }
 export const connectionControlMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     const maxCountOfConnections = 5
     const blockInterval = 10000
@@ -126,17 +104,17 @@ export const connectionControlMiddleware = async (req: Request, res: Response, n
     const ip = req.ip
     const endpoint = req.url.split('/')[2]
 
-    const isBlocked = await blockIpCollection.findOne({ip, endpoint,
+    const isBlocked = await BlockIpModelClass.findOne({ip, endpoint,
         blockedAt: {$gte: (connectionAt - blockInterval)}})
     if (isBlocked) return res.sendStatus(429)
 
-    const connectionsCount = await connectionsCountCollection.countDocuments({ip, endpoint,
+    const connectionsCount = await ConnectionsModelClass.countDocuments({ip, endpoint,
         connectionAt: {$gte: (connectionAt - blockInterval)}})
     if (connectionsCount + 1 > maxCountOfConnections) {
-        await blockIpCollection.insertOne({ip, endpoint, blockedAt: connectionAt})
+        await BlockIpModelClass.insertMany({ip, endpoint, blockedAt: connectionAt})
         return res.sendStatus(429)
     }
 
-    await connectionsCountCollection.insertOne({ip, endpoint, connectionAt})
+    await ConnectionsModelClass.insertMany({ip, endpoint, connectionAt})
     return next()
 }

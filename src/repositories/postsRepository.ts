@@ -1,44 +1,29 @@
-import {postsCollection} from "./db";
 import {PostDbType} from "../types/postsTypes";
+import {PostsModelClass} from "./db";
 
 export const postsRepository = {
     async findPostById(id: string): Promise<PostDbType | null> {
-        let post: PostDbType | null = await postsCollection.findOne({id: id})
+        let post: PostDbType | null = await PostsModelClass.findOne({id: id})
         return post
     },
-    async findPostOnBlog(blogId: string, skip: number, pageSize: number, sortBy: string, sortDirection: any)
-        : Promise<PostDbType [] | null> {
-        return await postsCollection
-            .find({blogId: blogId})
-            .sort(sortBy, sortDirection)
-            .skip(skip)
-            .limit(pageSize)
-            .toArray()
-    },
     async createPost(newPost: PostDbType): Promise<PostDbType> {
-        const result = await postsCollection.insertOne(newPost)
+        const result = await PostsModelClass.insertMany(newPost)
         return newPost
     },
     async updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string) {
-        const result = await postsCollection.updateOne({id: id},
+        const result = await PostsModelClass.updateOne({id: id},
             {
                 $set: {
-                    title: title, shortDescription: shortDescription,
-                    content: content, blogId: blogId
+                    title, shortDescription, content, blogId
                 }
             })
         return result.matchedCount === 1
     },
     async deletePost(id: string) {
-        const result = await postsCollection.deleteOne({id: id})
+        const result = await PostsModelClass.deleteOne({id: id})
         return result.deletedCount === 1
     },
-    async countPostsByBlogId(blogId: string): Promise<number> {
-        const count = await postsCollection.countDocuments({blogId: blogId})
-        return count
-    },
     async deleteAllPost() {
-        const deleteAllPost = await postsCollection.deleteMany({})
-        return true
+        return await PostsModelClass.deleteMany({})
     }
 }
