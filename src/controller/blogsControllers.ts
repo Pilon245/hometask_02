@@ -27,6 +27,7 @@ export const blogsControllers = {
     },
     async createBlogs( req: Request, res: Response) {
         const newBlog = await blogsService.createBlogs(req.body.name, req.body.youtubeUrl)
+        console.log("newBlog", newBlog)
         if(newBlog){
             res.status(201).send(newBlog)
         }

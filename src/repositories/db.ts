@@ -12,9 +12,7 @@ import mongoose from "mongoose";
 import {LikeStatusDBType} from "../types/likeTypes";
 
 const mongoUri = process.env.MONGODB_URL || ""
-
-const dbName = process.env.MONGODB_NAME || 'network'
-
+const dbName = 'network'
 // export const client = new MongoClient(mongoUri);
 // const db = client.db("network");
 // export const blogsCollection = db.collection<BlogsDbType>("blogs")
@@ -48,7 +46,7 @@ const commentsSchema = new mongoose.Schema<CommentsDbType>({
     likesInfo: {
         likesCount: Number,
         dislikesCount: Number,
-        myStatus:  LikeValue
+        myStatus:  String
     }
 })
 const postSchema = new mongoose.Schema<PostDbType>({
@@ -100,7 +98,7 @@ const connectionSchema = new mongoose.Schema<connectionsDBType>({
 const likeSchema = new mongoose.Schema<LikeStatusDBType>({
     likesStatus: Number,
     dislikesStatus: Number,
-    myStatus: LikeValue,
+    myStatus: String,
     authUserId: String,
     commentId: String,
 })
@@ -119,7 +117,7 @@ export async function runDb(){
     try{
         // await client.connect();
         // await client.db
-        await mongoose.connect(mongoUri + "/" + dbName)
+        await mongoose.connect(mongoUri, {dbName}) //{dbName: 'network'}
         console.log("Connected successfully to mongo server")
     } catch {
         console.log("can't connected to db ")

@@ -1,13 +1,22 @@
 import {BlogsDbType} from "../types/blogsTypes";
-import {BlogsModelClass} from "./db";
+import {BlogsModelClass, SessionModelClass} from "./db";
 
 export const blogsRepository = {
     async findBlogsById(id: string): Promise<BlogsDbType | null> {
-        return await BlogsModelClass.findOne({id: id}).lean()
+        return await BlogsModelClass.findOne({id}).lean()
     },
     async createBlogs(newBlogs: BlogsDbType): Promise<BlogsDbType> {
-        await BlogsModelClass.insertMany([newBlogs])
-        return newBlogs
+        // await BlogsModelClass.create({...newBlogs})
+        // return newBlogs
+        const blogsInstance = new BlogsModelClass(newBlogs)
+
+        // blogsInstance.id = newBlogs.id
+        // blogsInstance.name = newBlogs.name
+        // blogsInstance.youtubeUrl = newBlogs.youtubeUrl
+        // blogsInstance.createdAt = newBlogs.createdAt
+
+        await blogsInstance.save()
+        return blogsInstance
     },
     async updateBlogs(id: string,name: string, youtubeUrl: string) : Promise<boolean> {
         const result = await BlogsModelClass.updateOne({id: id}, {name, youtubeUrl})

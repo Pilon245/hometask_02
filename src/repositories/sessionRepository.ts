@@ -35,7 +35,6 @@ export const sessionRepository = {
     async updateSecurityDevices(userId: string, deviceId: string, lastActiveDate: string){
         const sessionInstance = await SessionModelClass.findOne({userId: userId, deviceId: deviceId})
         if (!sessionInstance) return false
-
         sessionInstance.lastActiveDate = lastActiveDate
 
         await sessionInstance.save()
