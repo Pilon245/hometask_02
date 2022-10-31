@@ -3,6 +3,7 @@ import {postsService} from "../service/postsService";
 import {queryValidation} from "../middlewares/queryValidation";
 import {postsQeuryRepository} from "../repositories/postsQeuryRepository";
 import {commentsService} from "../service/commentsService";
+import {commentsQueryRepository} from "../repositories/commentsQeuryRepository";
 
 export const postControllers = {
     async getPost(req: Request, res: Response) {
@@ -16,11 +17,21 @@ export const postControllers = {
         return res.status(200).send(foundRepository)
     },
     async getPostById(req: Request, res: Response) {
-        const post = await postsQeuryRepository.findPostById(req.params.id)
-        if (post) {
-            res.status(200).send(post)
-        } else {
-            res.send(404)
+        if(req.user) {
+            const post = await postsQeuryRepository.findPostById(req.params.id, req.user.id)
+            if (post) {
+                res.status(200).send(post)
+            } else {
+                res.send(404)
+            }
+        }
+        if(!req.user) {
+            const post = await postsQeuryRepository.findPostByIdNoAuth(req.params.id)
+            if (post) {
+                res.status(200).send(post)
+            } else {
+                res.send(404)
+            }
         }
     },
     async getPostOnBlog(req: Request, res: Response) {

@@ -14,8 +14,8 @@ import {commentOnPostIdValidation} from "../middlewares/paramsValidation";
 
 export const postRouter = Router({})
 
-postRouter.get('/posts',postControllers.getPost)
-postRouter.get('/posts/:id',postControllers.getPostById)
+postRouter.get('/posts',TokenOnCommentIdMiddleware,postControllers.getPost)
+postRouter.get('/posts/:id',TokenOnCommentIdMiddleware,postControllers.getPostById)
 postRouter.post('/posts',authMiddleware,postsValidation,inputBodyValidation,postControllers.createPost)
 postRouter.put('/posts/:id',authMiddleware,postsValidation,inputBodyValidation,postControllers.updatePost)
 postRouter.delete('/posts/:id',authMiddleware,postControllers.deletePost)
