@@ -1,4 +1,4 @@
-import {CommentsModelClass, LikeModelClass,} from "./db";
+import {CommentsModelClass, LikeCommentModelClass,} from "./db";
 import {getPagesCounts, getSkipNumber} from "../helpers/getSkipNumber";
 import { FindCommentsPayload} from "../types/commentsTypes";
 
@@ -16,9 +16,9 @@ export const commentsQueryRepository = {
         const totalCount = await CommentsModelClass.countDocuments({postId: postId})
 
         const Promises = comments.map(async (c) => {
-            const likeCount = await LikeModelClass.countDocuments(
+            const likeCount = await LikeCommentModelClass.countDocuments(
                 {commentId: c.id, likesStatus: 1})
-            const disLikeCount = await LikeModelClass.countDocuments(
+            const disLikeCount = await LikeCommentModelClass.countDocuments(
                 {$and: [{commentId: c.id}, {dislikesStatus: 1}]})
             return {
                 id: c.id,
@@ -53,11 +53,11 @@ export const commentsQueryRepository = {
         const totalCount = await CommentsModelClass.countDocuments({postId: postId})
 
         const Promises = comments.map(async (c) => {
-            const likeCount = await LikeModelClass.countDocuments(
+            const likeCount = await LikeCommentModelClass.countDocuments(
                 {commentId: c.id, likesStatus: 1})
-            const disLikeCount = await LikeModelClass.countDocuments(
+            const disLikeCount = await LikeCommentModelClass.countDocuments(
                 {$and: [{commentId: c.id}, {dislikesStatus: 1}]})
-             const likeStatus = await LikeModelClass.findOne(
+             const likeStatus = await LikeCommentModelClass.findOne(
                  {$and: [{commentId: c.id}, {authUserId: userId}]})
             return {
                 id: c.id,
@@ -84,9 +84,9 @@ export const commentsQueryRepository = {
         const comments = await CommentsModelClass
             .findOne({id: id})
 
-        const totalLike = await LikeModelClass.countDocuments(
+        const totalLike = await LikeCommentModelClass.countDocuments(
             {$and: [{commentId: id}, {likesStatus: 1}]})
-        const totalDislike = await LikeModelClass.countDocuments(
+        const totalDislike = await LikeCommentModelClass.countDocuments(
             {$and: [{commentId: id}, {dislikesStatus: 1}]}
         )
 
@@ -112,12 +112,12 @@ export const commentsQueryRepository = {
         const comments = await CommentsModelClass
             .findOne({id: id})
 
-        const totalLike = await LikeModelClass.countDocuments(
+        const totalLike = await LikeCommentModelClass.countDocuments(
             {$and: [{commentId: id}, {likesStatus: 1}]})
-        const totalDislike = await LikeModelClass.countDocuments(
+        const totalDislike = await LikeCommentModelClass.countDocuments(
             {$and: [{commentId: id}, {dislikesStatus: 1}]}
         )
-        const likeStatus = await LikeModelClass.findOne(
+        const likeStatus = await LikeCommentModelClass.findOne(
             {$and: [{commentId: id}, {authUserId: authUserId}]})
 
         if (comments) {

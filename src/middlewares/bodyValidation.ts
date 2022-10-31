@@ -137,7 +137,6 @@ const likeStatusValidation = body("likeStatus")
 
 
 
-
 export const blogsValidation = [nameValidation, youtubeUrlValition]
 export const postsOnBlogValidation = [titleValidation, shortDescriptionValidation, contentValidation]
 

@@ -8,6 +8,7 @@ export type PostDbType = {
     blogId: string
     blogName: string
     createdAt: string
+    extendedLikesInfo: extendedLikesInfoType
 }
 
 export type OutputPostDbType = {
@@ -18,6 +19,7 @@ export type OutputPostDbType = {
     blogId: string
     blogName: string
     createdAt: string
+    extendedLikesInfo: extendedLikesInfoType
 }
 
 export type FindPostsPayload = {
@@ -25,4 +27,15 @@ export type FindPostsPayload = {
     pageNumber: number,
     sortBy: string,
     sortDirection: SortDirection,
+}
+export type extendedLikesInfoType = {
+    likesCount: number,
+    dislikesCount: number,
+    myStatus: string,
+    newestLikes: newestLikesType []
+}
+export type newestLikesType = {
+    addedAt: string,
+    userId: string,
+    login: string,
 }

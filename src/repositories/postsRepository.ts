@@ -1,14 +1,25 @@
 import {PostDbType} from "../types/postsTypes";
-import {PostsModelClass} from "./db";
+import {LikeCommentModelClass, LikePostModelClass, PostsModelClass} from "./db";
+import {LikeCommentStatusDBType, LikePostStatusDBType} from "../types/likeTypes";
+import {LikeValue} from "../types/commentsTypes";
 
 export const postsRepository = {
     async findPostById(id: string): Promise<PostDbType | null> {
         let post: PostDbType | null = await PostsModelClass.findOne({id: id})
         return post
     },
+    async findLikeByIdAndPostId(id: string, postId: string): Promise<LikePostStatusDBType | null> {
+        return await LikePostModelClass.findOne({$and: [{userId: id}, {postId: postId}]})
+    },
     async createPost(newPost: PostDbType): Promise<PostDbType> {
         const result = await PostsModelClass.insertMany(newPost)
         return newPost
+    },
+    async createLike(like: LikePostStatusDBType) {
+        const likeInstance = new LikePostModelClass(like)
+        await likeInstance.save()
+
+        return likeInstance
     },
     async updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string) {
         const result = await PostsModelClass.updateOne({id: id},
@@ -16,6 +27,26 @@ export const postsRepository = {
                 $set: {
                     title, shortDescription, content, blogId
                 }
+            })
+        return result.matchedCount === 1
+    },
+    async updateLike(
+        userId: string,
+        postId: string,
+        likesStatus: number,
+        dislikesStatus: number,
+        myStatus: LikeValue,
+        login: string,
+        addedAt: string
+    ) {
+        const result = await LikePostModelClass.updateOne({$and: [{postId: postId}, {userId: userId}]},
+            {
+                likesStatus,
+                dislikesStatus,
+                myStatus,
+                login,
+                addedAt
+
             })
         return result.matchedCount === 1
     },

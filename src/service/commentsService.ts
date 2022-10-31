@@ -1,6 +1,6 @@
 import {commentsRepository} from "../repositories/commentsRepository";
 import {CommentsDbType, LikeValue} from "../types/commentsTypes";
-import {LikeStatusDBType} from "../types/likeTypes";
+import {LikeCommentStatusDBType} from "../types/likeTypes";
 
 
 export const commentsService = {
@@ -60,7 +60,7 @@ export const commentsService = {
 
         if (!user) {
             if (value === "Like") {
-                const newLike: LikeStatusDBType = {
+                const newLike: LikeCommentStatusDBType = {
                     likesStatus: 1,
                     dislikesStatus: 0,
                     myStatus: value,
@@ -70,7 +70,7 @@ export const commentsService = {
                 return await commentsRepository.createLike(newLike)
             }
             if (value === "Dislike") {
-                const newLike: LikeStatusDBType = {
+                const newLike: LikeCommentStatusDBType = {
                     likesStatus: 0,
                     dislikesStatus: 1,
                     myStatus: value,
@@ -80,7 +80,7 @@ export const commentsService = {
                 return await commentsRepository.createLike(newLike)
             }
             if (value === "None") {
-                const newLike: LikeStatusDBType = {
+                const newLike: LikeCommentStatusDBType = {
                     likesStatus: 0,
                     dislikesStatus: 0,
                     myStatus: value,

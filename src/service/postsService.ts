@@ -1,27 +1,14 @@
 import {postsRepository} from "../repositories/postsRepository";
-import {PostDbType} from "../types/postsTypes";
+import {extendedLikesInfoType, newestLikesType, PostDbType} from "../types/postsTypes";
 import {blogsRepository} from "../repositories/blogsRepository";
 import {OutputPostDbType} from "../types/postsTypes";
 import {BlogsDbType} from "../types/blogsTypes";
+import {LikeValue} from "../types/commentsTypes";
+import {commentsRepository} from "../repositories/commentsRepository";
+import {LikeCommentStatusDBType, LikePostStatusDBType} from "../types/likeTypes";
+import {usersRepository} from "../repositories/usersRepository";
 
 export const postsService = {
-    async findPostById(id: string): Promise<OutputPostDbType | null> {
-        const post = await postsRepository.findPostById(id)
-        if (post) {
-            const outPost: OutputPostDbType = {
-                id: post.id,
-                title: post.title,
-                shortDescription: post.shortDescription,
-                content: post.content,
-                blogId: post.blogId,
-                blogName: post.blogName,
-                createdAt: post.createdAt
-
-            }
-            return outPost
-        }
-        return post
-    },
     async createPost(title: string, shortDescription: string, content: string, blogId: string)
         : Promise<OutputPostDbType> {
         const blogName: BlogsDbType | null = await blogsRepository.findBlogsById(blogId)
@@ -32,8 +19,13 @@ export const postsService = {
             content: content,
             blogId: blogId,
             blogName: blogName!.name,
-            createdAt: new Date().toISOString()
-
+            createdAt: new Date().toISOString(),
+            extendedLikesInfo: {
+                likesCount: 0,
+                dislikesCount: 0,
+                myStatus: "None",
+                newestLikes: []
+            }
         }
         const createdPost = await postsRepository.createPost(newPost)
         const outNewPost: OutputPostDbType = {
@@ -43,7 +35,13 @@ export const postsService = {
             content: createdPost.content,
             blogId: createdPost.blogId,
             blogName: createdPost.blogName,
-            createdAt: createdPost.createdAt
+            createdAt: createdPost.createdAt,
+            extendedLikesInfo: {
+                likesCount: 0,
+                dislikesCount: 0,
+                myStatus: "None",
+                newestLikes: []
+            }
 
         }
         return outNewPost
@@ -51,6 +49,91 @@ export const postsService = {
     async updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string) {
         return await postsRepository.updatePost(id, title, shortDescription, content, blogId)
     },
+    async updateLike(userId: string, postId: string, value: LikeValue, login: string) {
+    const user = await postsRepository.findLikeByIdAndPostId(userId, postId)
+    if (!user) {
+        if (value === "Like") {
+            const newLike: LikePostStatusDBType = {
+                likesStatus: 1,
+                dislikesStatus: 0,
+                myStatus: value,
+                userId: userId,
+                postId: postId,
+                login: login,
+                addedAt: new Date().toISOString()
+            }
+            return await postsRepository.createLike(newLike)
+        }
+        if (value === "Dislike") {
+            const newLike: LikePostStatusDBType = {
+                likesStatus: 0,
+                dislikesStatus: 1,
+                myStatus: value,
+                userId: userId,
+                postId: postId,
+                login: login,
+                addedAt: new Date().toISOString()
+            }
+            return await postsRepository.createLike(newLike)
+        }
+        if (value === "None") {
+            const newLike: LikePostStatusDBType = {
+                likesStatus: 0,
+                dislikesStatus: 0,
+                myStatus: value,
+                userId: userId,
+                postId: postId,
+                login: login,
+                addedAt: new Date().toISOString()
+            }
+            return await postsRepository.createLike(newLike)
+
+        }
+    }
+    if (value === "Like" && user!.likesStatus === 0) {
+
+        const likesStatus = 1
+        const dislikesStatus = 0
+        const myStatus = value
+        const authUserId = userId
+        const post = postId
+        const loginUser = login
+        const addedAt = new Date().toISOString()
+
+        return await postsRepository.updateLike(
+            authUserId, post, likesStatus, dislikesStatus, myStatus,loginUser,addedAt
+        )
+    }
+    if (value === "Dislike" && user!.dislikesStatus === 0) {
+        console.log("value22", value)
+        const likesStatus = 0
+        const dislikesStatus = 1
+        const myStatus = value
+        const authUserId = userId
+        const post = postId
+        const loginUser =  login
+        const addedAt = new Date().toISOString()
+
+        return await postsRepository.updateLike(
+            authUserId, post, likesStatus, dislikesStatus, myStatus,loginUser,addedAt
+        )
+    }
+
+    if (value === "None") {
+        const likesStatus = 0
+        const dislikesStatus = 0
+        const myStatus = value
+        const authUserId = userId
+        const post = postId
+        const loginUser =  login
+        const addedAt = new Date().toISOString()
+
+        return await postsRepository.updateLike(
+            authUserId, post, likesStatus, dislikesStatus, myStatus,loginUser,addedAt
+        )
+    }
+    return false
+},
     async deletePost(id: string) {
         return await postsRepository.deletePost(id)
     },

@@ -1,19 +1,19 @@
 import {UsersDbType} from "../types/usersTypes";
 import {
-    CommentsModelClass, LikeModelClass, SessionModelClass,
+    CommentsModelClass, LikeCommentModelClass, LikePostModelClass, SessionModelClass,
 
 } from "./db";
 import {CommentsDbType, LikeValue} from "../types/commentsTypes";
 import {BlogsDbType} from "../types/blogsTypes";
 import {commentsControllers} from "../controller/commentsControllers";
-import {LikeStatusDBType} from "../types/likeTypes";
+import {LikeCommentStatusDBType} from "../types/likeTypes";
 
 export const commentsRepository = {
     async findCommentById(id: string) {
         return await CommentsModelClass.findOne({id: id})
     },
-    async findLikeByIdAndCommentId(id: string, commentId: string): Promise<LikeStatusDBType | null> {
-        return await LikeModelClass.findOne({$and: [{authUserId: id}, {commentId: commentId}]})
+    async findLikeByIdAndCommentId(id: string, commentId: string): Promise<LikeCommentStatusDBType | null> {
+        return await LikePostModelClass.findOne({$and: [{userId: id}, {commentId: commentId}]})
     },
     async createComment(newComment: CommentsDbType): Promise<CommentsDbType> {
         const commentInstance = new CommentsModelClass(newComment)
@@ -23,8 +23,8 @@ export const commentsRepository = {
         // await CommentsModelClass.insertOne(newComment)
         // return newComment
     },
-    async createLike(like: LikeStatusDBType) {
-        const likeInstance = new LikeModelClass(like)
+    async createLike(like: LikeCommentStatusDBType) {
+        const likeInstance = new LikeCommentModelClass(like)
         await likeInstance.save()
 
         return likeInstance
@@ -44,7 +44,7 @@ export const commentsRepository = {
         likesStatus: number,
         dislikesStatus: number,
         myStatus: LikeValue) {
-        const result = await LikeModelClass.updateOne({$and: [{commentId: comment}, {authUserId: authUserId}]},
+        const result = await LikeCommentModelClass.updateOne({$and: [{commentId: comment}, {authUserId: authUserId}]},
             {
                 $set: {
                     likesStatus: likesStatus,

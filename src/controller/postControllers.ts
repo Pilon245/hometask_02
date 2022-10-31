@@ -2,6 +2,7 @@ import {Request, Response} from "express";
 import {postsService} from "../service/postsService";
 import {queryValidation} from "../middlewares/queryValidation";
 import {postsQeuryRepository} from "../repositories/postsQeuryRepository";
+import {commentsService} from "../service/commentsService";
 
 export const postControllers = {
     async getPost(req: Request, res: Response) {
@@ -15,7 +16,7 @@ export const postControllers = {
         return res.status(200).send(foundRepository)
     },
     async getPostById(req: Request, res: Response) {
-        const post = await postsService.findPostById(req.params.id)
+        const post = await postsQeuryRepository.findPostById(req.params.id)
         if (post) {
             res.status(200).send(post)
         } else {
@@ -58,6 +59,14 @@ export const postControllers = {
         } else {
             res.sendStatus(404)
         }
+    },
+    async updateLike(req: Request, res: Response) {
+        const isUpdate = await postsService.updateLike(
+            req.user!.id,
+            req.params.postId,
+            req.body.likeStatus,
+            req.user!.accountData.login )
+        res.send(204)
     },
     async deletePost(req: Request, res: Response) {
         const isDelete = await postsService.deletePost(req.params.id)

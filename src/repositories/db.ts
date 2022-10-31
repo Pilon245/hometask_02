@@ -9,7 +9,7 @@ import {SessionDBType} from "../types/sessionTypes";
 import {blockIpDBType, connectionsDBType} from "../types/ipTypes";
 import {TokenDBType} from "../types/tokenTypes";
 import mongoose from "mongoose";
-import {LikeStatusDBType} from "../types/likeTypes";
+import {LikeCommentStatusDBType, LikePostStatusDBType} from "../types/likeTypes";
 
 const mongoUri = process.env.MONGODB_URL || ""
 const dbName = 'network'
@@ -95,12 +95,21 @@ const connectionSchema = new mongoose.Schema<connectionsDBType>({
     endpoint: String,
     connectionAt: Number,
 })
-const likeSchema = new mongoose.Schema<LikeStatusDBType>({
+const likeCommentSchema = new mongoose.Schema<LikeCommentStatusDBType>({
     likesStatus: Number,
     dislikesStatus: Number,
     myStatus: String,
     authUserId: String,
     commentId: String,
+})
+const likePostSchema = new mongoose.Schema<LikePostStatusDBType>({
+    likesStatus: Number,
+    dislikesStatus: Number,
+    myStatus: String,
+    userId: String,
+    postId: String,
+    login: String,
+    addedAt: Date
 })
 
 export const BlogsModelClass = mongoose.model('blogs', blogSchema)
@@ -111,7 +120,8 @@ export const SessionModelClass = mongoose.model('session', sessionSchema)
 export const BlockIpModelClass = mongoose.model('blockIp', blockIpSchema)
 export const ConnectionsModelClass = mongoose.model('connections', connectionSchema)
 export const TokenModelClass = mongoose.model('token', tokenSchema)
-export const LikeModelClass = mongoose.model('like', likeSchema)
+export const LikeCommentModelClass = mongoose.model('likeComment', likeCommentSchema)
+export const LikePostModelClass = mongoose.model('likePost', likePostSchema)
 
 export async function runDb(){
     try{

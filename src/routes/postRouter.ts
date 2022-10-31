@@ -1,7 +1,7 @@
 import {Router} from "express";
 import {postControllers} from "../controller/postControllers";
 import {authMiddleware} from "../middlewares/authMiddleware";
-import {commentOnPostValidation, postsValidation} from "../middlewares/bodyValidation";
+import {commentOnPostValidation, likeValidation, postsValidation} from "../middlewares/bodyValidation";
 import {
     authTokenMiddleware,
     inputBodyValidation,
@@ -23,3 +23,5 @@ postRouter.get('/posts/:postId/comments',TokenOnCommentIdMiddleware,commentOnPos
     commentsControllers.getComment)
 postRouter.post('/posts/:postId/comments', authTokenMiddleware,commentOnPostIdValidation, inputQueryValidation,
 commentOnPostValidation,inputBodyValidation,commentsControllers.createComment)
+postRouter.put('/posts/:postId/like-status',authTokenMiddleware, commentOnPostIdValidation, inputQueryValidation,
+    likeValidation, inputBodyValidation, postControllers.updateLike )
