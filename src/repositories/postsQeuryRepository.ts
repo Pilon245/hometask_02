@@ -18,7 +18,7 @@ export const postsQeuryRepository = {
                 {$and: [{postId: p.id}, {likesStatus: 1}]})
             const totalDislike = await LikePostModelClass.countDocuments(
                 {$and: [{postId: p.id}, {dislikesStatus: 1}]})
-            const lastLikes = await LikePostModelClass.find({postId: p.id})
+            const lastLikes = await LikePostModelClass.find({$and: [{postId: p.id}, {likesStatus: 1}]})
                 .sort({"addedAt": "desc"})
                 .lean()
             return {
@@ -70,7 +70,7 @@ export const postsQeuryRepository = {
                 {$and: [{postId: p.id}, {dislikesStatus: 1}]})
             const likeStatus = await LikePostModelClass.findOne(
                 {$and: [{postId: p.id}, {userId: userId}]})
-            const lastLikes = await LikePostModelClass.find({postId: p.id})
+            const lastLikes = await LikePostModelClass.find({$and: [{postId: p.id}, {likesStatus: 1}]})
                 .sort({"addedAt": "desc"})
                 .lean()
             return {
@@ -111,7 +111,7 @@ export const postsQeuryRepository = {
         const totalDislike = await LikePostModelClass.countDocuments(
             {$and: [{postId: id}, {dislikesStatus: 1}]}
         )
-        const lastLikes = await LikePostModelClass.find({postId: id})
+        const lastLikes = await LikePostModelClass.find({$and: [{postId: id}, {likesStatus: 1}]})
             .sort({"addedAt": "desc"})
             .lean()
 
@@ -151,7 +151,7 @@ export const postsQeuryRepository = {
         const likeStatus = await LikePostModelClass.findOne(
             {$and: [{postId: id}, {userId: userId}]})
 
-        const lastLikes = await LikePostModelClass.find({postId: id})
+        const lastLikes = await LikePostModelClass.find({$and: [{postId: id}, {likesStatus: 1}]})
             .sort({"addedAt": "desc"})
             .lean()
 
