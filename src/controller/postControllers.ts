@@ -8,13 +8,25 @@ import {commentsQueryRepository} from "../repositories/commentsQeuryRepository";
 export const postControllers = {
     async getPost(req: Request, res: Response) {
         const {pageNumber, pageSize, sortBy, sortDirection} = queryValidation(req.query)
-        const foundRepository = await postsQeuryRepository.findPost({
+        if(req.user) {
+            const foundRepository = await postsQeuryRepository.findPost(req.user.id, {
                 pageNumber,
                 pageSize,
                 sortBy,
                 sortDirection
-        })
-        return res.status(200).send(foundRepository)
+            })
+            return res.status(200).send(foundRepository)
+        }
+        if(!req.user) {
+            const foundRepository = await postsQeuryRepository.findPostNoAuth({
+                pageNumber,
+                pageSize,
+                sortBy,
+                sortDirection
+            })
+            return res.status(200).send(foundRepository)
+        }
+
     },
     async getPostById(req: Request, res: Response) {
         if(req.user) {

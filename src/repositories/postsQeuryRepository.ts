@@ -4,10 +4,56 @@ import {LikeCommentModelClass, LikePostModelClass, PostsModelClass} from "./db";
 import {postsRepository} from "./postsRepository";
 
 
-
 export const postsQeuryRepository = {
-    async findPost({pageSize, pageNumber, sortBy, sortDirection}: FindPostsPayload)
-         {
+    async findPostNoAuth({pageSize, pageNumber, sortBy, sortDirection}: FindPostsPayload) {
+        const posts = await PostsModelClass
+            .find({})
+            .sort({[sortBy]: sortDirection === 'asc' ? 1 : -1})
+            .skip(getSkipNumber(pageNumber, pageSize))
+            .limit(pageSize)
+            .lean()
+
+        const Promises = posts.map(async (p) => {
+            const totalLike = await LikePostModelClass.countDocuments(
+                {$and: [{postId: p.id}, {likesStatus: 1}]})
+            const totalDislike = await LikePostModelClass.countDocuments(
+                {$and: [{postId: p.id}, {dislikesStatus: 1}]})
+            const lastLikes = await LikePostModelClass.find({postId: p.id})
+                .sort({"addedAt": "desc"})
+                .lean()
+            return {
+                id: p.id,
+                title: p.title,
+                shortDescription: p.shortDescription,
+                content: p.content,
+                blogId: p.blogId,
+                blogName: p.blogName,
+                createdAt: p.createdAt,
+                extendedLikesInfo: {
+                    likesCount: totalLike,
+                    dislikesCount: totalDislike,
+                    myStatus: "None",
+                    newestLikes: lastLikes.slice(0, 3).map(l => ({
+                        addedAt: l.addedAt,
+                        userId: l.userId,
+                        login: l.login
+                    }))
+                }
+            }
+        })
+        const items = await Promise.all(Promises)
+
+        const totalCount = await PostsModelClass.countDocuments()
+
+        return {
+            pagesCount: getPagesCounts(totalCount, pageSize),
+            page: pageNumber,
+            pageSize: pageSize,
+            totalCount: totalCount,
+            items: items
+        }
+    },
+    async findPost(userId: string, {pageSize, pageNumber, sortBy, sortDirection}: FindPostsPayload) {
         const posts = await PostsModelClass
             .find({})
             .sort({[sortBy]: sortDirection === 'asc' ? 1 : -1})
@@ -17,21 +63,44 @@ export const postsQeuryRepository = {
 
         const totalCount = await PostsModelClass.countDocuments()
 
+        const Promises = posts.map(async (p) => {
+            const totalLike = await LikePostModelClass.countDocuments(
+                {$and: [{postId: p.id}, {likesStatus: 1}]})
+            const totalDislike = await LikePostModelClass.countDocuments(
+                {$and: [{postId: p.id}, {dislikesStatus: 1}]})
+            const likeStatus = await LikePostModelClass.findOne(
+                {$and: [{postId: p.id}, {userId: userId}]})
+            const lastLikes = await LikePostModelClass.find({postId: p.id})
+                .sort({"addedAt": "desc"})
+                .lean()
+            return {
+                id: p.id,
+                title: p.title,
+                shortDescription: p.shortDescription,
+                content: p.content,
+                blogId: p.blogId,
+                blogName: p.blogName,
+                createdAt: p.createdAt,
+                extendedLikesInfo: {
+                    likesCount: totalLike,
+                    dislikesCount: totalDislike,
+                    myStatus: likeStatus?.myStatus ? likeStatus.myStatus : "None",
+                    newestLikes: lastLikes.slice(0, 3).map(l => ({
+                        addedAt: l.addedAt,
+                        userId: l.userId,
+                        login: l.login
+                    }))
+                }
+            }
+        })
+        const items = await Promise.all(Promises)
+
         return {
             pagesCount: getPagesCounts(totalCount, pageSize),
             page: pageNumber,
             pageSize: pageSize,
             totalCount: totalCount,
-            items: posts.map(p => (
-                {
-                    id: p.id,
-                    title: p.title,
-                    shortDescription: p.shortDescription,
-                    content: p.content,
-                    blogId: p.blogId,
-                    blogName: p.blogName,
-                    createdAt: p.createdAt
-                }))
+            items: items
         }
     },
     async findPostByIdNoAuth(id: string): Promise<OutputPostDbType | null> {
@@ -42,9 +111,8 @@ export const postsQeuryRepository = {
         const totalDislike = await LikePostModelClass.countDocuments(
             {$and: [{postId: id}, {dislikesStatus: 1}]}
         )
-
         const lastLikes = await LikePostModelClass.find({postId: id})
-            .sort({"addedAt": "asc"})
+            .sort({"addedAt": "desc"})
             .lean()
 
         if (post) {
@@ -60,8 +128,8 @@ export const postsQeuryRepository = {
                     likesCount: totalLike,
                     dislikesCount: totalDislike,
                     myStatus: "None",
-                    newestLikes: lastLikes.slice(0,3).map(l => ({
-                        addedAt : l.addedAt,
+                    newestLikes: lastLikes.slice(0, 3).map(l => ({
+                        addedAt: l.addedAt,
                         userId: l.userId,
                         login: l.login
                     }))
@@ -84,7 +152,7 @@ export const postsQeuryRepository = {
             {$and: [{postId: id}, {userId: userId}]})
 
         const lastLikes = await LikePostModelClass.find({postId: id})
-            .sort({"addedAt": "asc"})
+            .sort({"addedAt": "desc"})
             .lean()
 
         if (post) {
@@ -100,8 +168,8 @@ export const postsQeuryRepository = {
                     likesCount: totalLike,
                     dislikesCount: totalDislike,
                     myStatus: likeStatus?.myStatus ? likeStatus.myStatus : "None",
-                    newestLikes: lastLikes.slice(0,3).map(l => ({
-                        addedAt : l.addedAt,
+                    newestLikes: lastLikes.slice(0, 3).map(l => ({
+                        addedAt: l.addedAt,
                         userId: l.userId,
                         login: l.login
                     }))
@@ -112,18 +180,17 @@ export const postsQeuryRepository = {
         }
         return post
     },
-    async findPostOnBlog(blogId: string,{pageSize, pageNumber, sortBy, sortDirection}: FindPostsPayload)
-    {
-            const posts =  await PostsModelClass
-                .find({blogId: blogId})
-                .sort({[sortBy]: sortDirection})
-                .skip(getSkipNumber(pageNumber,pageSize))
-                .limit(pageSize)
-                .lean()
+    async findPostOnBlog(blogId: string, {pageSize, pageNumber, sortBy, sortDirection}: FindPostsPayload) {
+        const posts = await PostsModelClass
+            .find({blogId: blogId})
+            .sort({[sortBy]: sortDirection})
+            .skip(getSkipNumber(pageNumber, pageSize))
+            .limit(pageSize)
+            .lean()
 
         const totalCount = await PostsModelClass.countDocuments({blogId: blogId})
 
-        return  {
+        return {
             pagesCount: (Math.ceil(totalCount / pageSize)),
             page: pageNumber,
             pageSize: pageSize,
@@ -139,6 +206,6 @@ export const postsQeuryRepository = {
                     createdAt: p.createdAt
                 }))
         }
-        }
     }
+}
 
