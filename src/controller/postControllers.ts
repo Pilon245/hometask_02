@@ -48,18 +48,36 @@ export const postControllers = {
     },
     async getPostOnBlog(req: Request, res: Response) {
         const {pageNumber, pageSize, sortBy, sortDirection} = queryValidation(req.query)
-        const posts = await postsQeuryRepository.findPostOnBlog(
-            req.params.blogId,
-            {
-                pageNumber,
-                pageSize,
-                sortBy,
-                sortDirection
-            })
-        if (posts) {
-            res.status(200).send(posts)
-        } else {
-            res.sendStatus(404)
+        if(req.user) {
+            const posts = await postsQeuryRepository.findPostOnBlog(
+                req.params.blogId,
+                req.user.id,
+                {
+                    pageNumber,
+                    pageSize,
+                    sortBy,
+                    sortDirection
+                })
+            if (posts) {
+                res.status(200).send(posts)
+            } else {
+                res.sendStatus(404)
+            }
+        }
+        if(!req.user) {
+            const posts = await postsQeuryRepository.findPostOnBlogNoAuth(
+                req.params.blogId,
+                {
+                    pageNumber,
+                    pageSize,
+                    sortBy,
+                    sortDirection
+                })
+            if (posts) {
+                res.status(200).send(posts)
+            } else {
+                res.sendStatus(404)
+            }
         }
     },
     async createPost(req: Request, res: Response) {

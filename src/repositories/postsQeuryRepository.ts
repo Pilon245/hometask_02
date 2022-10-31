@@ -180,7 +180,7 @@ export const postsQeuryRepository = {
         }
         return post
     },
-    async findPostOnBlog(blogId: string, {pageSize, pageNumber, sortBy, sortDirection}: FindPostsPayload) {
+    async findPostOnBlogNoAuth(blogId: string, {pageSize, pageNumber, sortBy, sortDirection}: FindPostsPayload) {
         const posts = await PostsModelClass
             .find({blogId: blogId})
             .sort({[sortBy]: sortDirection})
@@ -188,24 +188,114 @@ export const postsQeuryRepository = {
             .limit(pageSize)
             .lean()
 
+        const Promises = posts.map(async (p) => {
+            const totalLike = await LikePostModelClass.countDocuments(
+                {$and: [{postId: p.id}, {likesStatus: 1}]})
+            const totalDislike = await LikePostModelClass.countDocuments(
+                {$and: [{postId: p.id}, {dislikesStatus: 1}]})
+            const lastLikes = await LikePostModelClass.find({$and: [{postId: p.id}, {likesStatus: 1}]})
+                .sort({"addedAt": "desc"})
+                .lean()
+            return {
+                id: p.id,
+                title: p.title,
+                shortDescription: p.shortDescription,
+                content: p.content,
+                blogId: p.blogId,
+                blogName: p.blogName,
+                createdAt: p.createdAt,
+                extendedLikesInfo: {
+                    likesCount: totalLike,
+                    dislikesCount: totalDislike,
+                    myStatus: "None",
+                    newestLikes: lastLikes.slice(0, 3).map(l => ({
+                        addedAt: l.addedAt,
+                        userId: l.userId,
+                        login: l.login
+                    }))
+                }
+            }
+        })
+        const items = await Promise.all(Promises)
+
         const totalCount = await PostsModelClass.countDocuments({blogId: blogId})
 
         return {
-            pagesCount: (Math.ceil(totalCount / pageSize)),
+            pagesCount: getPagesCounts(totalCount, pageSize),
             page: pageNumber,
             pageSize: pageSize,
             totalCount: totalCount,
-            items: posts.map(p => (
-                {
-                    id: p.id,
-                    title: p.title,
-                    shortDescription: p.shortDescription,
-                    content: p.content,
-                    blogId: p.blogId,
-                    blogName: p.blogName,
-                    createdAt: p.createdAt
-                }))
+            items: items
         }
+        // const totalCount = await PostsModelClass.countDocuments({blogId: blogId})
+        //
+        // return {
+        //     pagesCount: (Math.ceil(totalCount / pageSize)),
+        //     page: pageNumber,
+        //     pageSize: pageSize,
+        //     totalCount: totalCount,
+        //     items: posts.map(p => (
+        //         {
+        //             id: p.id,
+        //             title: p.title,
+        //             shortDescription: p.shortDescription,
+        //             content: p.content,
+        //             blogId: p.blogId,
+        //             blogName: p.blogName,
+        //             createdAt: p.createdAt
+        //         }))
+        // }
+    },
+    async findPostOnBlog(blogId: string, userId: string, {pageSize, pageNumber, sortBy, sortDirection}: FindPostsPayload) {
+        const posts = await PostsModelClass
+            .find({blogId: blogId})
+            .sort({[sortBy]: sortDirection})
+            .skip(getSkipNumber(pageNumber, pageSize))
+            .limit(pageSize)
+            .lean()
+
+        const Promises = posts.map(async (p) => {
+            const totalLike = await LikePostModelClass.countDocuments(
+                {$and: [{postId: p.id}, {likesStatus: 1}]})
+            const totalDislike = await LikePostModelClass.countDocuments(
+                {$and: [{postId: p.id}, {dislikesStatus: 1}]})
+            const likeStatus = await LikePostModelClass.findOne(
+                {$and: [{postId: p.id}, {userId: userId}]})
+            const lastLikes = await LikePostModelClass.find({$and: [{postId: p.id}, {likesStatus: 1}]})
+                .sort({"addedAt": "desc"})
+                .lean()
+            return {
+                id: p.id,
+                title: p.title,
+                shortDescription: p.shortDescription,
+                content: p.content,
+                blogId: p.blogId,
+                blogName: p.blogName,
+                createdAt: p.createdAt,
+                extendedLikesInfo: {
+                    likesCount: totalLike,
+                    dislikesCount: totalDislike,
+                    myStatus: likeStatus?.myStatus ? likeStatus.myStatus : "None",
+                    newestLikes: lastLikes.slice(0, 3).map(l => ({
+                        addedAt: l.addedAt,
+                        userId: l.userId,
+                        login: l.login
+                    }))
+                }
+            }
+        })
+        const items = await Promise.all(Promises)
+
+        const totalCount = await PostsModelClass.countDocuments({blogId: blogId})
+
+        return {
+            pagesCount: getPagesCounts(totalCount, pageSize),
+            page: pageNumber,
+            pageSize: pageSize,
+            totalCount: totalCount,
+            items: items
+        }
+
     }
 }
 
