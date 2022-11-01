@@ -3,7 +3,6 @@ import {postsService} from "../service/postsService";
 import {queryValidation} from "../middlewares/queryValidation";
 import {postsQeuryRepository} from "../repositories/postsQeuryRepository";
 import {commentsService} from "../service/commentsService";
-import {commentsQueryRepository} from "../repositories/commentsQeuryRepository";
 
 export const postControllers = {
     async getPost(req: Request, res: Response) {
