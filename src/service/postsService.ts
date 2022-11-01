@@ -12,21 +12,36 @@ export const postsService = {
     async createPost(title: string, shortDescription: string, content: string, blogId: string)
         : Promise<OutputPostDbType> {
         const blogName: BlogsDbType | null = await blogsRepository.findBlogsById(blogId)
-        const newPost: PostDbType = {
-            id: String(+(new Date())),
-            title: title,
-            shortDescription: shortDescription,
-            content: content,
-            blogId: blogId,
-            blogName: blogName!.name,
-            createdAt: new Date().toISOString(),
-            extendedLikesInfo: {
+        // const newPost: PostDbType = {
+        //     id: String(+(new Date())),
+        //     title: title,
+        //     shortDescription: shortDescription,
+        //     content: content,
+        //     blogId: blogId,
+        //     blogName: blogName!.name,
+        //     createdAt: new Date().toISOString(),
+        //     extendedLikesInfo: {
+        //         likesCount: 0,
+        //         dislikesCount: 0,
+        //         myStatus: "None",
+        //         newestLikes: []
+        //     }
+        // }
+        const newPost = new PostDbType(
+             String(+(new Date())),
+            title,
+             shortDescription,
+           content,
+             blogId,
+            blogName!.name,
+            new Date().toISOString(),
+             {
                 likesCount: 0,
                 dislikesCount: 0,
                 myStatus: "None",
                 newestLikes: []
-            }
-        }
+             }
+            )
         const createdPost = await postsRepository.createPost(newPost)
         const outNewPost: OutputPostDbType = {
             id: createdPost.id,

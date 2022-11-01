@@ -1,10 +1,10 @@
 import {BlogsDbType} from "../types/blogsTypes";
 import {BlogsModelClass, SessionModelClass} from "./db";
 
-export const blogsRepository = {
+class BlogsRepository {
     async findBlogsById(id: string): Promise<BlogsDbType | null> {
         return await BlogsModelClass.findOne({id}).lean()
-    },
+    }
     async createBlogs(newBlogs: BlogsDbType): Promise<BlogsDbType> {
         // await BlogsModelClass.create({...newBlogs})
         // return newBlogs
@@ -17,18 +17,19 @@ export const blogsRepository = {
 
         await blogsInstance.save()
         return blogsInstance
-    },
+    }
     async updateBlogs(id: string,name: string, youtubeUrl: string) : Promise<boolean> {
         const result = await BlogsModelClass.updateOne({id: id}, {name, youtubeUrl})
         return result.matchedCount === 1
-    },
+    }
     async deleteBlogs(id: string) : Promise<boolean> {
         const result = await BlogsModelClass.deleteOne({id: id})
         return result.deletedCount === 1
-    },
+    }
     async deleteAllBlogs() {
         await BlogsModelClass.deleteMany({})
         return true
     }
-
 }
+
+export const blogsRepository = new BlogsRepository()

@@ -1,10 +1,21 @@
 import {SortDirection} from "../middlewares/queryValidation";
 
-export type BlogsDbType = {
-    id: string
-    name: string
-    youtubeUrl: string
-    createdAt: string
+// export type BlogsDbType = {
+//     id: string
+//     name: string
+//     youtubeUrl: string
+//     createdAt: string
+// }
+
+export class BlogsDbType {
+    constructor(
+        public id: string,
+        public name: string,
+        public youtubeUrl: string,
+        public createdAt: string
+    ) {
+    }
+
 }
 
 export type PagesBlogType = {

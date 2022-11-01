@@ -24,11 +24,20 @@ export type FindUsersPayload = {
         searchLoginTerm?: string
         searchEmailTerm?: string
 }
-export type UserAccountDBType = {
-        id: string
-        accountData: UsersAccountDataType
-        emailConfirmation: EmailConfirmationType
-        passwordConfirmation: PasswordConfirmationType
+// export type UserAccountDBType = {
+//         id: string
+//         accountData: UsersAccountDataType
+//         emailConfirmation: EmailConfirmationType
+//         passwordConfirmation: PasswordConfirmationType
+// }
+export class UserAccountDBType  {
+        constructor(
+            public id: string,
+        public accountData: UsersAccountDataType,
+        public emailConfirmation: EmailConfirmationType,
+        public passwordConfirmation: PasswordConfirmationType)
+        { }
+
 }
 export type UsersAccountDataType = {
         login: string
@@ -45,4 +54,28 @@ export type PasswordConfirmationType = {
         confirmationCode: string
         expirationDate: Date
         isConfirmed: boolean
-}
+ }
+// export class UserAccountClassDBType {
+//         constructor(
+//                 public id: String,
+//                 accountData: {
+//                         login: login,
+//                         email: email,
+//                         passwordHash,
+//                         createdAt: new Date().toISOString()
+//                 },
+//                 emailConfirmation: {
+//                         confirmationCode: uuidv4(),
+//                         expirationDate: add(new Date(), {hours: 1, minutes: 1}),
+//                         isConfirmed: false
+//                 },
+//                 passwordConfirmation: {
+//                         confirmationCode: uuidv4(),
+//                         expirationDate: add(new Date(), {hours: 1, minutes: 1}),
+//                         isConfirmed: false
+//                 }
+//         }
+//         ) {
+//         }
+//
+// }

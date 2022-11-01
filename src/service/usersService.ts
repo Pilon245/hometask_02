@@ -37,25 +37,44 @@ export const usersService = {
     },
     async createUsers(login: string,password: string, email: string): Promise<UserAccountDBType> {
         const passwordHash = await _generatePasswordForDb(password)
-        const newUsers : UserAccountDBType = {
-            id: String(+new Date()),
-            accountData: {
+        // const newUsers : UserAccountDBType = {
+        //     id: String(+new Date()),
+        //     accountData: {
+        //         login: login,
+        //         email: email,
+        //         passwordHash,
+        //         createdAt: new Date().toISOString()
+        //     },
+        //     emailConfirmation: {
+        //         confirmationCode: uuidv4(),
+        //         expirationDate: add(new Date(), {hours: 1, minutes: 1}),
+        //         isConfirmed: false
+        //     },
+        //     passwordConfirmation: {
+        //         confirmationCode: uuidv4(),
+        //         expirationDate: add(new Date(), {hours: 1, minutes: 1}),
+        //         isConfirmed: false
+        //     }
+        // }
+        const newUsers = new UserAccountDBType(
+             String(+new Date()),
+            {
                 login: login,
                 email: email,
                 passwordHash,
                 createdAt: new Date().toISOString()
             },
-            emailConfirmation: {
-                confirmationCode: uuidv4(),
-                expirationDate: add(new Date(), {hours: 1, minutes: 1}),
-                isConfirmed: false
+             {
+                 confirmationCode: uuidv4(),
+                 expirationDate: (add(new Date(), {hours: 1, minutes: 1})),
+                 isConfirmed: false
             },
-            passwordConfirmation: {
-                confirmationCode: uuidv4(),
-                expirationDate: add(new Date(), {hours: 1, minutes: 1}),
-                isConfirmed: false
+             {
+                 confirmationCode: uuidv4(),
+                 expirationDate: add(new Date(), {hours: 1, minutes: 1}),
+                 isConfirmed:  false
             }
-        }
+        )
 
         const createdUser = await usersRepository.createUsers(newUsers)
         // try {

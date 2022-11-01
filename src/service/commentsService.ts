@@ -20,20 +20,33 @@ export const commentsService = {
 
     },
     async createComment(postId: string, content: string, userId: string, userLogin: string) {
-        const newComment: CommentsDbType = {
-            id: String(+new Date()),
-            content: content,
-            userId: userId,
-            postId: postId,
-            userLogin: userLogin,
-            createdAt: new Date().toISOString(),
-            likesInfo: {
+        // const newComment: CommentsDbType = {
+        //     id: String(+new Date()),
+        //     content: content,
+        //     userId: userId,
+        //     postId: postId,
+        //     userLogin: userLogin,
+        //     createdAt: new Date().toISOString(),
+        //     likesInfo: {
+        //         likesCount: 0,
+        //         dislikesCount: 0,
+        //         myStatus:  "None",
+        //     }
+        //
+        // }
+        let newComment = new CommentsDbType(
+            String(+new Date()),
+            content,
+            userId,
+            postId,
+            userLogin,
+            new Date().toISOString(),
+            {
                 likesCount: 0,
                 dislikesCount: 0,
-                myStatus:  "None",
+                myStatus: "None",
             }
-
-        }
+        )
         const createdComment = await commentsRepository.createComment(newComment)
         const outCreateComment = {
             id: createdComment.id,
@@ -42,10 +55,10 @@ export const commentsService = {
             userLogin: createdComment.userLogin,
             createdAt: createdComment.createdAt,
             likesInfo: {
-                 dislikesCount: 0,
-                 likesCount:0,
-                 myStatus:  "None",
-               }
+                dislikesCount: 0,
+                likesCount: 0,
+                myStatus: "None",
+            }
         }
         return outCreateComment
     },
@@ -54,10 +67,6 @@ export const commentsService = {
     },
     async updateLike(userId: string, commentId: string, value: LikeValue) {
         const user = await commentsRepository.findLikeByIdAndCommentId(userId, commentId)
-        console.log("user:", user)
-        // console.log("user!.likesStatus", user!.likesStatus)
-        console.log("value", value)
-
         if (!user) {
             if (value === "Like") {
                 const newLike: LikeCommentStatusDBType = {
@@ -91,29 +100,6 @@ export const commentsService = {
 
             }
         }
-        //
-        // if(user!.likesStatus === 1 &&  user!.dislikesStatus === 1 ) {
-        //     if (value === "Like") {
-        //         const likesStatus = 0
-        //         const dislikesStatus = 0
-        //         const myStatus = value
-        //         const authUserId = userId
-        //         const comment = commentId
-        //         return await commentsRepository.updateLike(
-        //             authUserId, comment, likesStatus, dislikesStatus, myStatus
-        //         )
-        //     }
-        //     if (value === "Dislike") {
-        //         const likesStatus = 0
-        //         const dislikesStatus = 0
-        //         const myStatus = value
-        //         const authUserId = userId
-        //         const comment = commentId
-        //         return await commentsRepository.updateLike(
-        //             authUserId, comment, likesStatus, dislikesStatus, myStatus
-        //         )
-        //     }
-        // }
         if (value === "Like" && user!.likesStatus === 0) {
 
             const likesStatus = 1
