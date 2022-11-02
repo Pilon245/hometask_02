@@ -1,13 +1,18 @@
 import {UserAccountDBType} from "../types/usersTypes";
-import {usersRepository} from "../repositories/usersRepository";
 import bcrypt from "bcrypt";
 import {_generatePasswordForDb} from "../helpers/getSkipNumber";
 import add from "date-fns/add";
 import {v4 as uuidv4} from "uuid";
+import {UsersRepository} from "../repositories/usersRepository";
 
-export const usersService = {
+export class UsersService {
+    usersRepository: UsersRepository
+    constructor() {
+        this.usersRepository =  new UsersRepository()
+    }
+
     async findUserById(id: string, ) {
-        const user = await usersRepository.findUserById(id)
+        const user = await this.usersRepository.findUserById(id)
         //todo тут как правильнее выводить
         const userOutput = {
             email: user?.accountData.email,
@@ -15,9 +20,9 @@ export const usersService = {
             userId: user?.id
         }
         return userOutput
-    },
+    }
     async checkCredentials(loginOrEmail: string, password: string){
-        const user = await usersRepository.findLoginOrEmail(loginOrEmail)
+        const user = await this.usersRepository.findLoginOrEmail(loginOrEmail)
         if (!user) {
             return false
         }
@@ -27,14 +32,14 @@ export const usersService = {
             return false
         }
         return user
-    },
+    }
     async checkRefreshToken(loginOrEmail: string){
-        const user = await usersRepository.findLoginOrEmail(loginOrEmail)
+        const user = await this.usersRepository.findLoginOrEmail(loginOrEmail)
         if (!user) {
             return false
         }
         return user
-    },
+    }
     async createUsers(login: string,password: string, email: string): Promise<UserAccountDBType> {
         const passwordHash = await _generatePasswordForDb(password)
         // const newUsers : UserAccountDBType = {
@@ -76,7 +81,7 @@ export const usersService = {
             }
         )
 
-        const createdUser = await usersRepository.createUsers(newUsers)
+        const createdUser = await this.usersRepository.createUsers(newUsers)
         // try {
         //     await emailManager.sendPasswordRecoveryMessage(newUsers)
         //
@@ -85,12 +90,14 @@ export const usersService = {
         //     return null
         // }
         return newUsers
-    },
+    }
 
     async deleteUsers(id: string): Promise<boolean> {
-        return await usersRepository.deleteUsers(id)
-    },
+        return await this.usersRepository.deleteUsers(id)
+    }
     async deleteAllUsers() {
-        return await usersRepository.deleteAllUsers()
+        return await this.usersRepository.deleteAllUsers()
     }
 }
+
+export const usersService = new UsersService()

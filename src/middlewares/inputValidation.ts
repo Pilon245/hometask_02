@@ -4,6 +4,7 @@ import {jwtService} from "../service/jwtService";
 import {usersRepository} from "../repositories/usersRepository";
 import {payloadRefreshToken} from "../helpers/getSkipNumber";
 import {BlockIpModelClass, ConnectionsModelClass} from "../repositories/db";
+import {sessionRepository} from "../repositories/sessionRepository";
 
 
 export const inputBodyValidation = (req: Request, res: Response, next: NextFunction) => {
@@ -87,11 +88,15 @@ export const refreshTokenMiddleware = async (req: Request, res: Response, next: 
 
     const userId = await jwtService.getUserIdByToken(token)
     if (!userId) return res.sendStatus(401)
+
+    const foundLastDate = await sessionRepository.findDevicesByDeviceId(userId.deviceId)
+    if(foundLastDate.last !== userId.iat) return res.sendStatus(401)
+
     const user = await usersRepository.findUserById(userId)
     if (!user) return res.sendStatus(401)
     const payload = await payloadRefreshToken(refToken)
-    const isValid = await usersRepository.findTokenByUserIdAndDeviceId(user.id, payload.deviceId)
-    if(!isValid) return res.sendStatus(401)
+    // const isValid = await usersRepository.findTokenByUserIdAndDeviceId(user.id, payload.deviceId)
+    // if(!isValid) return res.sendStatus(401)
     req.user = user
     return next()
 

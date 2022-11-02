@@ -7,6 +7,6 @@ import {usersValidation} from "../middlewares/bodyValidation";
 export const usersRouter = Router({})
 
 
-usersRouter.get('/users', usersControllers.getUsers)
-usersRouter.post('/users',authMiddleware,usersValidation,inputBodyValidation, usersControllers.createUsers)
-usersRouter.delete('/users/:id', authMiddleware,usersControllers.deleteUsers)
+usersRouter.get('/users', usersControllers.getUsers.bind(usersControllers))
+usersRouter.post('/users',authMiddleware,usersValidation,inputBodyValidation, usersControllers.createUsers.bind(usersControllers))
+usersRouter.delete('/users/:id', authMiddleware,usersControllers.deleteUsers.bind(usersControllers))

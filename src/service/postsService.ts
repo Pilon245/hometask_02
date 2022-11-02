@@ -8,7 +8,7 @@ import {commentsRepository} from "../repositories/commentsRepository";
 import {LikeCommentStatusDBType, LikePostStatusDBType} from "../types/likeTypes";
 import {usersRepository} from "../repositories/usersRepository";
 
-export const postsService = {
+class PostsService {
     async createPost(title: string, shortDescription: string, content: string, blogId: string)
         : Promise<OutputPostDbType> {
         const blogName: BlogsDbType | null = await blogsRepository.findBlogsById(blogId)
@@ -60,10 +60,10 @@ export const postsService = {
 
         }
         return outNewPost
-    },
+    }
     async updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string) {
         return await postsRepository.updatePost(id, title, shortDescription, content, blogId)
-    },
+    }
     async updateLike(userId: string, postId: string, value: LikeValue, login: string) {
     const user = await postsRepository.findLikeByIdAndPostId(userId, postId)
     if (!user) {
@@ -148,12 +148,14 @@ export const postsService = {
         )
     }
     return false
-},
+}
     async deletePost(id: string) {
         return await postsRepository.deletePost(id)
-    },
+    }
     async deleteAllPost() {
         return await postsRepository.deleteAllPost()
     }
 
 }
+
+export const postsService = new PostsService

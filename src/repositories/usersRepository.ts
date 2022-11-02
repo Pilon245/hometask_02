@@ -1,8 +1,9 @@
 import {UserAccountDBType} from "../types/usersTypes";
 import {blockIpDBType} from "../types/ipTypes";
 import {TokenModelClass, UsersModelClass} from "./db";
+import {UsersControllers} from "../controller/usersControllers";
 
-class UsersRepository {
+export class UsersRepository {
     async findUserById(id: string) {
         const result = await UsersModelClass.findOne({id:id})
         return  result
@@ -80,4 +81,3 @@ class UsersRepository {
     }
 }
 
-export const usersRepository = new UsersRepository()

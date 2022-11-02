@@ -5,15 +5,15 @@ import {jwtService} from "./jwtService";
 import {SessionDBType} from "../types/sessionTypes";
 
 
-export const sessionService = {
+class SessionService {
     async findDevices(id: string) {
         const devices = await sessionRepository.findDevices(id)
         return devices
-    },
+    }
     async findDevicesByDeviceId(deviceId: string) {
         const devices = await sessionRepository.findDevices(deviceId)
         return devices
-    },
+    }
     async createSession(user: UserAccountDBType, ip: string, deviceName: string, token: string, device: string) {
         const userId = user.id
         const deviceId = device
@@ -35,20 +35,22 @@ export const sessionService = {
             userId
         )
         await sessionRepository.createSecurityDevices(session)
-    },
+    }
     async updateSession(user: UserAccountDBType, token: string,) {
         const userId = user.id
         const payload = await jwtService.getUserIdByRefreshToken(token.split(" ")[0])
         const lastActiveDate = new Date(payload.iat * 1000).toISOString()
         await sessionRepository.updateSecurityDevices(userId, payload.deviceId, lastActiveDate)
-    },
+    }
     async deleteDevices(id: string, deviceId: string) {
         return await sessionRepository.deleteDevices(id, deviceId)
-    },
+    }
     async deleteDevicesById(deviceId: string) {
         return await sessionRepository.deleteDeviceById(deviceId)
-    },
+    }
     async deleteAllSessions() {
         return await sessionRepository.deleteAllSessions()
     }
 }
+
+export const sessionService = new SessionService()

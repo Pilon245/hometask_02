@@ -13,7 +13,7 @@ import {SortDirection} from "../middlewares/queryValidation";
 export class SessionDBType {
     constructor(
         public ip: string,
-        public  title: string,
+        public title: string,
         public lastActiveDate: string,
         public expiresDate: string,
         public deviceId: string,

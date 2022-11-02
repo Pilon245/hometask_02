@@ -1,7 +1,7 @@
 import {blogsRepository} from "../repositories/blogsRepository";
 import {BlogsDbType, OutputBlogsDbType} from "../types/blogsTypes"
 
-export const blogsService = {
+class BlogsService {
     async findBlogsById(id: string): Promise<OutputBlogsDbType | null> {
         const blog = await blogsRepository.findBlogsById(id)
         if (blog) {
@@ -15,7 +15,7 @@ export const blogsService = {
         }
         return blog
 
-    },
+    }
     async createBlogs(name: string, youtubeUrl: string): Promise<OutputBlogsDbType> {
         // const newBlogs : BlogsDbType = {
         //     id: String(+new Date()),
@@ -38,15 +38,16 @@ export const blogsService = {
             createdAt: createdBlog.createdAt
         }
         return outCreateBlog
-    },
+    }
     async updateBlogs(id: string, name: string, youtubeUrl: string): Promise<boolean> {
         return await blogsRepository.updateBlogs(id, name, youtubeUrl)
-    },
+    }
     async deleteBlogs(id: string): Promise<boolean> {
         return await blogsRepository.deleteBlogs(id)
-    },
+    }
     async deleteAllBlogs() {
         return blogsRepository.deleteAllBlogs()
     }
-
 }
+
+export const blogsService = new BlogsService()

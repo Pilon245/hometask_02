@@ -3,7 +3,7 @@ import {CommentsDbType, LikeValue} from "../types/commentsTypes";
 import {LikeCommentStatusDBType} from "../types/likeTypes";
 
 
-export const commentsService = {
+class CommentsService  {
     async findCommentById(id: string) {
         const comment = await commentsRepository.findCommentById(id)
         if (comment) {
@@ -18,7 +18,7 @@ export const commentsService = {
         }
         return comment
 
-    },
+    }
     async createComment(postId: string, content: string, userId: string, userLogin: string) {
         // const newComment: CommentsDbType = {
         //     id: String(+new Date()),
@@ -61,10 +61,10 @@ export const commentsService = {
             }
         }
         return outCreateComment
-    },
+    }
     async updateComment(id: string, content: string) {
         return await commentsRepository.updateComment(id, content)
-    },
+    }
     async updateLike(userId: string, commentId: string, value: LikeValue) {
         const user = await commentsRepository.findLikeByIdAndCommentId(userId, commentId)
         if (!user) {
@@ -134,12 +134,14 @@ export const commentsService = {
             )
         }
         return false
-    },
+    }
     async deleteComment(id: string): Promise<boolean> {
         return await commentsRepository.deleteComment(id)
-    },
+    }
     async deleteAllComment() {
         return await commentsRepository.deleteAllComment()
     }
 
 }
+
+export const commentsService =  new CommentsService()
