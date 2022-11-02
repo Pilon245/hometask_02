@@ -90,7 +90,7 @@ export const refreshTokenMiddleware = async (req: Request, res: Response, next: 
     if (!userId) return res.sendStatus(401)
 
     const foundLastDate = await sessionRepository.findDevicesByDeviceId(userId.deviceId)
-    if(foundLastDate.last !== userId.iat) return res.sendStatus(401)
+    if(foundLastDate.lastActiveDate !== userId.iat) return res.sendStatus(401)
 
     const user = await usersRepository.findUserById(userId)
     if (!user) return res.sendStatus(401)

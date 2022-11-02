@@ -81,3 +81,4 @@ export class UsersRepository {
     }
 }
 
+export const usersRepository =  new UsersRepository()
