@@ -17,10 +17,10 @@ export const authControllers = {
             const accessToken = await jwtService.createdJWT(user)
             const refreshToken = await jwtService.createdRefreshJWT(user,deviceId)
             await sessionService.createSession(user, req.ip, req.headers['user-agent']!,refreshToken, deviceId)
-            await usersRepository.createToken(user.id, refreshToken, deviceId)
+            // await usersRepository.createToken(user.id, refreshToken, deviceId)
             const result = {accessToken: accessToken}
             return res.status(200).cookie("refreshToken", refreshToken,
-                {expires: new Date(Date.now()+ 6000000), httpOnly: true, secure: true})
+                {expires: new Date(Date.now()+ 6000000), httpOnly: true, secure: false})
                 .send(result)
         } else {
             return res.sendStatus(401)
@@ -33,7 +33,7 @@ export const authControllers = {
             const accessToken = await jwtService.createdJWT(user)
             const refreshToken = await jwtService.createdRefreshJWT(user, token.deviceId)
             await sessionService.updateSession(user, refreshToken)
-            await usersRepository.updateToken(user.id, refreshToken, token.deviceId)
+            // await usersRepository.updateToken(user.id, refreshToken, token.deviceId)
             const result = {accessToken: accessToken}
             return res.status(200).cookie("refreshToken", refreshToken,
                 {expires: new Date(Date.now()+ 6000000), httpOnly: true, secure: true})

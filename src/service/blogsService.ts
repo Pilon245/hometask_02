@@ -1,9 +1,15 @@
-import {blogsRepository} from "../repositories/blogsRepository";
+import {AdminBlogsRepository, BlogsRepository} from "../repositories/blogsRepository";
 import {BlogsDbType, OutputBlogsDbType} from "../types/blogsTypes"
+import {adminBlogsRepository} from "../compositionRoot";
 
-class BlogsService {
+export class BlogsService {
+    constructor(protected blogsRepository: BlogsRepository,
+                protected adminBlogsRepository: AdminBlogsRepository
+    ) {
+    }
+
     async findBlogsById(id: string): Promise<OutputBlogsDbType | null> {
-        const blog = await blogsRepository.findBlogsById(id)
+        const blog = await this.blogsRepository.findBlogsById(id)
         if (blog) {
             const outBlog: OutputBlogsDbType = {
                 id: blog.id,
@@ -30,7 +36,7 @@ class BlogsService {
             new Date().toISOString()
         )
 
-        const createdBlog = await blogsRepository.createBlogs(newBlogs)
+        const createdBlog = await this.blogsRepository.createBlogs(newBlogs)
         const outCreateBlog: OutputBlogsDbType = {
             id: createdBlog.id,
             name: createdBlog.name,
@@ -40,14 +46,14 @@ class BlogsService {
         return outCreateBlog
     }
     async updateBlogs(id: string, name: string, youtubeUrl: string): Promise<boolean> {
-        return await blogsRepository.updateBlogs(id, name, youtubeUrl)
+        return await this.blogsRepository.updateBlogs(id, name, youtubeUrl)
     }
     async deleteBlogs(id: string): Promise<boolean> {
-        return await blogsRepository.deleteBlogs(id)
+        return await this.blogsRepository.deleteBlogs(id)
     }
     async deleteAllBlogs() {
-        return blogsRepository.deleteAllBlogs()
+        return this.blogsRepository.deleteAllBlogs()
     }
 }
 
-export const blogsService = new BlogsService()
+// export const blogsService = new BlogsService()

@@ -44,7 +44,7 @@ class CommentsService  {
             {
                 likesCount: 0,
                 dislikesCount: 0,
-                myStatus: "None",
+                myStatus: LikeValue.none,
             }
         )
         const createdComment = await commentsRepository.createComment(newComment)
@@ -57,7 +57,7 @@ class CommentsService  {
             likesInfo: {
                 dislikesCount: 0,
                 likesCount: 0,
-                myStatus: "None",
+                myStatus: LikeValue.none,
             }
         }
         return outCreateComment
@@ -68,7 +68,7 @@ class CommentsService  {
     async updateLike(userId: string, commentId: string, value: LikeValue) {
         const user = await commentsRepository.findLikeByIdAndCommentId(userId, commentId)
         if (!user) {
-            if (value === "Like") {
+            if (value === LikeValue.like) {
                 const newLike: LikeCommentStatusDBType = {
                     likesStatus: 1,
                     dislikesStatus: 0,
@@ -78,7 +78,7 @@ class CommentsService  {
                 }
                 return await commentsRepository.createLike(newLike)
             }
-            if (value === "Dislike") {
+            if (value === LikeValue.dislike) {
                 const newLike: LikeCommentStatusDBType = {
                     likesStatus: 0,
                     dislikesStatus: 1,
@@ -88,7 +88,7 @@ class CommentsService  {
                 }
                 return await commentsRepository.createLike(newLike)
             }
-            if (value === "None") {
+            if (value === LikeValue.none) {
                 const newLike: LikeCommentStatusDBType = {
                     likesStatus: 0,
                     dislikesStatus: 0,
@@ -100,7 +100,7 @@ class CommentsService  {
 
             }
         }
-        if (value === "Like" && user!.likesStatus === 0) {
+        if (value === LikeValue.like && user!.likesStatus === 0) {
 
             const likesStatus = 1
             const dislikesStatus = 0
@@ -111,8 +111,7 @@ class CommentsService  {
                 authUserId, comment, likesStatus, dislikesStatus, myStatus
             )
         }
-        if (value === "Dislike" && user!.dislikesStatus === 0) {
-            console.log("value22", value)
+        if (value === LikeValue.dislike && user!.dislikesStatus === 0) {
             const likesStatus = 0
             const dislikesStatus = 1
             const myStatus = value
@@ -122,8 +121,7 @@ class CommentsService  {
                 authUserId, comment, likesStatus, dislikesStatus, myStatus
             )
         }
-
-        if (value === "None") {
+        if (value === LikeValue.none) {
             const likesStatus = 0
             const dislikesStatus = 0
             const myStatus = value

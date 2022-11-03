@@ -1,8 +1,9 @@
 import {param} from "express-validator";
-import {blogsRepository} from "../repositories/blogsRepository";
+// import {blogsRepository} from "../repositories/blogsRepository";
 import {postsRepository} from "../repositories/postsRepository";
 import {commentsRepository} from "../repositories/commentsRepository";
 import {sessionRepository} from "../repositories/sessionRepository";
+import {blogsRepository} from "../compositionRoot";
 
 const blogIdValidation = param("blogId")
         .custom(async (value) => {

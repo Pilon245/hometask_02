@@ -1,7 +1,11 @@
 import {BlogsDbType} from "../types/blogsTypes";
 import {BlogsModelClass, SessionModelClass} from "./db";
 
-class BlogsRepository {
+export class AdminBlogsRepository {
+}
+export class BlogsRepository {
+
+
     async findBlogsById(id: string): Promise<BlogsDbType | null> {
         return await BlogsModelClass.findOne({id}).lean()
     }
@@ -32,4 +36,4 @@ class BlogsRepository {
     }
 }
 
-export const blogsRepository = new BlogsRepository()
+

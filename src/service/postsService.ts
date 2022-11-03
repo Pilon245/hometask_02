@@ -1,12 +1,13 @@
 import {postsRepository} from "../repositories/postsRepository";
 import {extendedLikesInfoType, newestLikesType, PostDbType} from "../types/postsTypes";
-import {blogsRepository} from "../repositories/blogsRepository";
+// import {blogsRepository} from "../repositories/blogsRepository";
 import {OutputPostDbType} from "../types/postsTypes";
 import {BlogsDbType} from "../types/blogsTypes";
 import {LikeValue} from "../types/commentsTypes";
 import {commentsRepository} from "../repositories/commentsRepository";
 import {LikeCommentStatusDBType, LikePostStatusDBType} from "../types/likeTypes";
 import {usersRepository} from "../repositories/usersRepository";
+import {blogsRepository} from "../compositionRoot";
 
 class PostsService {
     async createPost(title: string, shortDescription: string, content: string, blogId: string)

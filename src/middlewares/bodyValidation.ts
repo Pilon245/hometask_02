@@ -1,7 +1,8 @@
 import {body} from "express-validator";
-import {blogsRepository} from "../repositories/blogsRepository";
+// import {blogsRepository} from "../repositories/blogsRepository";
 import {usersRepository} from "../repositories/usersRepository";
 import {LikeValue} from "../types/commentsTypes";
+import { blogsRepository} from "../compositionRoot";
 
 
 const nameValidation = body( "name")
@@ -17,6 +18,7 @@ const blogIdValidation = body("blogId")
         .isString().withMessage("Field 'blogId' is not a string.")
         .notEmpty({ignore_whitespace: true}).withMessage("Field 'blogId' cannot be empty.")
         .custom(async (value) => {
+            // const blog: any =  blogsControllers.getBlogsById.bind(blogsControllers.getBlogsById(value))
             const blog: any = await blogsRepository.findBlogsById(value)
             if(!blog){
                 throw new Error("Field 'blogId' is not in id.")

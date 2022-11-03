@@ -86,13 +86,20 @@ export const refreshTokenMiddleware = async (req: Request, res: Response, next: 
     }
     const token = refToken.split(' ')[0]
 
-    const userId = await jwtService.getUserIdByToken(token)
-    if (!userId) return res.sendStatus(401)
+    // const userId = await jwtService.getUserIdByToken(token)
+    // if (!userId) return res.sendStatus(401)
 
-    const foundLastDate = await sessionRepository.findDevicesByDeviceId(userId.deviceId)
-    if(foundLastDate.lastActiveDate !== userId.iat) return res.sendStatus(401)
+    const foundUser = await jwtService.getUserIdByRefreshToken(token)
+    if (!foundUser) return res.sendStatus(401)
 
-    const user = await usersRepository.findUserById(userId)
+    // console.log("foundUser", foundUser)
+
+    const foundLastDate = await sessionRepository.findDevicesByDeviceId(foundUser.deviceId)
+    // console.log("foundUser.iat", new Date(foundUser.iat * 1000).toISOString())
+    // console.log("foundLastDate!.lastActiveDate", foundLastDate!.lastActiveDate)
+    if(foundLastDate!.lastActiveDate !== new Date(foundUser.iat * 1000).toISOString()) return res.sendStatus(401)
+
+    const user = await usersRepository.findUserById(foundUser.id)
     if (!user) return res.sendStatus(401)
     const payload = await payloadRefreshToken(refToken)
     // const isValid = await usersRepository.findTokenByUserIdAndDeviceId(user.id, payload.deviceId)
