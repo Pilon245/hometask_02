@@ -1,10 +1,17 @@
+import "reflect-metadata";
 import {AdminBlogsRepository, BlogsRepository} from "../repositories/blogsRepository";
 import {BlogsDbType, OutputBlogsDbType} from "../types/blogsTypes"
 import {adminBlogsRepository} from "../compositionRoot";
+import {inject, injectable} from "inversify";
 
+@injectable()
 export class BlogsService {
-    constructor(protected blogsRepository: BlogsRepository,
-                protected adminBlogsRepository: AdminBlogsRepository
+    // constructor(protected blogsRepository: BlogsRepository,
+    //             protected adminBlogsRepository: AdminBlogsRepository
+    // ) {
+    // }
+    constructor(@inject(BlogsRepository) protected blogsRepository: BlogsRepository,
+        @inject(AdminBlogsRepository) protected adminBlogsRepository: AdminBlogsRepository
     ) {
     }
 

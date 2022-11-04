@@ -1,5 +1,6 @@
+import "reflect-metadata";
 import {Router} from 'express';
-import { ioc} from "../compositionRoot";
+import {container, ioc} from "../compositionRoot";
 import {authMiddleware} from "../middlewares/authMiddleware";
 import {inputBodyValidation, inputQueryValidation, TokenOnCommentIdMiddleware} from "../middlewares/inputValidation";
 import {postControllers} from "../controller/postControllers";
@@ -7,8 +8,9 @@ import {blogsValidation, postsOnBlogValidation} from "../middlewares/bodyValidat
 import {postOnblogIdValidation} from "../middlewares/paramsValidation";
 import {BlogsControllers} from "../controller/blogsControllers";
 // import ioc from "../compositionRoot";
+// const blogsControllers = ioc.getInstance<BlogsControllers>(BlogsControllers)
 
-const blogsControllers = ioc.getInstance<BlogsControllers>(BlogsControllers)
+const blogsControllers = container.resolve<BlogsControllers>(BlogsControllers) //  достучаться до обЪекта
 
 export const blogsRouter = Router({})
 

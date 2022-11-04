@@ -1,8 +1,13 @@
+import "reflect-metadata";
 import {BlogsDbType} from "../types/blogsTypes";
 import {BlogsModelClass, SessionModelClass} from "./db";
+import {injectable} from "inversify";
 
+@injectable()
 export class AdminBlogsRepository {
 }
+
+@injectable()
 export class BlogsRepository {
 
 

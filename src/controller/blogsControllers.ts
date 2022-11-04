@@ -1,15 +1,17 @@
+import "reflect-metadata";
 import {Request, Response} from "express";
 // import {blogsService} from "../service/blogsService";
 import {queryValidation} from "../middlewares/queryValidation";
 import {blogsQueryRepository} from "../repositories/blogsQeuryRepository";
 import {BlogsService} from "../service/blogsService";
 import {ioc} from "../compositionRoot";
+import {inject, injectable} from "inversify";
 
 
-
+@injectable()
 export class BlogsControllers  {
-    constructor(protected blogsService: BlogsService) {
-        ioc.getInstance<BlogsService>(BlogsService)
+    constructor(@inject(BlogsService) protected blogsService: BlogsService) {
+        // ioc.getInstance<BlogsService>(BlogsService)
     }
 
     async getBlogs( req: Request, res: Response) {
