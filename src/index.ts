@@ -10,6 +10,7 @@ import {authRouter} from "./routes/authRouter";
 import {commentsRouter} from "./routes/commentsRouter";
 import {devicesRouter} from "./routes/devicesRouter";
 import cors from 'cors';
+import mongoose from "mongoose";
 
 dotenv.config()
 
@@ -32,5 +33,7 @@ const startApp = async () => {
 })}
 //start app
 startApp()
+
+
 
 
